@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { WorkBrowser } from "@/components/work-browser";
 import { projectDisclaimer, projects } from "@/content/projects";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Our work",
-  description: "Engineering concept showcases for AI, product, blockchain, and trading software. Not customer delivery claims.",
+  description: "Concept showcases and internal demonstrations for AI, software, Web3, trading technology, and cloud and data engineering. Not customer delivery claims.",
   path: "/work",
 });
 
@@ -14,22 +15,13 @@ export default function WorkPage() {
       <header className="page-hero">
         <div className="wrap">
           <p className="eyebrow">Our work</p>
-          <h1>Concept showcases, not borrowed credibility.</h1>
-          <p className="lede">{projectDisclaimer} Each one explains the challenge, the constraints, the role Alitroz would take, and the technical approach.</p>
+          <h1>Concept showcases, labelled as concepts.</h1>
+          <p className="lede">{projectDisclaimer} Filter by the kind of system. None of these pages invent a client, a metric, or a delivery date.</p>
         </div>
       </header>
       <section className="section section-follow">
-        <div className="wrap work-grid">
-          {projects.map((project) => (
-            <article key={project.slug}>
-              <a className="card-link" href={`/work/${project.slug}`}>
-                <p className="kicker">{project.kindLabel}</p>
-                <h2 className="gap-top">{project.title}</h2>
-                <p className="muted gap-top">{project.summary}</p>
-                <p className="gap-top-lg">View the concept</p>
-              </a>
-            </article>
-          ))}
+        <div className="wrap">
+          <WorkBrowser projects={projects} />
         </div>
       </section>
     </>

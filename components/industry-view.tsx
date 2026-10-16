@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
 import type { Industry } from "@/content/industries";
@@ -16,7 +17,7 @@ export function IndustryView({ industry }: { industry: Industry }) {
       <div className="sheet">
         <div className="wrap sheet-inner">
           <section className="block">
-            <h2>Context</h2>
+            <h2>Common challenges</h2>
             {industry.context.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
@@ -33,6 +34,20 @@ export function IndustryView({ industry }: { industry: Industry }) {
             </div>
           </section>
           <section className="block">
+            <h2>Typical workflows</h2>
+            <ul className="plain-list">
+              {industry.workflows.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+          <section className="block">
+            <h2>Architecture</h2>
+            {industry.architecture.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </section>
+          <section className="block">
             <h2>How an engagement starts</h2>
             <ul className="plain-list">
               {industry.engagement.map((item) => (
@@ -42,16 +57,26 @@ export function IndustryView({ industry }: { industry: Industry }) {
           </section>
           <p className="boundary">{industry.boundary}</p>
           <section className="block">
+            <p className="kicker">Concept showcase</p>
+            <h2 className="gap-top">{industry.concept.label}</h2>
+            <p>{industry.concept.text}</p>
+            <p className="gap-top"><Link className="text-link" href={industry.concept.href}>View the concept</Link></p>
+          </section>
+          <section className="block">
             <h2>Related</h2>
             <ul className="related-list">
               {industry.related.map((link) => (
-                <li key={link.href}><a href={link.href}>{link.label}</a></li>
+                <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
               ))}
             </ul>
           </section>
         </div>
       </div>
-      <CtaBand label="Discuss a Project" />
+      <CtaBand
+        title={`Discuss a ${industry.title.toLowerCase()} project`}
+        body="Tell us the system, the constraint, and what a first useful release would have to do."
+        label="Discuss a Project"
+      />
     </>
   );
 }

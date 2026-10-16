@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { capabilityLinks, industryLinks, serviceLinks } from "@/content/navigation";
+import { capabilityLinks, engagementLinks, industryLinks, serviceLinks } from "@/content/navigation";
 import { getPublicIdentity } from "@/lib/public-identity";
 
 export function SiteFooter() {
@@ -46,6 +46,13 @@ export function SiteFooter() {
           <ul>
             <li><Link href="/company">Company</Link></li>
             <li><Link href="/company/our-approach">Our approach</Link></li>
+            <li><Link href="/company/quality-and-security">Quality and security</Link></li>
+            <li><Link href="/company/careers">Careers</Link></li>
+            <li><Link href="/engagement-models">Engagement models</Link></li>
+            {engagementLinks.map((link) => (
+              <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+            ))}
+            <li><Link href="/insights">Technical resources</Link></li>
             <li><Link href="/contact">Contact</Link></li>
             <li><Link href="/start-a-project">Start a project</Link></li>
             <li><Link href="/privacy-policy">Privacy policy</Link></li>

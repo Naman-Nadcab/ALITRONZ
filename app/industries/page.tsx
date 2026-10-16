@@ -5,7 +5,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Industries",
-  description: "Software engineering for fintech and trading firms, digital-asset teams, and SaaS and enterprise companies.",
+  description: "Software engineering for fintech, digital assets, SaaS, healthcare technology, commerce, logistics, and enterprise operations.",
   path: "/industries",
 });
 

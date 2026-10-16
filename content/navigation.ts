@@ -1,4 +1,4 @@
-import { capabilities, divisions } from "@/content/offerings";
+import { capabilities, capabilityDetails, divisions, engagements, solutions, specialistServices } from "@/content/offerings";
 import { industries } from "@/content/industries";
 
 export type NavLink = { label: string; href: string; note?: string };
@@ -20,15 +20,44 @@ export const industryLinks: NavLink[] = industries.map((item) => ({
   href: item.path,
 }));
 
+export const solutionLinks: NavLink[] = solutions.map((item) => ({
+  label: item.title,
+  href: item.path,
+}));
+
+export const engagementLinks: NavLink[] = engagements.map((item) => ({
+  label: item.title,
+  href: item.path,
+}));
+
+export const serviceGroups = divisions.map((division) => ({
+  title: division.title,
+  href: division.path,
+  links: specialistServices
+    .filter((item) => item.parent === division.slug)
+    .map((item) => ({ label: item.title, href: item.path })),
+}));
+
+export const capabilityGroups = capabilities.map((hub) => ({
+  title: hub.title,
+  href: hub.path,
+  links: capabilityDetails
+    .filter((item) => item.parent === hub.slug)
+    .map((item) => ({ label: item.title, href: item.path })),
+}));
+
 export const companyLinks: NavLink[] = [
-  { label: "Company", href: "/company", note: "Positioning, collaboration, and quality." },
-  { label: "Our approach", href: "/company/our-approach", note: "How an engagement actually runs." },
+  { label: "About", href: "/company", note: "Positioning and collaboration." },
+  { label: "Our approach", href: "/company/our-approach", note: "How an engagement runs." },
+  { label: "Quality and security", href: "/company/quality-and-security", note: "Controls, without a borrowed certificate." },
+  { label: "Careers", href: "/company/careers", note: "How to talk to us about work." },
   { label: "Contact", href: "/contact", note: "How to reach the team." },
 ];
 
 export const primaryNav = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services", menu: "services" as const },
+  { label: "Solutions", href: "/solutions" },
   { label: "Industries", href: "/industries" },
   { label: "Our Work", href: "/work" },
   { label: "Insights", href: "/insights" },

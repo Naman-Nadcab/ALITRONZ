@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
-import { capabilities, divisions } from "@/content/offerings";
+import { capabilityGroups, serviceGroups } from "@/content/navigation";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Services",
-  description: "AI, digital product engineering, Web3, and financial trading technology, with cloud, data, and security as supporting capabilities.",
+  description: "Specialist engineering for AI, digital products, Web3, financial technology, cloud, data, and application security.",
   path: "/services",
 });
 
@@ -15,28 +16,24 @@ export default function ServicesPage() {
       <header className="page-hero">
         <div className="wrap">
           <p className="eyebrow">Services</p>
-          <h1>Software divisions for serious products.</h1>
+          <h1>Specialist engineering, grouped by division.</h1>
           <p className="lede">
-            Four divisions cover the kinds of systems Alitroz engineers. Cloud, data, and security support that work. They are not unrelated lines of business.
+            Four divisions cover the products Alitroz builds. Cloud, data, and security are the capabilities that make those products deployable and operable.
           </p>
         </div>
       </header>
       <section className="section section-follow">
         <div className="wrap">
-          {divisions.map((division) => (
-            <article className="division division-copy" key={division.slug}>
+          {serviceGroups.map((group) => (
+            <article className="division division-copy" key={group.href}>
               <div>
-                <h2>{division.title}</h2>
+                <h2><Link href={group.href}>{group.title}</Link></h2>
               </div>
-              <div>
-                <p>{division.summary}</p>
-                <ul>
-                  {division.outcomes.map((outcome) => (
-                    <li key={outcome}>{outcome}</li>
-                  ))}
-                </ul>
-                <p className="gap-top-lg"><a className="text-link" href={division.path}>View {division.title}</a></p>
-              </div>
+              <ul className="related-list">
+                {group.links.map((link) => (
+                  <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+                ))}
+              </ul>
             </article>
           ))}
         </div>
@@ -44,19 +41,21 @@ export default function ServicesPage() {
       <section className="section section-elevated">
         <div className="wrap">
           <div className="section-head">
-            <h2>Supporting capabilities</h2>
-            <p className="muted">These practices make the four divisions deployable, understandable, and safer to operate.</p>
+            <h2>Capabilities</h2>
+            <p className="muted">Practices that support the four divisions. Each one has its own scope.</p>
           </div>
-          <div className="cap-grid">
-            {capabilities.map((capability) => (
-              <article key={capability.slug}>
-                <a className="card-link" href={capability.path}>
-                  <h3>{capability.title}</h3>
-                  <p className="muted gap-top">{capability.summary}</p>
-                </a>
-              </article>
-            ))}
-          </div>
+          {capabilityGroups.map((group) => (
+            <article className="division division-copy" key={group.href}>
+              <div>
+                <h3><Link href={group.href}>{group.title}</Link></h3>
+              </div>
+              <ul className="related-list">
+                {group.links.map((link) => (
+                  <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+                ))}
+              </ul>
+            </article>
+          ))}
         </div>
       </section>
       <CtaBand label="Discuss a Project" />

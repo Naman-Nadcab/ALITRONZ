@@ -1,7 +1,14 @@
+import { catalogOfferings } from "@/content/catalog";
+
 export type Offering = {
   slug: string;
   path: string;
-  kind: "division" | "capability";
+  kind: "division" | "capability" | "service" | "solution" | "engagement";
+  parent?: string;
+  figure?: string;
+  enquiryService?: string;
+  useCases?: { title: string; text: string }[];
+  tradeoffs?: string[];
   title: string;
   eyebrow: string;
   headline: string;
@@ -24,7 +31,7 @@ export type Offering = {
   related: { href: string; label: string }[];
 };
 
-export const offerings: Offering[] = [
+const coreOfferings: Offering[] = [
   {
     slug: "ai-automation",
     path: "/services/ai-automation",
@@ -272,7 +279,7 @@ export const offerings: Offering[] = [
       },
     ],
     related: [
-      { href: "/industries/saas-enterprise", label: "SaaS & Enterprise" },
+      { href: "/industries/saas", label: "SaaS & Technology" },
       { href: "/capabilities/cloud-devops", label: "Cloud, DevOps & Reliability" },
       { href: "/company/our-approach", label: "Our approach" },
     ],
@@ -525,7 +532,7 @@ export const offerings: Offering[] = [
       },
     ],
     related: [
-      { href: "/industries/fintech-trading", label: "Fintech & Trading" },
+      { href: "/industries/fintech", label: "Fintech & Financial Technology" },
       { href: "/capabilities/cloud-devops", label: "Cloud, DevOps & Reliability" },
       { href: "/insights/trading-software-is-a-system", label: "Trading software is a system" },
     ],
@@ -869,9 +876,16 @@ export const offerings: Offering[] = [
   },
 ];
 
+export const offerings: Offering[] = [...coreOfferings, ...catalogOfferings];
+export const allOfferings = offerings;
+
 export function getOffering(slug: string) {
-  return offerings.find((offering) => offering.slug === slug);
+  return allOfferings.find((offering) => offering.slug === slug);
 }
 
-export const divisions = offerings.filter((offering) => offering.kind === "division");
-export const capabilities = offerings.filter((offering) => offering.kind === "capability");
+export const divisions = allOfferings.filter((offering) => offering.kind === "division");
+export const capabilities = allOfferings.filter((offering) => offering.kind === "capability" && !offering.parent);
+export const capabilityDetails = allOfferings.filter((offering) => offering.kind === "capability");
+export const specialistServices = allOfferings.filter((offering) => offering.kind === "service");
+export const solutions = allOfferings.filter((offering) => offering.kind === "solution");
+export const engagements = allOfferings.filter((offering) => offering.kind === "engagement");

@@ -1,3 +1,5 @@
+import { extraArticles } from "@/content/insights-extra";
+
 export type ArticleBlock =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
@@ -11,16 +13,17 @@ export type Article = {
   category: string;
   blocks: ArticleBlock[];
   related: string[];
+  services?: { href: string; label: string }[];
 };
 
-export const articles: Article[] = [
+const coreArticles: Article[] = [
   {
     slug: "scope-an-enterprise-assistant",
     title: "Scope an enterprise assistant before you pick a model",
     excerpt:
       "The model is the replaceable part. The scope is the decision about what the assistant may read, what it may draft, and what a person must still confirm.",
     date: "2026-10-16",
-    category: "AI engineering",
+    category: "AI and Automation",
     related: ["trading-software-is-a-system", "blockchain-products-that-can-change"],
     blocks: [
       {
@@ -100,7 +103,7 @@ export const articles: Article[] = [
     excerpt:
       "A terminal is the visible part. The work is market data, order state, vendor access, reconciliation, and a clear line between the software firm and the broker.",
     date: "2026-10-16",
-    category: "Financial technology",
+    category: "Financial and Trading Technology",
     related: ["scope-an-enterprise-assistant", "blockchain-products-that-can-change"],
     blocks: [
       {
@@ -178,7 +181,7 @@ export const articles: Article[] = [
     excerpt:
       "Immutability is a property of some state, not an excuse to skip upgrades, indexing, wallet failure, and the question of who holds the admin key.",
     date: "2026-10-16",
-    category: "Web3 engineering",
+    category: "Web3 and Blockchain",
     related: ["scope-an-enterprise-assistant", "trading-software-is-a-system"],
     blocks: [
       {
@@ -236,6 +239,8 @@ export const articles: Article[] = [
     ],
   },
 ];
+
+export const articles: Article[] = [...coreArticles, ...extraArticles];
 
 export function getArticle(slug: string) {
   return articles.find((article) => article.slug === slug);

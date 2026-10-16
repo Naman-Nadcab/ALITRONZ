@@ -19,9 +19,9 @@ const initial = {
   company_website: "",
 };
 
-export function EnquiryForm() {
+export function EnquiryForm({ initialService = "" }: { initialService?: string }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [values, setValues] = useState(initial);
+  const [values, setValues] = useState({ ...initial, service: initialService });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>("idle");
   const alertRef = useRef<HTMLDivElement>(null);

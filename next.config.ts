@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  async redirects() {
+    return [
+      { source: "/industries/fintech-trading", destination: "/industries/fintech", permanent: true },
+      { source: "/industries/saas-enterprise", destination: "/industries/saas", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

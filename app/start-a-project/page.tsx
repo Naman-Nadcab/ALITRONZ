@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { EnquiryForm } from "@/components/enquiry-form";
+import { enquiryServices } from "@/lib/enquiry-schema";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -8,7 +9,9 @@ export const metadata: Metadata = pageMetadata({
   path: "/start-a-project",
 });
 
-export default function StartPage() {
+export default async function StartPage({ searchParams }: { searchParams: Promise<{ service?: string }> }) {
+  const { service } = await searchParams;
+  const initialService = service && (enquiryServices as readonly string[]).includes(service) ? service : "";
   return (
     <>
       <header className="page-hero">
@@ -37,7 +40,7 @@ export default function StartPage() {
               </article>
             </div>
           </div>
-          <EnquiryForm />
+          <EnquiryForm initialService={initialService} />
         </div>
       </section>
     </>

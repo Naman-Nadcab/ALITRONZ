@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/logo";
-import { capabilityLinks, companyLinks, primaryNav, serviceLinks } from "@/content/navigation";
+import { capabilityLinks, companyLinks, primaryNav, serviceGroups, solutionLinks } from "@/content/navigation";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -88,28 +88,25 @@ export function SiteHeader() {
                     Services
                   </button>
                   {menu === "services" ? (
-                    <div id="services-menu" className="mega" role="region" aria-label="Services">
-                      <div>
-                        <p className="mega-label">Divisions</p>
-                        {serviceLinks.map((link) => (
-                          <Link key={link.href} href={link.href}>
-                            <strong>{link.label}</strong>
-                            <span>{link.note}</span>
-                          </Link>
-                        ))}
-                      </div>
-                      <div>
-                        <p className="mega-label">Capabilities</p>
+                    <div id="services-menu" className="mega mega-wide" role="region" aria-label="Services">
+                      {serviceGroups.map((group) => (
+                        <div key={group.href}>
+                          <p className="mega-label"><Link href={group.href}>{group.title}</Link></p>
+                          {group.links.map((link) => (
+                            <Link key={link.href} href={link.href}>{link.label}</Link>
+                          ))}
+                        </div>
+                      ))}
+                      <div className="mega-span">
+                        <p className="mega-label">Also</p>
+                        <Link href="/services">All services</Link>
+                        <Link href="/solutions">Solutions</Link>
                         {capabilityLinks.map((link) => (
-                          <Link key={link.href} href={link.href}>
-                            <strong>{link.label}</strong>
-                            <span>{link.note}</span>
-                          </Link>
+                          <Link key={link.href} href={link.href}>{link.label}</Link>
                         ))}
-                        <Link href="/services">
-                          <strong>All services</strong>
-                          <span>The full map of divisions and capabilities.</span>
-                        </Link>
+                        {solutionLinks.map((link) => (
+                          <Link key={link.href} href={link.href}>{link.label}</Link>
+                        ))}
                       </div>
                     </div>
                   ) : null}
@@ -176,14 +173,20 @@ export function SiteHeader() {
           {drawerSection === "services" ? (
             <div className="drawer-group">
               <Link href="/services">All services</Link>
-              {serviceLinks.map((link) => (
-                <Link key={link.href} href={link.href}>{link.label}</Link>
+              {serviceGroups.map((group) => (
+                <div key={group.href}>
+                  <Link href={group.href}>{group.title}</Link>
+                  {group.links.map((link) => (
+                    <Link key={link.href} href={link.href}>{link.label}</Link>
+                  ))}
+                </div>
               ))}
               {capabilityLinks.map((link) => (
                 <Link key={link.href} href={link.href}>{link.label}</Link>
               ))}
             </div>
           ) : null}
+          <Link href="/solutions" aria-current={pathname === "/solutions" ? "page" : undefined}>Solutions</Link>
           <Link href="/industries" aria-current={pathname === "/industries" ? "page" : undefined}>Industries</Link>
           <Link href="/work" aria-current={pathname === "/work" ? "page" : undefined}>Our Work</Link>
           <Link href="/insights" aria-current={pathname === "/insights" ? "page" : undefined}>Insights</Link>

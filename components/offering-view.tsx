@@ -3,15 +3,24 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
 import { DivisionFigure } from "@/components/diagrams";
 import { JsonLd } from "@/components/json-ld";
-import type { Offering } from "@/content/offerings";
+import { getOffering, type Offering } from "@/content/offerings";
 import { absoluteUrl } from "@/lib/site-url";
 
+function sectionFor(offering: Offering) {
+  if (offering.kind === "solution") return { label: "Solutions", href: "/solutions" };
+  if (offering.kind === "engagement") return { label: "Engagement models", href: "/engagement-models" };
+  return { label: "Services", href: "/services" };
+}
+
 export function OfferingView({ offering }: { offering: Offering }) {
+  const parent = offering.parent ? getOffering(offering.parent) : undefined;
+  const enquiry = offering.enquiryService
+    ? `/start-a-project?service=${encodeURIComponent(offering.enquiryService)}`
+    : "/start-a-project";
   const crumbs = [
     { label: "Home", href: "/" },
-    offering.kind === "division"
-      ? { label: "Services", href: "/services" }
-      : { label: "Capabilities", href: "/services" },
+    sectionFor(offering),
+    ...(parent ? [{ label: parent.title, href: parent.path }] : []),
     { label: offering.title },
   ];
   return (
@@ -35,7 +44,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
           <h1>{offering.headline}</h1>
           <p className="lede">{offering.summary}</p>
           <div className="cta-row">
-            <Link className="btn btn-primary" href="/start-a-project">
+            <Link className="btn btn-primary" href={enquiry}>
               Discuss a Project <span className="arrow" aria-hidden="true">→</span>
             </Link>
             <Link className="btn btn-secondary" href="/work">Explore Our Work</Link>
@@ -50,6 +59,19 @@ export function OfferingView({ offering }: { offering: Offering }) {
               <p key={paragraph}>{paragraph}</p>
             ))}
           </section>
+          {offering.useCases && offering.useCases.length > 0 ? (
+            <section className="block">
+              <h2>Where it is used</h2>
+              <div className="hairline-grid cols-2">
+                {offering.useCases.map((item) => (
+                  <article key={item.title}>
+                    <h3>{item.title}</h3>
+                    <p className="muted gap-top">{item.text}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ) : null}
           <section className="block">
             <h2>What Alitroz builds</h2>
             <div className="hairline-grid cols-2">
@@ -85,7 +107,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
               </ul>
             </div>
             <div className="figure-frame">
-              <DivisionFigure slug={offering.slug} />
+              <DivisionFigure slug={offering.slug} figure={offering.figure} />
             </div>
           </section>
           <section className="block">
@@ -115,6 +137,16 @@ export function OfferingView({ offering }: { offering: Offering }) {
               <p key={paragraph}>{paragraph}</p>
             ))}
             {offering.boundary ? <p className="boundary gap-top">{offering.boundary}</p> : null}
+            {offering.tradeoffs && offering.tradeoffs.length > 0 ? (
+              <>
+                <h3 className="gap-top">Trade-offs</h3>
+                <ul className="plain-list">
+                  {offering.tradeoffs.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
           </section>
           <section className="block">
             <p className="kicker">Concept showcase</p>
@@ -145,7 +177,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
           </section>
         </div>
       </div>
-      <CtaBand label="Discuss a Project" />
+      <CtaBand label="Discuss a Project" href={enquiry} />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
 import { companyPage } from "@/content/company";
 import { pageMetadata } from "@/lib/metadata";
@@ -18,8 +19,10 @@ export default function CompanyPage() {
           <h1>{companyPage.headline}</h1>
           <p className="lede">{companyPage.summary}</p>
           <div className="cta-row">
-            <a className="btn btn-secondary" href="/company/our-approach">Our approach</a>
-            <a className="btn btn-primary" href="/start-a-project">Start a Project <span className="arrow" aria-hidden="true">→</span></a>
+            <Link className="btn btn-secondary" href="/company/our-approach">Our approach</Link>
+            <Link className="btn btn-secondary" href="/company/quality-and-security">Quality and security</Link>
+            <Link className="btn btn-secondary" href="/company/careers">Careers</Link>
+            <Link className="btn btn-primary" href="/start-a-project">Start a Project <span className="arrow" aria-hidden="true">→</span></Link>
           </div>
         </div>
       </header>

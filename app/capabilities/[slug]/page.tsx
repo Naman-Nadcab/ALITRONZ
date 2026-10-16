@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { OfferingView } from "@/components/offering-view";
-import { capabilities, getOffering } from "@/content/offerings";
+import { capabilityDetails, getOffering } from "@/content/offerings";
 import { pageMetadata } from "@/lib/metadata";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return capabilities.map((offering) => ({ slug: offering.slug }));
+  return capabilityDetails.map((offering) => ({ slug: offering.slug }));
 }
 
 export const dynamicParams = false;
