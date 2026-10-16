@@ -28,8 +28,9 @@ export default function ServicesPage() {
             <article className="division division-copy" key={group.href}>
               <div>
                 <h2><Link href={group.href}>{group.title}</Link></h2>
+                <p className="muted gap-top">{group.result}</p>
               </div>
-              <ul className="related-list">
+              <ul className="service-directory">
                 {group.links.map((link) => (
                   <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
                 ))}
@@ -48,8 +49,9 @@ export default function ServicesPage() {
             <article className="division division-copy" key={group.href}>
               <div>
                 <h3><Link href={group.href}>{group.title}</Link></h3>
+                <p className="muted gap-top">{group.result}</p>
               </div>
-              <ul className="related-list">
+              <ul className="service-directory">
                 {group.links.map((link) => (
                   <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
                 ))}

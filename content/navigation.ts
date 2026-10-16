@@ -33,6 +33,7 @@ export const engagementLinks: NavLink[] = engagements.map((item) => ({
 export const serviceGroups = divisions.map((division) => ({
   title: division.title,
   href: division.path,
+  result: division.result,
   links: specialistServices
     .filter((item) => item.parent === division.slug)
     .map((item) => ({ label: item.title, href: item.path })),
@@ -41,6 +42,7 @@ export const serviceGroups = divisions.map((division) => ({
 export const capabilityGroups = capabilities.map((hub) => ({
   title: hub.title,
   href: hub.path,
+  result: hub.result,
   links: capabilityDetails
     .filter((item) => item.parent === hub.slug)
     .map((item) => ({ label: item.title, href: item.path })),

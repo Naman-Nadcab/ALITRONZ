@@ -22,7 +22,7 @@ export function ProjectView({ project }: { project: Project }) {
           <p className="kind-banner">{projectDisclaimer}</p>
           <h1 className="gap-top">{project.title}</h1>
           <p className="lede">{project.summary}</p>
-          <ul className="tech-list">
+          <ul className="fact-list">
             <li>{project.kindLabel}</li>
             <li>{project.category}</li>
             <li>{project.industry}</li>

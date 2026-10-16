@@ -71,7 +71,7 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <Link href="/" className="logo" aria-label="Alitroz Technology, home">
+        <Link href="/" className="logo">
           <Logo />
         </Link>
         <nav className="nav-desktop" aria-label="Primary">

@@ -25,7 +25,6 @@ export function DivisionFigure({ slug, figure }: { slug: string; figure?: string
   const mode = variant(slug);
   return (
     <svg viewBox="0 0 320 160" fill="none" role="img" aria-label={`${family} system diagram`}>
-      <title>{family} diagram</title>
       {family === "ai" ? <Ai mode={mode} /> : null}
       {family === "product" ? <Product mode={mode} /> : null}
       {family === "web3" ? <Web3 mode={mode} /> : null}

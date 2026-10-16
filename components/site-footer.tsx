@@ -10,7 +10,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="wrap footer-grid">
         <div className="footer-brand">
-          <Link href="/" aria-label="Alitroz Technology, home"><Logo /></Link>
+          <Link href="/"><Logo /></Link>
           <p className="muted">We engineer intelligent products for ambitious businesses. Software development and consulting. Not a broker, exchange, or adviser.</p>
           {identity.email ? <p className="footer-contact"><a href={`mailto:${identity.email}`}>{identity.email}</a></p> : <p className="footer-contact"><Link href="/start-a-project">Project enquiries</Link></p>}
           {identity.address ? <p className="muted">{identity.address}</p> : null}

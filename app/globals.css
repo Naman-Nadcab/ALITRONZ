@@ -261,13 +261,16 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .nav-item { position: relative; }
 .mega { width: min(760px, calc(100vw - 2rem)); display: grid; grid-template-columns: 1.4fr 0.8fr; gap: 1.25rem; }
 .mega-wide {
-  left: auto;
-  right: 0;
+  position: fixed;
+  top: calc(var(--header-h) + 0.45rem);
+  left: max(1rem, calc(50vw - 540px));
+  right: auto;
   width: min(1080px, calc(100vw - 2rem));
   max-height: min(70vh, 640px);
   overflow: auto;
   grid-template-columns: repeat(2, 1fr);
 }
+.company-menu { left: auto; right: 0; }
 .mega-wide a { padding: 0.35rem 0.15rem; font-size: 0.92rem; }
 .mega-span { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; border-top: 1px solid var(--line); padding-top: 0.8rem; }
 .mega-span .mega-label { width: 100%; }
@@ -337,6 +340,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .insight-list h2 { font-size: clamp(1.6rem, 2.5vw, 2.2rem); }
 .cap-grid > *, .principle-grid > *, .work-grid > *, .industry-grid > *, .hairline-grid > * { background: var(--bg); }
+.cap-grid > *, .principle-grid > *, .work-grid > *, .industry-grid > * { color: var(--ink); }
+.section-paper .cap-grid .muted,
+.section-paper .principle-grid .muted,
+.section-paper .work-grid .muted,
+.section-paper .industry-grid .muted { color: var(--muted); }
+.section-paper .cap-grid .card-link:hover h3,
+.section-paper .principle-grid .card-link:hover h3,
+.section-paper .work-grid .card-link:hover h3,
+.section-paper .industry-grid .card-link:hover h3 { color: var(--accent); }
 .section-elevated .cap-grid > *,
 .section-elevated .hairline-grid > * { background: var(--bg-elevated); }
 .section-paper .hairline-grid,
@@ -349,7 +361,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .card-link:hover h3 { color: var(--accent); }
 .section-paper .card-link:hover h3, .sheet .card-link:hover h3 { color: #0c6478; }
 
+.service-directory { display: grid; gap: 0.15rem 1.5rem; margin: 0; padding: 0; list-style: none; }
+.service-directory a { display: inline-block; padding: 0.28rem 0; text-decoration: none; }
+.service-directory a:hover { color: var(--accent); }
 .tech-list, .related-list { display: flex; flex-wrap: wrap; gap: 0.35rem 0; margin: 0.8rem 0 0; padding: 0; list-style: none; }
+.fact-list { display: flex; flex-wrap: wrap; gap: 0.45rem 1.25rem; margin: 1.15rem 0 0; padding: 0; list-style: none; color: var(--muted); }
 .tech-list li::after, .related-list li::after { content: "  /  "; color: var(--muted); }
 .tech-list li:last-child::after, .related-list li:last-child::after { content: ""; }
 .related-list a { text-decoration: none; font-weight: 650; }
@@ -443,7 +459,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
   color: var(--ink);
 }
 .field textarea { min-height: 140px; resize: vertical; }
-.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-bottom-color: var(--accent); }
+.field input:focus, .field select:focus, .field textarea:focus { border-bottom-color: var(--accent); }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .field-error { color: var(--danger); font-size: 0.88rem; }
 .form-error, .form-note {
   margin-top: 1rem;
@@ -479,7 +496,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .filter-row button.is-active, .filter-row button[aria-selected="true"] { color: var(--ink); border-color: var(--line-strong); }
 .toc { margin-bottom: 1.5rem; }
 .toc ol { margin: 0.6rem 0 0; padding-left: 1.15rem; }
-.toc a { color: var(--muted); }
+.sheet .toc a { color: var(--muted-dark); }
+.sheet .toc a:hover { color: #0c6478; }
 .article-pager { display: grid; gap: 0.8rem; margin-top: 2rem; }
 .article-pager a { color: var(--ink); }
 
@@ -493,6 +511,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .figure-frame { border-top: 0; padding-top: 0; }
   .cap-grid, .work-grid, .industry-grid { grid-template-columns: repeat(3, 1fr); }
   .principle-grid, .process-rail { grid-template-columns: repeat(3, 1fr); }
+  .service-directory { grid-template-columns: 1fr 1fr; }
   .hairline-grid.cols-2 { grid-template-columns: 1fr 1fr; }
   .hairline-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
 }
