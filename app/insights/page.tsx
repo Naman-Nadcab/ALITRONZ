@@ -27,19 +27,17 @@ export default function InsightsPage() {
         </div>
       </header>
       {categories.map((category) => (
-        <section className="section section-follow" id={category.toLowerCase().replace(/[^a-z0-9]+/g, "-")} key={category}>
+        <section className={`section section-follow insight-group${categories.indexOf(category) % 2 ? " section-paper" : ""}`} id={category.toLowerCase().replace(/[^a-z0-9]+/g, "-")} key={category}>
           <div className="wrap">
             <h2>{category}</h2>
-            <div className="hairline-grid insight-list">
+            <div className="editorial-list">
               {articles.filter((article) => article.category === category).map((article) => {
                 const minutes = readingMinutes(article.blocks.flatMap((block) => (block.type === "ul" ? block.items : [block.text])));
                 return (
                   <article key={article.slug}>
-                    <Link className="card-link" href={`/insights/${article.slug}`}>
-                      <h3 className="gap-top">{article.title}</h3>
-                      <p className="muted gap-top">{article.excerpt}</p>
-                      <p className="meta-row">{formatDate(article.date)} · {minutes} min read</p>
-                    </Link>
+                    <p className="meta-row">{formatDate(article.date)} · {minutes} min read</p>
+                    <h3><Link href={`/insights/${article.slug}`}>{article.title}</Link></h3>
+                    <p className="muted">{article.excerpt}</p>
                   </article>
                 );
               })}

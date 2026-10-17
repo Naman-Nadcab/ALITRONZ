@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
+import { FamilyVisual, familyOf } from "@/components/visuals/family-visual";
 import { capabilityGroups, serviceGroups } from "@/content/navigation";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -24,40 +25,45 @@ export default function ServicesPage() {
       </header>
       <section className="section section-follow">
         <div className="wrap">
-          {serviceGroups.map((group) => (
-            <article className="division division-copy" key={group.href}>
+          {serviceGroups.map((group, index) => (
+            <article className={`division-stage${index % 2 ? " is-flip" : ""}`} key={group.href}>
               <div>
+                <p className="index-no">{String(index + 1).padStart(2, "0")}</p>
                 <h2><Link href={group.href}>{group.title}</Link></h2>
                 <p className="muted gap-top">{group.result}</p>
+                <ul className="service-directory">
+                  {group.links.map((link) => (
+                    <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+                  ))}
+                </ul>
               </div>
-              <ul className="service-directory">
-                {group.links.map((link) => (
-                  <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
-                ))}
-              </ul>
+              <FamilyVisual family={familyOf(group.href.split("/").pop() ?? "")} compact />
             </article>
           ))}
         </div>
       </section>
-      <section className="section section-elevated">
+      <section className="section section-lavender">
         <div className="wrap">
           <div className="section-head">
             <h2>Capabilities</h2>
-            <p className="muted">Practices that support the four divisions. Each one has its own scope.</p>
+            <p>Practices that support the four divisions. Each one has its own scope.</p>
           </div>
-          {capabilityGroups.map((group) => (
-            <article className="division division-copy" key={group.href}>
-              <div>
-                <h3><Link href={group.href}>{group.title}</Link></h3>
-                <p className="muted gap-top">{group.result}</p>
-              </div>
-              <ul className="service-directory">
-                {group.links.map((link) => (
-                  <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
-                ))}
-              </ul>
-            </article>
-          ))}
+          <div className="cap-stage">
+            {capabilityGroups.map((group) => (
+              <article key={group.href}>
+                <FamilyVisual family={familyOf(group.href.split("/").pop() ?? "")} compact />
+                <div>
+                  <h3><Link href={group.href}>{group.title}</Link></h3>
+                  <p className="gap-top">{group.result}</p>
+                  <ul className="service-directory">
+                    {group.links.map((link) => (
+                      <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
       <CtaBand label="Discuss a Project" />

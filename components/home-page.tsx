@@ -1,18 +1,37 @@
 import Link from "next/link";
-import { DivisionFigure } from "@/components/diagrams";
 import { AlitrozCore } from "@/components/three/alitroz-core";
-import { SystemDiagram } from "@/components/system-diagram";
 import { CtaBand } from "@/components/cta-band";
-import { engagementModels, hero, principles, processStages } from "@/content/home";
+import { FamilyVisual, familyOf } from "@/components/visuals/family-visual";
+import { hero, homepageJourney } from "@/content/home";
 import { industries } from "@/content/industries";
-import { capabilities, divisions } from "@/content/offerings";
+import { capabilities, divisions, engagements } from "@/content/offerings";
 import { projects } from "@/content/projects";
 
+const capabilityFamily: Record<string, string> = {
+  "cloud-devops": "cloud",
+  "data-engineering": "data",
+  cybersecurity: "security",
+};
+
+const featuredWork = [
+  "enterprise-ai-knowledge-copilot",
+  "saas-administration-platform",
+  "digital-asset-platform-architecture",
+  "forex-trading-terminal-prototype",
+];
+
+const featuredIndustries = ["fintech", "digital-assets-web3", "saas", "enterprise"];
+
 export function HomePage() {
+  const work = featuredWork
+    .map((slug) => projects.find((project) => project.slug === slug))
+    .filter((project) => project !== undefined);
+  const sectorPreview = industries.filter((industry) => featuredIndustries.includes(industry.slug));
+
   return (
     <>
       <section className="hero">
-        <div className="wrap hero-grid">
+        <div className="wrap hero-stage">
           <div className="hero-copy">
             <p className="eyebrow">{hero.eyebrow}</p>
             <h1>{hero.title}</h1>
@@ -23,17 +42,12 @@ export function HomePage() {
               </Link>
               <Link className="btn btn-secondary" href="/work">{hero.secondary}</Link>
             </div>
-            <ul className="hero-index">
-              {divisions.map((division) => (
-                <li key={division.slug}><Link href={division.path}>{division.title}</Link></li>
-              ))}
-            </ul>
           </div>
           <div className="hero-visual">
             <AlitrozCore />
             <p className="core-caption">
               <span>The Alitroz Core</span>
-              Connected systems, held in one instrument.
+              A studio sculpture for connected systems.
             </p>
           </div>
         </div>
@@ -41,129 +55,63 @@ export function HomePage() {
 
       <section className="section section-paper">
         <div className="wrap">
-          <div className="section-head">
-            <p className="eyebrow">01 — Positioning</p>
+          <div className="statement">
             <h2>Complex ideas. Engineered into products.</h2>
-            <p>
-              Alitroz moves from the business problem through architecture, implementation, validation, deployment, and continued improvement. The value is a system people can operate, not a list of technologies.
-            </p>
-            <p>
-              Discovery clarifies the outcome, the constraints, and what should not be built. The later stages stay connected, so the work does not stall between a prototype and real use.
-            </p>
+            <div>
+              <p>
+                Alitroz works across strategy, experience design, engineering, integrations, testing, and deployment. The value is a system a team can operate, not a list of technologies.
+              </p>
+              <p className="gap-top">
+                Discovery names the outcome and the constraints. The later stages stay connected, so the work does not stall between a prototype and something people can run.
+              </p>
+            </div>
           </div>
-          <SystemDiagram />
         </div>
       </section>
 
       <section className="section" id="services">
         <div className="wrap">
           <div className="section-head">
-            <p className="eyebrow">02 — Services</p>
-            <h2>Four divisions. One engineering standard.</h2>
-            <p className="muted">Each division is a way of taking a business problem through to software. The supporting capabilities sit underneath all four.</p>
+            <p className="eyebrow">Services</p>
+            <h2>Four ways to take a product from idea to software.</h2>
           </div>
           <div>
             {divisions.map((division, index) => (
-              <article className="division" key={division.slug}>
-                <div>
+              <article className={`division-stage${index % 2 ? " is-flip" : ""}`} key={division.slug}>
+                <div className="division-copy">
                   <p className="index-no">{String(index + 1).padStart(2, "0")}</p>
                   <h3>{division.title}</h3>
-                </div>
-                <div>
-                  <p>{division.result}</p>
-                  <ul>
-                    {division.outcomes.slice(0, 2).map((outcome) => (
-                      <li key={outcome}>{outcome}</li>
-                    ))}
-                  </ul>
+                  <p className="gap-top">{division.result}</p>
                   <p className="gap-top-lg">
                     <Link className="text-link" href={division.path}>Explore {division.title}</Link>
                   </p>
                 </div>
-                <div className="figure-frame">
-                  <DivisionFigure slug={division.slug} />
-                </div>
+                <FamilyVisual family={familyOf(division.slug)} />
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section section-elevated">
+      <section className="section section-lavender" id="work">
         <div className="wrap">
           <div className="section-head">
-            <p className="eyebrow">03 — Capabilities</p>
-            <h2>Engineering that keeps the product runnable.</h2>
-            <p className="muted">Cloud, data, and security support the four divisions. They are not separate businesses added for appearance.</p>
+            <p className="eyebrow">Selected work</p>
+            <h2>Concepts and prototypes, labelled as such.</h2>
+            <p>These demonstrations show how Alitroz would approach a problem. They are not completed customer deliveries, and no client outcomes are claimed.</p>
           </div>
-          <div className="cap-grid">
-            {capabilities.map((capability) => (
-              <article key={capability.slug}>
-                <Link className="card-link" href={capability.path}>
-                  <p className="kicker">Capability</p>
-                  <h3 className="gap-top">{capability.title}</h3>
-                  <p className="muted gap-top">{capability.result}</p>
-                </Link>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="work">
-        <div className="wrap">
-          <div className="section-head">
-            <p className="eyebrow">04 — Selected work</p>
-            <h2>Engineering concepts, clearly labelled.</h2>
-            <p className="muted">These showcases describe how Alitroz would approach a problem. They are not completed customer deliveries, and no client outcomes are claimed.</p>
-          </div>
-          <div className="work-grid">
-            {projects.map((project) => (
-              <article key={project.slug}>
-                <Link className="card-link" href={`/work/${project.slug}`}>
+          <div className="showcase-list">
+            {work.map((project, index) => (
+              <article key={project.slug} className={index === 0 ? "showcase-feature" : "showcase-card"}>
+                <FamilyVisual family={familyOf(project.category)} compact />
+                <div>
                   <p className="kicker">{project.kindLabel}</p>
                   <h3 className="gap-top">{project.title}</h3>
-                  <p className="muted gap-top">{project.summary}</p>
-                  <p className="gap-top-lg">View the concept</p>
-                </Link>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section section-paper" id="industries">
-        <div className="wrap">
-          <div className="section-head">
-            <p className="eyebrow">05 — Industries</p>
-            <h2>Sector context changes the constraints.</h2>
-            <p>The same engineering discipline meets different permissions, data, and operating duties. These pages describe software for companies in each sector. They are not a regulatory status.</p>
-          </div>
-          <div className="industry-grid">
-            {industries.map((industry) => (
-              <article key={industry.slug}>
-                <Link className="card-link" href={industry.path}>
-                  <h3>{industry.title}</h3>
-                  <p className="muted gap-top">{industry.summary}</p>
-                </Link>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="wrap">
-          <div className="section-head">
-            <p className="eyebrow">06 — Process</p>
-            <h2>Discovery to support, with a reason for each stage.</h2>
-          </div>
-          <div className="process-rail">
-            {processStages.map((stage) => (
-              <article key={stage.title}>
-                <h3>{stage.title}</h3>
-                <p className="muted">{stage.purpose}</p>
-                <p className="gap-top"><strong>Deliverable. </strong>{stage.deliverables}</p>
+                  <p className="gap-top">{project.summary}</p>
+                  <p className="gap-top-lg">
+                    <Link className="text-link" href={`/work/${project.slug}`}>View the concept</Link>
+                  </p>
+                </div>
               </article>
             ))}
           </div>
@@ -173,41 +121,86 @@ export function HomePage() {
       <section className="section section-paper">
         <div className="wrap">
           <div className="section-head">
-            <p className="eyebrow">07 — Engagement</p>
-            <h2>Ways to start, without a fictional rate card.</h2>
-            <p>Each model is scoped in writing. We do not publish standard prices or delivery times, because both depend on the requirements.</p>
+            <p className="eyebrow">Approach</p>
+            <h2>From ambitious ideas to dependable products.</h2>
           </div>
-          <div className="model-list">
-            {engagementModels.map((model, index) => (
-              <article key={model.title}>
+          <div className="process-rail">
+            {homepageJourney.map((stage, index) => (
+              <article key={stage.title}>
                 <p className="kicker">{String(index + 1).padStart(2, "0")}</p>
-                <h3>{model.title}</h3>
-                <p>{model.text}</p>
+                <h3>{stage.title}</h3>
+                <p className="gap-top">{stage.text}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section section-elevated">
+      <section className="section" id="capabilities">
         <div className="wrap">
           <div className="section-head">
-            <p className="eyebrow">08 — Working principles</p>
-            <h2>How an engagement is handled.</h2>
-            <p className="muted">These are working practices. They are not certifications, testimonials, or performance statistics.</p>
+            <p className="eyebrow">Capabilities</p>
+            <h2>The engineering that keeps a product runnable.</h2>
+            <p className="muted">Cloud, data, and security support the four divisions. They are not separate businesses added for appearance.</p>
           </div>
-          <div className="principle-grid">
-            {principles.map((principle) => (
-              <article key={principle.title}>
-                <h3>{principle.title}</h3>
-                <p className="muted gap-top">{principle.text}</p>
+          <div className="cap-stage">
+            {capabilities.map((capability) => (
+              <article key={capability.slug}>
+                <FamilyVisual family={capabilityFamily[capability.slug] ?? "cloud"} compact />
+                <Link href={capability.path}>
+                  <p className="kicker">Capability</p>
+                  <h3 className="gap-top">{capability.title}</h3>
+                  <p className="gap-top">{capability.result}</p>
+                </Link>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <CtaBand label="Start a Project" />
+      <section className="section section-ice" id="industries">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow">Industries</p>
+            <h2>The same discipline, different constraints.</h2>
+            <p>These pages describe software for companies in each sector. They are not a regulatory status.</p>
+          </div>
+          <div className="industry-index">
+            {sectorPreview.map((industry) => (
+              <Link key={industry.slug} href={industry.path}>
+                <h2>{industry.title}</h2>
+                <p>{industry.summary}</p>
+              </Link>
+            ))}
+          </div>
+          <p className="gap-top-lg"><Link className="text-link" href="/industries">All industries</Link></p>
+        </div>
+      </section>
+
+      <section className="section section-paper">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow">Engagement</p>
+            <h2>Ways to start, without a published rate card.</h2>
+            <p>Prices and dates are written into the agreement for the work. They are not implied here.</p>
+          </div>
+          <div className="engage-list">
+            {engagements.map((model, index) => (
+              <Link className="engage-row" href={model.path} key={model.slug}>
+                <p className="kicker">{String(index + 1).padStart(2, "0")}</p>
+                <strong>{model.title}</strong>
+                <p>{model.summary}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CtaBand
+        title="Have something ambitious in mind?"
+        body="Tell us what you are building. We will start with the business challenge, the right technical approach, and a clear path forward."
+        label="Start a Project"
+      />
     </>
   );
 }

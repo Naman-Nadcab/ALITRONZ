@@ -7,6 +7,7 @@ import { projectDisclaimer, projects } from "@/content/projects";
 import { routes } from "@/content/routes";
 import { hero } from "@/content/home";
 import { primaryNav, capabilityLinks, companyLinks, industryLinks, serviceLinks } from "@/content/navigation";
+import { searchTopics } from "@/content/search-topics";
 
 const routeSet = new Set(routes);
 
@@ -25,7 +26,7 @@ describe("public content", () => {
   it("keeps navigation and content links on real routes", () => {
     const hrefs: string[] = [];
     const strings: string[] = [];
-    collect({ offerings, industries, projects, articles, primaryNav, serviceLinks, capabilityLinks, industryLinks, companyLinks }, strings, hrefs);
+    collect({ offerings, industries, projects, articles, primaryNav, serviceLinks, capabilityLinks, industryLinks, companyLinks, searchTopics }, strings, hrefs);
     for (const href of hrefs) expect(routeSet.has(href), href).toBe(true);
   });
 

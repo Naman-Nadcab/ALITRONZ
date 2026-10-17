@@ -26,12 +26,15 @@ export default function ApproachPage() {
         <div className="wrap sheet-inner">
           <section className="block">
             <h2>The sequence</h2>
-            <div className="hairline-grid cols-2">
-              {processStages.map((stage) => (
+            <div className="journey">
+              {processStages.map((stage, index) => (
                 <article key={stage.title}>
-                  <h3>{stage.title}</h3>
-                  <p className="gap-top">{stage.purpose}</p>
-                  <p className="muted gap-top">{stage.deliverables}</p>
+                  <p className="kicker">{String(index + 1).padStart(2, "0")}</p>
+                  <div>
+                    <h3>{stage.title}</h3>
+                    <p className="gap-top">{stage.purpose}</p>
+                    <p className="muted gap-top">{stage.deliverables}</p>
+                  </div>
                 </article>
               ))}
             </div>

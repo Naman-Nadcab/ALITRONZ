@@ -99,10 +99,37 @@ export const principles = [
   },
 ] as const;
 
+export const homepageJourney = [
+  {
+    title: "Discovery",
+    text: "Agree the outcome, the people who will use the product, and what should stay out of scope.",
+  },
+  {
+    title: "Architecture",
+    text: "Set the boundaries for interfaces, data, identity, and the places a person must stay in control.",
+  },
+  {
+    title: "Experience design",
+    text: "Shape the product people actually use, against the constraints discovery already found.",
+  },
+  {
+    title: "Engineering",
+    text: "Build the software in increments that can be reviewed in the client’s repository.",
+  },
+  {
+    title: "Validation",
+    text: "Check the main paths, the failure paths, and the integrations the product depends on.",
+  },
+  {
+    title: "Deployment and support",
+    text: "Release somewhere the team can operate and roll back, then keep the agreed maintenance going.",
+  },
+] as const;
+
 export const hero = {
   eyebrow: "AI · Software · Digital infrastructure",
   title: "We engineer intelligent products for ambitious businesses.",
-  lede: "From AI-powered applications to enterprise platforms, blockchain systems, and financial technology, we turn complex requirements into engineered digital products.",
+  lede: "From AI-powered applications to enterprise software, blockchain systems, and financial technology, we transform complex requirements into engineered digital products.",
   primary: "Discuss a Project",
   secondary: "Explore Our Work",
 };

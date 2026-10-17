@@ -36,13 +36,14 @@ export function SystemDiagram() {
               }
             }}
           >
-            {stage.title}
+            {String(stageIndex + 1).padStart(2, "0")} {stage.title}
           </button>
         ))}
       </div>
-      <div className="tab-panel" role="tabpanel" id="stage-panel" aria-labelledby={`stage-tab-${index}`}>
+      <div className="tab-panel stage-panel" role="tabpanel" id="stage-panel" aria-labelledby={`stage-tab-${index}`}>
         <h3>{current.title}</h3>
-        <p>{current.summary}</p>
+        <p className="gap-top">{current.summary}</p>
+        <p className="gap-top">{current.purpose}</p>
       </div>
     </div>
   );

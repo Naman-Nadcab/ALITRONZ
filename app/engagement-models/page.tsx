@@ -22,15 +22,14 @@ export default function EngagementPage() {
           </p>
         </div>
       </header>
-      <section className="section section-follow">
-        <div className="wrap industry-grid">
-          {engagements.map((item) => (
-            <article key={item.slug}>
-              <Link className="card-link" href={item.path}>
-                <h2>{item.title}</h2>
-                <p className="muted gap-top">{item.summary}</p>
-              </Link>
-            </article>
+      <section className="section section-paper section-follow">
+        <div className="wrap engage-list">
+          {engagements.map((item, index) => (
+            <Link className="engage-row" key={item.slug} href={item.path}>
+              <p className="kicker">{String(index + 1).padStart(2, "0")}</p>
+              <strong>{item.title}</strong>
+              <p>{item.summary}</p>
+            </Link>
           ))}
         </div>
       </section>

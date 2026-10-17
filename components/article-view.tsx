@@ -42,10 +42,11 @@ export function ArticleView({ article }: { article: Article }) {
             <span>{minutes} min read</span>
             <span>Alitroz Technology</span>
           </p>
+          <div className="article-hero-mark" aria-hidden="true" />
         </div>
       </header>
       <article className="sheet">
-        <div className="wrap wrap-narrow sheet-inner">
+        <div className={`wrap sheet-inner${headings.length > 1 ? " article-layout" : ""}`}>
           {headings.length > 1 ? (
             <nav className="toc" aria-label="On this page">
               <p className="kicker">On this page</p>
@@ -56,43 +57,45 @@ export function ArticleView({ article }: { article: Article }) {
               </ol>
             </nav>
           ) : null}
-          <div className="article-body prose">
-            {article.blocks.map((block, blockIndex) => {
-              if (block.type === "h2") return <h2 id={slugify(block.text)} key={block.text}>{block.text}</h2>;
-              if (block.type === "ul") {
-                return (
-                  <ul key={blockIndex}>
-                    {block.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                );
-              }
-              return <p key={block.text}>{block.text}</p>;
-            })}
-          </div>
-          {article.services && article.services.length > 0 ? (
+          <div>
+            <div className="article-body prose">
+              {article.blocks.map((block, blockIndex) => {
+                if (block.type === "h2") return <h2 id={slugify(block.text)} key={block.text}>{block.text}</h2>;
+                if (block.type === "ul") {
+                  return (
+                    <ul key={blockIndex}>
+                      {block.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  );
+                }
+                return <p key={block.text}>{block.text}</p>;
+              })}
+            </div>
+            {article.services && article.services.length > 0 ? (
+              <section className="block">
+                <h2>Related services</h2>
+                <ul className="related-list">
+                  {article.services.map((link) => (
+                    <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
             <section className="block">
-              <h2>Related services</h2>
+              <h2>Related</h2>
               <ul className="related-list">
-                {article.services.map((link) => (
-                  <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+                {related.map((item) => (
+                  <li key={item.slug}><Link href={`/insights/${item.slug}`}>{item.title}</Link></li>
                 ))}
               </ul>
             </section>
-          ) : null}
-          <section className="block">
-            <h2>Related</h2>
-            <ul className="related-list">
-              {related.map((item) => (
-                <li key={item.slug}><Link href={`/insights/${item.slug}`}>{item.title}</Link></li>
-              ))}
-            </ul>
-          </section>
-          <nav className="article-pager" aria-label="More articles">
-            {previous ? <Link href={`/insights/${previous.slug}`}>Previous: {previous.title}</Link> : <span />}
-            {next ? <Link href={`/insights/${next.slug}`}>Next: {next.title}</Link> : <span />}
-          </nav>
+            <nav className="article-pager" aria-label="More articles">
+              {previous ? <Link href={`/insights/${previous.slug}`}>Previous: {previous.title}</Link> : <span />}
+              {next ? <Link href={`/insights/${next.slug}`}>Next: {next.title}</Link> : <span />}
+            </nav>
+          </div>
         </div>
       </article>
       <CtaBand title="Bring a similar problem" body="If this describes a system you need built, start with the constraint and the first workflow." />

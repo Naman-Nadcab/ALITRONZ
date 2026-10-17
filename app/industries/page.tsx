@@ -21,16 +21,17 @@ export default function IndustriesPage() {
           </p>
         </div>
       </header>
-      <section className="section section-follow">
-        <div className="wrap industry-grid">
-          {industries.map((industry) => (
-            <article key={industry.slug}>
-              <a className="card-link" href={industry.path}>
+      <section className="section section-paper section-follow">
+        <div className="wrap">
+          <div className="industry-index">
+            {industries.map((industry, index) => (
+              <a key={industry.slug} href={industry.path}>
+                <p className="kicker">{String(index + 1).padStart(2, "0")}</p>
                 <h2>{industry.title}</h2>
-                <p className="muted gap-top">{industry.summary}</p>
+                <p>{industry.summary}</p>
               </a>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
       <CtaBand label="Discuss a Project" />

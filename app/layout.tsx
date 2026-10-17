@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Manrope, Syne } from "next/font/google";
+import { Instrument_Serif, Manrope, Syne } from "next/font/google";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -23,6 +23,13 @@ const display = Syne({
   display: "swap",
 });
 
+const editorial = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-serif",
+  display: "swap",
+});
+
 const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
@@ -42,7 +49,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export const viewport: Viewport = { themeColor: "#090c12" };
+export const viewport: Viewport = { themeColor: "#F3F1EC" };
 
 function warnIfSiteUrlMissing() {
   const flag = globalThis as typeof globalThis & { __alitrozSiteUrlWarned?: boolean };
@@ -65,7 +72,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   if (identity.address) organization.address = identity.address;
 
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable}`}>
+    <html lang="en" className={`${sans.variable} ${display.variable} ${editorial.variable}`}>
       <body>
         <JsonLd
           data={{

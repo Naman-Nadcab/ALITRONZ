@@ -1,21 +1,23 @@
 export function CoreFallback() {
   return (
-    <div className="core-fallback">
+    <div className="core-fallback" role="img" aria-label="The Alitroz Core, a faceted glass sculpture with a luminous center and orbital rings.">
       <svg viewBox="0 0 640 720" fill="none" aria-hidden="true">
-        <g className="orbit" stroke="#aeb8c8" strokeWidth="1">
-          <ellipse cx="320" cy="340" rx="210" ry="78" transform="rotate(-18 320 340)" opacity="0.7" />
-          <ellipse cx="320" cy="340" rx="168" ry="210" transform="rotate(24 320 340)" opacity="0.45" />
+        <ellipse cx="320" cy="560" rx="150" ry="28" fill="#171925" opacity="0.08" />
+        <g stroke="#c5ceda" strokeWidth="1.2">
+          <ellipse cx="320" cy="340" rx="230" ry="78" transform="rotate(-18 320 340)" opacity="0.75" />
+          <ellipse cx="320" cy="340" rx="168" ry="220" transform="rotate(28 320 340)" opacity="0.4" />
+          <ellipse cx="320" cy="340" rx="190" ry="60" transform="rotate(70 320 340)" stroke="#8173fa" opacity="0.8" />
         </g>
-        <path d="M320 150 470 236 470 408 320 494 170 408 170 236Z" stroke="#d5dde8" strokeWidth="1.4" />
-        <path d="M250 250 390 300 360 470 214 390Z" stroke="#73e5f7" strokeWidth="1.2" opacity="0.9" />
-        <path d="M300 230 430 360 300 500 188 360Z" stroke="#8e98a8" strokeWidth="1" />
-        <circle cx="320" cy="348" r="28" fill="#73e5f7" />
-        <circle cx="320" cy="348" r="70" stroke="#73e5f7" strokeWidth="1" opacity="0.7" />
-        <circle cx="512" cy="286" r="4" fill="#f4f6fa" />
-        <circle cx="146" cy="390" r="3.5" fill="#8173fa" />
-        <circle cx="400" cy="150" r="3" fill="#f4f6fa" />
-        <circle cx="250" cy="540" r="3" fill="#73e5f7" />
-        <path d="M320 348 512 286M320 348 146 390M320 348 250 540" stroke="#73e5f7" strokeWidth="1" opacity="0.55" />
+        <path d="M320 150 478 232 470 420 320 510 168 414 176 228Z" stroke="#d7e2ee" strokeWidth="1.4" fill="#d7e2ee" fillOpacity="0.05" />
+        <path d="M250 230 400 286 372 470 214 392Z" stroke="#73e5f7" strokeWidth="1.3" />
+        <path d="M300 210 438 360 300 500 188 348Z" stroke="#9aa6b8" strokeWidth="1" />
+        <path d="M320 250 390 300 360 400 280 360Z" fill="#e7eef6" stroke="#9aa6b8" />
+        <circle cx="320" cy="348" r="22" fill="#73e5f7" />
+        <circle cx="320" cy="348" r="64" stroke="#73e5f7" strokeWidth="1" opacity="0.65" />
+        <rect x="486" y="250" width="46" height="16" fill="#e7eef6" transform="rotate(18 486 250)" />
+        <rect x="132" y="360" width="16" height="42" fill="#d5deea" />
+        <rect x="360" y="132" width="34" height="12" fill="#c9bfff" />
+        <path d="M320 348 500 262M320 348 148 390M320 348 380 150" stroke="#73e5f7" strokeWidth="1" opacity="0.45" />
       </svg>
     </div>
   );

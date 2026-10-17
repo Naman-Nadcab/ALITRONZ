@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { FamilyVisual, familyFromCategory } from "@/components/visuals/family-visual";
 import type { Project } from "@/content/projects";
 
 export function WorkBrowser({ projects }: { projects: Project[] }) {
@@ -26,15 +27,18 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
         ))}
       </div>
       {visible.length === 0 ? <p>No concept work in this category yet.</p> : null}
-      <div className="work-grid">
-        {visible.map((project) => (
-          <article key={project.slug}>
-            <Link className="card-link" href={`/work/${project.slug}`}>
+      <div className="showcase-list">
+        {visible.map((project, index) => (
+          <article key={project.slug} className={index === 0 ? "showcase-feature" : "showcase-card"}>
+            <FamilyVisual family={familyFromCategory(project.category)} compact />
+            <div>
               <p className="kicker">{project.kindLabel} · {project.category}</p>
               <h2 className="gap-top">{project.title}</h2>
               <p className="muted gap-top">{project.summary}</p>
-              <p className="gap-top-lg">View the concept</p>
-            </Link>
+              <p className="gap-top-lg">
+                <Link className="text-link" href={`/work/${project.slug}`}>View the concept</Link>
+              </p>
+            </div>
           </article>
         ))}
       </div>

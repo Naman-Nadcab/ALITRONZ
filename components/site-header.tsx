@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/logo";
-import { capabilityLinks, companyLinks, primaryNav, serviceGroups, solutionLinks } from "@/content/navigation";
+import { capabilityLinks, companyLinks, primaryNav, serviceGroups } from "@/content/navigation";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -83,18 +83,20 @@ export function SiteHeader() {
                     className="menu-button"
                     aria-expanded={menu === "services"}
                     aria-controls="services-menu"
+                    aria-current={pathname.startsWith("/services") || pathname.startsWith("/capabilities") ? "page" : undefined}
                     onClick={() => setMenu(menu === "services" ? null : "services")}
                   >
-                    Services
+                    {item.label}
                   </button>
                   {menu === "services" ? (
-                    <div id="services-menu" className="mega mega-wide" role="region" aria-label="Services">
+                    <div id="services-menu" className="mega mega-wide" role="region" aria-label="What we do">
                       {serviceGroups.map((group) => (
                         <div key={group.href}>
-                          <p className="mega-label"><Link href={group.href}>{group.title}</Link></p>
-                          {group.links.map((link) => (
-                            <Link key={link.href} href={link.href}>{link.label}</Link>
-                          ))}
+                          <p className="mega-label">Division</p>
+                          <Link href={group.href}>
+                            <strong>{group.title}</strong>
+                            <span>{group.result}</span>
+                          </Link>
                         </div>
                       ))}
                       <div className="mega-span">
@@ -102,9 +104,6 @@ export function SiteHeader() {
                         <Link href="/services">All services</Link>
                         <Link href="/solutions">Solutions</Link>
                         {capabilityLinks.map((link) => (
-                          <Link key={link.href} href={link.href}>{link.label}</Link>
-                        ))}
-                        {solutionLinks.map((link) => (
                           <Link key={link.href} href={link.href}>{link.label}</Link>
                         ))}
                       </div>
@@ -120,9 +119,10 @@ export function SiteHeader() {
                     className="menu-button"
                     aria-expanded={menu === "company"}
                     aria-controls="company-menu"
+                    aria-current={pathname.startsWith("/company") || pathname === "/contact" ? "page" : undefined}
                     onClick={() => setMenu(menu === "company" ? null : "company")}
                   >
-                    Company
+                    {item.label}
                   </button>
                   {menu === "company" ? (
                     <div id="company-menu" className="company-menu" role="region" aria-label="Company">
@@ -137,8 +137,9 @@ export function SiteHeader() {
                 </div>
               );
             }
+            const active = item.href === "/" ? pathname === "/" : pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
-              <Link key={item.href} className="nav-link" href={item.href} aria-current={pathname === item.href ? "page" : undefined}>
+              <Link key={item.href} className="nav-link" href={item.href} aria-current={active ? "page" : undefined}>
                 {item.label}
               </Link>
             );
@@ -168,7 +169,7 @@ export function SiteHeader() {
         <div id="mobile-nav" ref={drawerRef} className="nav-drawer">
           <Link href="/" aria-current={pathname === "/" ? "page" : undefined}>Home</Link>
           <button className="drawer-sub" aria-expanded={drawerSection === "services"} onClick={() => setDrawerSection(drawerSection === "services" ? null : "services")}>
-            Services
+            What We Do
           </button>
           {drawerSection === "services" ? (
             <div className="drawer-group">
@@ -191,7 +192,7 @@ export function SiteHeader() {
           <Link href="/work" aria-current={pathname === "/work" ? "page" : undefined}>Our Work</Link>
           <Link href="/insights" aria-current={pathname === "/insights" ? "page" : undefined}>Insights</Link>
           <button className="drawer-sub" aria-expanded={drawerSection === "company"} onClick={() => setDrawerSection(drawerSection === "company" ? null : "company")}>
-            Company
+            About
           </button>
           {drawerSection === "company" ? (
             <div className="drawer-group">

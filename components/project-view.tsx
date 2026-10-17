@@ -1,42 +1,34 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
-import { DivisionFigure } from "@/components/diagrams";
+import { FamilyVisual, WorkflowSpine, familyFromCategory } from "@/components/visuals/family-visual";
 import { projectDisclaimer, type Project } from "@/content/projects";
 
-const figureFor: Record<string, string> = {
-  "AI and Automation": "ai",
-  "Custom Software": "product",
-  "Web and Mobile Applications": "product",
-  "Web3 and Blockchain": "web3",
-  "Financial and Trading Technology": "finance",
-  "Cloud and Data Engineering": "cloud",
-};
-
 export function ProjectView({ project }: { project: Project }) {
+  const family = familyFromCategory(project.category);
   return (
     <>
       <header className="page-hero">
-        <div className="wrap">
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Our work", href: "/work" }, { label: project.title }]} />
-          <p className="kind-banner">{projectDisclaimer}</p>
-          <h1 className="gap-top">{project.title}</h1>
-          <p className="lede">{project.summary}</p>
-          <ul className="fact-list">
-            <li>{project.kindLabel}</li>
-            <li>{project.category}</li>
-            <li>{project.industry}</li>
-            {project.services.map((service) => (
-              <li key={service}>{service}</li>
-            ))}
-          </ul>
+        <div className="wrap page-hero-split">
+          <div>
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Our work", href: "/work" }, { label: project.title }]} />
+            <p className="kind-banner">{projectDisclaimer}</p>
+            <h1 className="gap-top">{project.title}</h1>
+            <p className="lede">{project.summary}</p>
+            <ul className="fact-list">
+              <li>{project.kindLabel}</li>
+              <li>{project.category}</li>
+              <li>{project.industry}</li>
+              {project.services.map((service) => (
+                <li key={service}>{service}</li>
+              ))}
+            </ul>
+          </div>
+          <FamilyVisual family={family} />
         </div>
       </header>
       <div className="sheet">
         <div className="wrap sheet-inner">
-          <div className="figure-frame">
-            <DivisionFigure slug={project.slug} figure={figureFor[project.category] ?? "product"} />
-          </div>
           {[
             ["Context and challenge", project.context],
             ["Constraints and requirements", project.constraints],
@@ -62,11 +54,7 @@ export function ProjectView({ project }: { project: Project }) {
           {project.workflows ? (
             <section className="block">
               <h2>Main workflows</h2>
-              <ul className="plain-list">
-                {project.workflows.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+              <WorkflowSpine steps={project.workflows} />
             </section>
           ) : null}
           {project.security ? (
