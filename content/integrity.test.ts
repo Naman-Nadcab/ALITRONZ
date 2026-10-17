@@ -28,6 +28,7 @@ describe("public content", () => {
     const strings: string[] = [];
     collect({ offerings, industries, projects, articles, primaryNav, serviceLinks, capabilityLinks, industryLinks, companyLinks, searchTopics }, strings, hrefs);
     for (const href of hrefs) expect(routeSet.has(href), href).toBe(true);
+    expect(new Set(routes).size).toBe(routes.length);
   });
 
   it("does not invent credibility", () => {

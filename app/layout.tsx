@@ -53,9 +53,10 @@ export const viewport: Viewport = { themeColor: "#F3F1EC" };
 
 function warnIfSiteUrlMissing() {
   const flag = globalThis as typeof globalThis & { __alitrozSiteUrlWarned?: boolean };
-  if (flag.__alitrozSiteUrlWarned || process.env.NODE_ENV !== "production" || hasConfiguredSiteUrl()) return;
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw || flag.__alitrozSiteUrlWarned || hasConfiguredSiteUrl()) return;
   flag.__alitrozSiteUrlWarned = true;
-  console.warn("NEXT_PUBLIC_SITE_URL is unset. Canonical, Open Graph, and sitemap URLs will use http://localhost:3000 until it is set.");
+  console.warn("NEXT_PUBLIC_SITE_URL is invalid. Canonical URLs will use https://alitronz.com.");
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

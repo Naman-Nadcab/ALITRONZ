@@ -1,7 +1,7 @@
-const FALLBACK_ORIGIN = "http://localhost:3000";
+const PRODUCTION_ORIGIN = "https://alitronz.com";
 
 export function hasConfiguredSiteUrl() {
-  return Boolean(process.env.NEXT_PUBLIC_SITE_URL?.trim());
+  return getSiteUrl().protocol === "https:";
 }
 
 export function getSiteUrl() {
@@ -9,14 +9,14 @@ export function getSiteUrl() {
   if (raw) {
     try {
       const url = new URL(raw);
-      if (url.protocol === "http:" || url.protocol === "https:") {
+      if ((url.protocol === "http:" || url.protocol === "https:") && url.hostname) {
         return url;
       }
     } catch {
-      // Fall through to the local origin so builds still have absolute URLs.
+      // An invalid override falls through to the confirmed production origin.
     }
   }
-  return new URL(FALLBACK_ORIGIN);
+  return new URL(PRODUCTION_ORIGIN);
 }
 
 export function absoluteUrl(path: string) {

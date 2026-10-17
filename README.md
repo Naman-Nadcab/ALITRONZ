@@ -49,7 +49,7 @@ Leave them blank rather than inventing them. Rebuild after changing any `NEXT_PU
 
 ## Site URL
 
-Set `NEXT_PUBLIC_SITE_URL` to the production origin, with no trailing slash, before launch. Canonical URLs, Open Graph URLs, structured data, `robots.txt`, and `sitemap.xml` use it. Without it, those absolute URLs fall back to `http://localhost:3000` and the production build logs a warning. `robots.txt` omits the sitemap link until the variable is set.
+Canonical URLs, Open Graph URLs, structured data, `robots.txt`, and `sitemap.xml` use `https://alitronz.com` unless `NEXT_PUBLIC_SITE_URL` overrides that origin. The override must be an absolute `http` or `https` URL with no trailing slash. DNS, certificates, and Search Console are not configured by this repository.
 
 ## Legal review still required
 
