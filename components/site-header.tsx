@@ -182,6 +182,7 @@ export function SiteHeader() {
       {drawer ? (
         <div id="mobile-nav" ref={drawerRef} className="nav-drawer">
           <Link href="/" aria-current={pathname === "/" ? "page" : undefined}>Home</Link>
+          <Link href="/#atlas">Explore</Link>
           <button className="drawer-sub" aria-expanded={drawerSection === "services"} onClick={() => setDrawerSection(drawerSection === "services" ? null : "services")}>
             What We Do
           </button>

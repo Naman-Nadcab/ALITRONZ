@@ -103,22 +103,22 @@ function Sculpture({
   return (
     <group ref={root}>
       <ShadowDisc />
-      <group ref={spin} scale={0.92} position={[0.15, 0.05, 0]}>
+      <group ref={spin} scale={0.86} position={[0, 0, 0]}>
         <mesh>
           <icosahedronGeometry args={[1.22, 1]} />
           <meshPhysicalMaterial
-            color="#f7fbff"
+            color="#d9d2ff"
             metalness={0.02}
             roughness={0.12}
-            transmission={0.72}
-            thickness={1.1}
+            transmission={0.42}
+            thickness={0.8}
             ior={1.45}
-            iridescence={0.85}
-            iridescenceIOR={1.35}
-            iridescenceThicknessRange={[140, 420]}
+            iridescence={1}
+            iridescenceIOR={1.4}
+            iridescenceThicknessRange={[180, 520]}
             clearcoat={1}
-            clearcoatRoughness={0.04}
-            envMapIntensity={1.35}
+            clearcoatRoughness={0.08}
+            envMapIntensity={0.7}
           />
         </mesh>
         <mesh>
@@ -131,7 +131,7 @@ function Sculpture({
         </mesh>
         <mesh ref={core}>
           <icosahedronGeometry args={[0.28, 1]} />
-          <meshStandardMaterial color="#73ddeb" emissive="#73ddeb" emissiveIntensity={0.85} />
+          <meshStandardMaterial color="#73dfd0" emissive="#73dfd0" emissiveIntensity={0.7} />
         </mesh>
         <group ref={rings}>
           <mesh rotation={[Math.PI / 2.2, 0.35, 0.15]}>
@@ -188,22 +188,23 @@ export default function CoreCanvas({ active }: { active: boolean }) {
 
   return (
     <Canvas
-      camera={{ position: [0.2, 0.12, 5.8], fov: 32 }}
+      camera={{ position: [0, 0.2, 8.1], fov: 30 }}
       dpr={[1, 1.5]}
       frameloop={active && pageVisible ? "always" : "demand"}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
-        gl.setClearColor(0x000000, 0);
+        gl.setClearColor(0x34324c, 1);
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.02;
+        gl.toneMappingExposure = 1.05;
       }}
     >
       <Staging />
-      <ambientLight intensity={0.85} color="#f4f1ec" />
-      <directionalLight position={[4.2, 6, 5]} intensity={2.1} color="#fffaf4" />
-      <directionalLight position={[-5, 2, 3]} intensity={1.15} color="#73ddeb" />
-      <directionalLight position={[1, -2, -4]} intensity={0.7} color="#8173fa" />
-      <pointLight position={[0, 0.2, 0.4]} intensity={2.2} distance={5} decay={2} color="#dff5fc" />
+      <ambientLight intensity={0.35} color="#c6bcff" />
+      <directionalLight position={[4.2, 6, 5]} intensity={1.35} color="#f4f0ff" />
+      <directionalLight position={[-5, 2, 3]} intensity={1.25} color="#73dfd0" />
+      <directionalLight position={[1, -2, -4]} intensity={0.85} color="#a99aff" />
+      <pointLight position={[2.2, 0.4, 1.2]} intensity={1.4} distance={6} decay={2} color="#ff987e" />
+      <pointLight position={[0, 0.2, 0.4]} intensity={1.6} distance={5} decay={2} color="#c6bcff" />
       <Sculpture pointer={pointer} scroll={scroll} />
     </Canvas>
   );

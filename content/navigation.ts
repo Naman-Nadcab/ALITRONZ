@@ -57,6 +57,7 @@ export const companyLinks: NavLink[] = [
 ];
 
 export const primaryNav = [
+  { label: "Explore", href: "/#atlas" },
   { label: "What We Do", href: "/services", menu: "services" as const },
   { label: "Solutions", href: "/solutions" },
   { label: "Industries", href: "/industries" },
