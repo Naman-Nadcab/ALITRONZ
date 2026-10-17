@@ -2,10 +2,12 @@ import Link from "next/link";
 import { AlitrozCore } from "@/components/three/alitroz-core";
 import { CtaBand } from "@/components/cta-band";
 import { FamilyVisual, familyOf } from "@/components/visuals/family-visual";
-import { hero, homepageJourney } from "@/content/home";
+import { CapabilityExplorer } from "@/components/capability-explorer";
+import { ProcessStory } from "@/components/process-story";
+import { buildPaths, hero, homepageJourney } from "@/content/home";
 import { industries } from "@/content/industries";
 import { articles } from "@/content/insights";
-import { capabilities, divisions, engagements } from "@/content/offerings";
+import { capabilities, divisions, engagements, solutions } from "@/content/offerings";
 import { projects } from "@/content/projects";
 
 const capabilityFamily: Record<string, string> = {
@@ -93,6 +95,17 @@ export function HomePage() {
         </div>
       </section>
 
+      <section className="section section-ice" id="build">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow">Digital Systems Lab</p>
+            <h2>What are you looking to build?</h2>
+            <p>Choose an objective. The links below are the existing service, concept, and enquiry pages. Nothing here calls an external model.</p>
+          </div>
+          <CapabilityExplorer paths={buildPaths} />
+        </div>
+      </section>
+
       <section className="section" id="services">
         <div className="wrap">
           <div className="section-head">
@@ -149,18 +162,7 @@ export function HomePage() {
             <p className="eyebrow">Approach</p>
             <h2>From ambitious ideas to dependable products.</h2>
           </div>
-          <div className="process-rail">
-            {homepageJourney.map((stage, index) => (
-              <article key={stage.title}>
-                <p className="kicker">{String(index + 1).padStart(2, "0")}</p>
-                <h3>{stage.title}</h3>
-                <p className="gap-top">{stage.text}</p>
-              </article>
-            ))}
-          </div>
-          <p className="gap-top-lg">
-            <Link className="text-link" href="/company/our-approach">Read the engineering approach</Link>
-          </p>
+          <ProcessStory stages={homepageJourney} />
         </div>
       </section>
 
@@ -183,6 +185,27 @@ export function HomePage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section section-paper" id="solutions">
+        <div className="wrap solution-index">
+          <div>
+            <p className="eyebrow">Solutions</p>
+            <h2>Several services, one operating problem.</h2>
+            <p>These pages describe how the work fits together. They are not a second copy of the service list.</p>
+          </div>
+          <ol>
+            {solutions.map((solution, index) => (
+              <li key={solution.slug}>
+                <Link href={solution.path}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <strong>{solution.title}</strong>
+                  <em>{solution.summary}</em>
+                </Link>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
