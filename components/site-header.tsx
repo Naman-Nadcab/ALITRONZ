@@ -24,6 +24,15 @@ export function SiteHeader() {
   }
 
   useEffect(() => {
+    if (!menu) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenu(null);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [menu]);
+
+  useEffect(() => {
     if (!drawer) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -90,9 +99,14 @@ export function SiteHeader() {
                   </button>
                   {menu === "services" ? (
                     <div id="services-menu" className="mega mega-wide" role="region" aria-label="What we do">
-                      {serviceGroups.map((group) => (
+                      <div className="mega-intro">
+                        <p className="mega-label">What we do</p>
+                        <strong>Four engineering divisions</strong>
+                        <span>Specialist work in AI, product engineering, blockchain, and financial technology, with cloud, data, and security underneath.</span>
+                      </div>
+                      {serviceGroups.map((group, index) => (
                         <div key={group.href}>
-                          <p className="mega-label">Division</p>
+                          <p className="mega-label"><span className={`mega-mark mark-${index + 1}`} aria-hidden="true" />Division</p>
                           <Link href={group.href}>
                             <strong>{group.title}</strong>
                             <span>{group.result}</span>
@@ -101,7 +115,7 @@ export function SiteHeader() {
                       ))}
                       <div className="mega-span">
                         <p className="mega-label">Also</p>
-                        <Link href="/services">All services</Link>
+                        <Link href="/services">View all services</Link>
                         <Link href="/solutions">Solutions</Link>
                         {capabilityLinks.map((link) => (
                           <Link key={link.href} href={link.href}>{link.label}</Link>

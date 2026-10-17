@@ -11,6 +11,7 @@ export function CtaBand({
 }) {
   return (
     <section className="cta-band">
+      <div className="cta-orb" aria-hidden="true" />
       <div className="wrap cta-band-inner">
         <div>
           <h2>{title}</h2>

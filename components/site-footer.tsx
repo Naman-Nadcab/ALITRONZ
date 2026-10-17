@@ -37,6 +37,7 @@ export function SiteFooter() {
             {industryLinks.map((link) => (
               <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
             ))}
+            <li><Link href="/solutions">Solutions</Link></li>
             <li><Link href="/work">Our work</Link></li>
             <li><Link href="/insights">Insights</Link></li>
           </ul>

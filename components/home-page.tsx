@@ -4,6 +4,7 @@ import { CtaBand } from "@/components/cta-band";
 import { FamilyVisual, familyOf } from "@/components/visuals/family-visual";
 import { hero, homepageJourney } from "@/content/home";
 import { industries } from "@/content/industries";
+import { articles } from "@/content/insights";
 import { capabilities, divisions, engagements } from "@/content/offerings";
 import { projects } from "@/content/projects";
 
@@ -22,11 +23,34 @@ const featuredWork = [
 
 const featuredIndustries = ["fintech", "digital-assets-web3", "saas", "enterprise"];
 
+const divisionCta: Record<string, string> = {
+  "ai-automation": "Explore AI Solutions",
+  "digital-product-engineering": "Explore Product Engineering",
+  "web3-blockchain": "Explore Web3 Engineering",
+  "financial-trading-technology": "Explore Trading Technology",
+};
+
+const featuredInsights = [
+  "scope-an-enterprise-assistant",
+  "tenancy-is-the-saas-product",
+  "mt-integration-is-not-a-brokerage",
+];
+
+function formatDate(iso: string) {
+  const [year, month, day] = iso.split("-").map(Number);
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  if (!year || !month || !day || !months[month - 1]) return iso;
+  return `${day} ${months[month - 1]} ${year}`;
+}
+
 export function HomePage() {
   const work = featuredWork
     .map((slug) => projects.find((project) => project.slug === slug))
     .filter((project) => project !== undefined);
   const sectorPreview = industries.filter((industry) => featuredIndustries.includes(industry.slug));
+  const insightPreview = featuredInsights
+    .map((slug) => articles.find((article) => article.slug === slug))
+    .filter((article) => article !== undefined);
 
   return (
     <>
@@ -83,7 +107,7 @@ export function HomePage() {
                   <h3>{division.title}</h3>
                   <p className="gap-top">{division.result}</p>
                   <p className="gap-top-lg">
-                    <Link className="text-link" href={division.path}>Explore {division.title}</Link>
+                    <Link className="text-link" href={division.path}>{divisionCta[division.slug] ?? `Explore ${division.title}`}</Link>
                   </p>
                 </div>
                 <FamilyVisual family={familyOf(division.slug)} />
@@ -107,7 +131,8 @@ export function HomePage() {
                 <div>
                   <p className="kicker">{project.kindLabel}</p>
                   <h3 className="gap-top">{project.title}</h3>
-                  <p className="gap-top">{project.summary}</p>
+                  <p className="gap-top"><strong>Problem. </strong>{project.context}</p>
+                  <p className="gap-top"><strong>Approach. </strong>{project.approach}</p>
                   <p className="gap-top-lg">
                     <Link className="text-link" href={`/work/${project.slug}`}>View the concept</Link>
                   </p>
@@ -133,6 +158,9 @@ export function HomePage() {
               </article>
             ))}
           </div>
+          <p className="gap-top-lg">
+            <Link className="text-link" href="/company/our-approach">Read the engineering approach</Link>
+          </p>
         </div>
       </section>
 
@@ -193,6 +221,35 @@ export function HomePage() {
               </Link>
             ))}
           </div>
+          <p className="gap-top-lg">
+            <Link className="text-link" href="/engagement-models">All engagement models</Link>
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow">Insights</p>
+            <h2>Notes from the engineering work.</h2>
+            <p>Short technical writing on the problems these services actually run into.</p>
+          </div>
+          <div className="insight-preview">
+            {insightPreview.map((article) => (
+              <article key={article.slug}>
+                <p className="kicker">{article.category}</p>
+                <h3 className="gap-top">{article.title}</h3>
+                <p className="gap-top">{article.excerpt}</p>
+                <p className="muted gap-top">
+                  <time dateTime={article.date}>{formatDate(article.date)}</time>
+                </p>
+                <p className="gap-top-lg">
+                  <Link className="text-link" href={`/insights/${article.slug}`}>Read article</Link>
+                </p>
+              </article>
+            ))}
+          </div>
+          <p className="gap-top-lg"><Link className="text-link" href="/insights">All insights</Link></p>
         </div>
       </section>
 
