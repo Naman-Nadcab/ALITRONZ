@@ -6,7 +6,7 @@ import { FamilyVisual, WorkflowSpine } from "@/components/visuals/family-visual"
 import type { Industry } from "@/content/industries";
 import { absoluteUrl } from "@/lib/site-url";
 
-const industryFamily: Record<string, string> = {
+export const industryFamily: Record<string, string> = {
   fintech: "finance",
   "digital-assets-web3": "web3",
   saas: "product",
@@ -36,7 +36,7 @@ export function IndustryView({ industry }: { industry: Industry }) {
           <div>
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Industries", href: "/industries" }, { label: industry.title }]} />
             <p className="eyebrow">{industry.eyebrow}</p>
-            <h1>{industry.headline}</h1>
+            <h1 className={industry.headline.length > 64 ? "is-long" : undefined}>{industry.headline}</h1>
             <p className="lede">{industry.summary}</p>
           </div>
           <FamilyVisual family={family} variant={industry.slug} />

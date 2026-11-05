@@ -78,21 +78,21 @@ export const qualityPage = {
 
 export const careersPage = {
   title: "Careers",
-  headline: "No open roles are listed, because none are verified here.",
+  headline: "We are not advertising open roles right now.",
   summary:
-    "Alitroz does not publish invented jobs, locations, or a headcount. If you want to talk about engineering work, use the contact path and say what you do.",
+    "When a role opens it will be described here with the work, the constraints, and a way to apply. Until then, engineers who want to talk about the work are welcome to write to us.",
   sections: [
     {
-      title: "What this page will not do",
+      title: "How we hire",
       paragraphs: [
-        "There is no application form pretending a vacancy exists. There is no list of benefits, offices, or team photos. Those would be fiction until they are real and checked.",
-        "A future role, if one is opened, will be described with the work, the constraints, and a way to apply that a person can complete. Until then, this page stays short on purpose.",
+        "Roles are published only when they are real: the work, the constraints, the location or remote arrangement, and a way to apply that a person can complete.",
+        "We describe the problems a role will work on rather than a list of perks, so you can judge whether the work is for you before you write.",
       ],
     },
     {
       title: "How to reach us",
       paragraphs: [
-        "Write through the contact page or the project enquiry if you are a client. If you are an engineer asking whether there is work, say so plainly in the message. We will reply if there is a conversation to have. A reply is not an offer.",
+        "Clients should use the project enquiry. Engineers asking about future work can write through the contact page; say what you build and what you are looking for, and we will reply if there is a conversation to have.",
       ],
     },
   ],

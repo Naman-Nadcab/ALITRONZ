@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
 import { engagements } from "@/content/offerings";
+import { EngagementVisual } from "@/components/visuals/engagement-visual";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -25,10 +26,26 @@ export default function EngagementPage() {
       <section className="section section-paper section-follow">
         <div className="wrap engage-list">
           {engagements.map((item, index) => (
-            <Link className="engage-row" key={item.slug} href={item.path}>
+            <Link className="engage-row engage-row-rich" key={item.slug} href={item.path}>
               <p className="kicker">{String(index + 1).padStart(2, "0")}</p>
               <strong>{item.title}</strong>
               <p>{item.summary}</p>
+              <dl className="engage-row-facts">
+                <div>
+                  <dt>You receive</dt>
+                  <dd>{item.result}</dd>
+                </div>
+                <div>
+                  <dt>Best when</dt>
+                  <dd>{item.useCases?.[0]?.text ?? item.headline}</dd>
+                </div>
+                <div>
+                  <dt>Boundary</dt>
+                  <dd>{item.outcomes[item.outcomes.length - 1]}</dd>
+                </div>
+              </dl>
+              <EngagementVisual slug={item.slug} compact />
+              <span className="engage-row-cta">Read the model <span aria-hidden="true">→</span></span>
             </Link>
           ))}
         </div>

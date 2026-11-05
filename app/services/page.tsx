@@ -37,12 +37,12 @@ export default function ServicesPage() {
                   ))}
                 </ul>
               </div>
-              <FamilyVisual family={familyOf(group.href.split("/").pop() ?? "")} variant={group.href} compact />
+              <FamilyVisual family={familyOf(group.href.split("/").pop() ?? "")} variant={group.href.split("/").pop() ?? ""} />
             </article>
           ))}
         </div>
       </section>
-      <section className="section section-lavender">
+      <section className="section section-lavender" id="capabilities">
         <div className="wrap">
           <div className="section-head">
             <h2>Capabilities</h2>

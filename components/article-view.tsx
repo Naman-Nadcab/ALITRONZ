@@ -40,7 +40,7 @@ export function ArticleView({ article }: { article: Article }) {
           <div>
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: article.title }]} />
             <p className="eyebrow">{article.category}</p>
-            <h1>{article.title}</h1>
+            <h1 className={article.title.length > 48 ? "is-long" : undefined}>{article.title}</h1>
             <p className="lede">{article.excerpt}</p>
             <p className="meta-row">
               <span>{formatDate(article.date)}</span>
@@ -90,8 +90,8 @@ export function ArticleView({ article }: { article: Article }) {
                 </ul>
               </section>
             ) : null}
-            <section className="block">
-              <h2>Related</h2>
+            <section className="block article-related">
+              <h2>Related articles</h2>
               <ul className="related-list">
                 {related.map((item) => (
                   <li key={item.slug}><Link href={`/insights/${item.slug}`}>{item.title}</Link></li>

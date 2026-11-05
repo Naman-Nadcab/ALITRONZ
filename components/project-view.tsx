@@ -32,11 +32,8 @@ export function ProjectView({ project }: { project: Project }) {
             <h1 className="gap-top">{project.title}</h1>
             <p className="lede">{project.summary}</p>
             <ul className="fact-list">
-              <li>{project.kindLabel}</li>
-              <li>{project.category}</li>
-              <li>{project.industry}</li>
-              {project.services.map((service) => (
-                <li key={service}>{service}</li>
+              {dedupeTags([project.kindLabel, project.category, project.industry, ...project.services]).map((tag) => (
+                <li key={tag}>{tag}</li>
               ))}
             </ul>
           </div>
@@ -103,4 +100,14 @@ export function ProjectView({ project }: { project: Project }) {
       <CtaBand title="Start a similar project" body="Tell us the constraint and the first workflow. This showcase is a concept, not a template we copy into production." />
     </div>
   );
+}
+
+function dedupeTags(tags: string[]) {
+  const seen = new Set<string>();
+  return tags.filter((tag) => {
+    const key = tag.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, " ").trim();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }

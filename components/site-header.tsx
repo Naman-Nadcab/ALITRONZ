@@ -173,7 +173,7 @@ export function SiteHeader({ searchItems }: { searchItems: SearchItem[] }) {
           })}
         </nav>
         <SiteSearch items={searchItems} />
-        <Link className="btn btn-primary header-cta" href="/start-a-project">
+        <Link className="btn btn-primary header-cta" href="/start-a-project" aria-current={pathname === "/start-a-project" ? "page" : undefined}>
           Start a Project
         </Link>
         <button

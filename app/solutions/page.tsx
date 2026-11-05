@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
-import { FamilyVisual, SystemFlow, familyOf } from "@/components/visuals/family-visual";
+import { FamilyVisual, familyOf } from "@/components/visuals/family-visual";
 import { solutions } from "@/content/offerings";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -31,14 +31,17 @@ export default function SolutionsPage() {
                 <p className="kicker">{String(index + 1).padStart(2, "0")}</p>
                 <h2 className="gap-top">{solution.title}</h2>
                 <p className="gap-top">{solution.summary}</p>
-                <div className="gap-top-lg">
-                  <SystemFlow family={familyOf(solution.slug, solution.figure)} />
-                </div>
+                <p className="gap-top muted">{solution.result}</p>
+                <ul className="service-directory gap-top-lg">
+                  {solution.related.slice(0, 4).map((link) => (
+                    <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+                  ))}
+                </ul>
                 <p className="gap-top-lg">
                   <Link className="text-link" href={solution.path}>View the solution</Link>
                 </p>
               </div>
-              <FamilyVisual family={familyOf(solution.slug, solution.figure)} variant={solution.slug} compact />
+              <FamilyVisual family={familyOf(solution.slug, solution.figure)} variant={solution.slug} />
             </article>
           ))}
         </div>

@@ -1,8 +1,14 @@
-import { familyFromCategory } from "@/components/visuals/family-visual";
+import { FamilyVisual, familyFromCategory } from "@/components/visuals/family-visual";
 
-function hash(value: string) {
-  return [...value].reduce((total, character) => (total * 31 + character.charCodeAt(0)) % 9973, 17);
-}
+const coverNote: Record<string, string> = {
+  ai: "The AI system this article is about: data, retrieval, model, tools, and the person who approves a change.",
+  product: "The product layers this article is about: experience, application logic, API, data, and release.",
+  web3: "The on-chain system this article is about: wallet, dApp, contracts, network, indexing, and dashboard.",
+  finance: "The trading stack this article is about: terminal, market data, liquidity, orders, risk, and reconciliation.",
+  cloud: "The cloud topology this article is about: edge, applications, containers, APIs, data, queues, and monitoring.",
+  data: "The data pipeline this article is about: sources, ingestion, streaming, transformation, warehouse, and analytics.",
+  security: "The security layers this article is about: identity, authentication, authorization, boundary, API, data, and monitoring.",
+};
 
 export function ArticleCover({
   slug,
@@ -11,38 +17,14 @@ export function ArticleCover({
   slug: string;
   category: string;
 }) {
-  const seed = hash(slug);
   const family = familyFromCategory(category);
-  const paths = Array.from({ length: 6 }, (_, index) => {
-    const start = 52 + ((seed + index * 43) % 260);
-    const turn = 90 + ((seed * (index + 3)) % 260);
-    const end = 80 + ((seed + index * 71) % 300);
-    return `M 32 ${start} C 180 ${turn}, 380 ${end}, 688 ${70 + index * 62}`;
-  });
-  const nodes = Array.from({ length: 7 }, (_, index) => ({
-    x: 90 + ((seed * (index + 5)) % 540),
-    y: 70 + ((seed + index * 97) % 330),
-    size: 5 + ((seed + index * 13) % 13),
-  }));
-
   return (
-    <figure className={`article-cover family-${family}`}>
-      <svg viewBox="0 0 720 480" role="img" aria-label={`Original editorial diagram for ${category}`}>
-        <rect width="720" height="480" rx="26" className="article-cover-bg" />
-        <path d="M40 410 L270 102 L510 350 L680 76" className="article-cover-plane" />
-        {paths.map((path, index) => (
-          <path key={path} d={path} className={`article-cover-path path-${index % 3}`} />
-        ))}
-        {nodes.map((node, index) => (
-          <g key={`${node.x}-${node.y}`}>
-            <circle cx={node.x} cy={node.y} r={node.size * 2.5} className="article-cover-halo" />
-            <circle cx={node.x} cy={node.y} r={node.size} className={`article-cover-node node-${index % 3}`} />
-          </g>
-        ))}
-        <path d="M56 48 H250" className="article-cover-rule" />
-        <path d="M470 432 H664" className="article-cover-rule" />
-      </svg>
-      <figcaption>{category} / Editorial system {String((seed % 89) + 10).padStart(2, "0")}</figcaption>
-    </figure>
+    <div className={`article-cover family-${family}`}>
+      <FamilyVisual family={family} compact variant={slug} />
+      <p className="article-cover-note">
+        <span>{category} · system map</span>
+        {coverNote[family] ?? coverNote.product}
+      </p>
+    </div>
   );
 }

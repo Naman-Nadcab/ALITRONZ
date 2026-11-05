@@ -2,13 +2,15 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
 import { JsonLd } from "@/components/json-ld";
+import { EngagementVisual } from "@/components/visuals/engagement-visual";
 import { FamilyVisual, SystemFlow, familyOf } from "@/components/visuals/family-visual";
-import { getOffering, type Offering } from "@/content/offerings";
+import { allOfferings, getOffering, type Offering } from "@/content/offerings";
 import { absoluteUrl } from "@/lib/site-url";
 
 function sectionFor(offering: Offering) {
   if (offering.kind === "solution") return { label: "Solutions", href: "/solutions" };
   if (offering.kind === "engagement") return { label: "Engagement models", href: "/engagement-models" };
+  if (offering.kind === "capability" || offering.path.startsWith("/capabilities/")) return { label: "Capabilities", href: "/services#capabilities" };
   return { label: "Services", href: "/services" };
 }
 
@@ -18,6 +20,10 @@ export function OfferingView({ offering }: { offering: Offering }) {
     ? `/start-a-project?service=${encodeURIComponent(offering.enquiryService)}`
     : "/start-a-project";
   const family = familyOf(offering.slug, offering.figure);
+  const groupKey = offering.parent ?? (offering.kind === "division" || (offering.kind === "capability" && !offering.parent) ? offering.slug : undefined);
+  const siblings = groupKey
+    ? allOfferings.filter((item) => item.parent === groupKey && item.slug !== offering.slug)
+    : allOfferings.filter((item) => item.kind === offering.kind && item.slug !== offering.slug && (offering.kind === "solution" || offering.kind === "engagement"));
   const crumbs = [
     { label: "Home", href: "/" },
     sectionFor(offering),
@@ -54,7 +60,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
           <div>
             <Breadcrumbs items={crumbs} />
             <p className="eyebrow">{offering.eyebrow}</p>
-            <h1>{offering.headline}</h1>
+            <h1 className={offering.headline.length > 64 ? "is-long" : undefined}>{offering.headline}</h1>
             <p className="lede">{offering.summary}</p>
             <div className="cta-row">
               <Link className="btn btn-primary" href={enquiry}>
@@ -62,8 +68,41 @@ export function OfferingView({ offering }: { offering: Offering }) {
               </Link>
               <Link className="btn btn-secondary" href="/work">Explore Our Work</Link>
             </div>
+            <ul className="hero-facts" aria-label="At a glance">
+              {offering.kind === "engagement" ? (
+                <>
+                  <li>
+                    <span>You receive</span>
+                    <strong>{offering.result}</strong>
+                  </li>
+                  <li>
+                    <span>Best when</span>
+                    <strong>{offering.useCases?.[0]?.text ?? offering.headline}</strong>
+                  </li>
+                  <li>
+                    <span>Commercials</span>
+                    <strong>Scoped per agreement. No published rate card, duration, or acceptance promise.</strong>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <span>{parent ? "Part of" : offering.kind === "solution" ? "Solution type" : "Scope"}</span>
+                    <strong>{parent ? parent.title : offering.kind === "solution" ? "Connected system across several capabilities" : `${siblings.length} specialist services`}</strong>
+                  </li>
+                  <li>
+                    <span>Result</span>
+                    <strong>{offering.result}</strong>
+                  </li>
+                  <li>
+                    <span>Concept showcase</span>
+                    <strong>{offering.demonstrator.title}</strong>
+                  </li>
+                </>
+              )}
+            </ul>
           </div>
-          <FamilyVisual family={family} variant={offering.slug} />
+          {offering.kind === "engagement" ? <EngagementVisual slug={offering.slug} /> : <FamilyVisual family={family} variant={offering.slug} />}
         </div>
       </header>
       <div className="sheet">
@@ -133,7 +172,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
                     ))}
                   </ul>
                 </div>
-                <SystemFlow family={family} />
+                <SystemFlow family={family} variant={offering.slug} noun={offering.kind === "engagement" ? "engagement model" : offering.kind} />
               </div>
             </section>
             <section className="block">
@@ -195,6 +234,19 @@ export function OfferingView({ offering }: { offering: Offering }) {
                 ))}
               </div>
             </section>
+            {siblings.length > 0 ? (
+              <section className="block" id="siblings">
+                <h2>{parent ? `Other ${parent.title} services` : offering.kind === "division" ? `Specialist ${offering.title} services` : "Related pages in this group"}</h2>
+                <nav className="sibling-nav sibling-grid" aria-label={parent ? `Other ${parent.title} services` : "Specialist services"}>
+                  {siblings.map((sibling) => (
+                    <Link key={sibling.path} href={sibling.path} aria-current={sibling.path === offering.path ? "page" : undefined}>
+                      <strong>{sibling.title}</strong>
+                      <span aria-hidden="true">↗</span>
+                    </Link>
+                  ))}
+                </nav>
+              </section>
+            ) : null}
             <section className="block">
               <h2>Related</h2>
               <ul className="related-list">

@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
 import { approachPage } from "@/content/company";
 import { engagementModels, processStages } from "@/content/home";
+import { MethodRibbon } from "@/components/visuals/method-ribbon";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -26,6 +27,7 @@ export default function ApproachPage() {
         <div className="wrap sheet-inner">
           <section className="block">
             <h2>The sequence</h2>
+            <MethodRibbon stages={processStages.map((stage) => stage.title)} />
             <div className="journey">
               {processStages.map((stage, index) => (
                 <article key={stage.title}>

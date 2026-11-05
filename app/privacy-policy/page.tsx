@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         <div className="wrap">
           <p className="eyebrow">Legal</p>
           <h1>Privacy policy</h1>
-          <p className="lede">This policy describes the website enquiry form. It is not a substitute for legal advice, and it should be reviewed before production use.</p>
+          <p className="lede">This policy describes what the website enquiry form collects, why, and how long it is kept.</p>
           <p className="meta-row">Published {published}</p>
         </div>
       </header>
@@ -27,10 +27,10 @@ export default function PrivacyPage() {
         <div className="wrap wrap-narrow sheet-inner prose">
           <section className="block">
             <h2>Who this refers to</h2>
-            <p>This website is published under the name Alitroz Technology. {identity.legalName ? `The published legal name is ${identity.legalName}.` : "A registered legal name has not been published on this website. The contracting party for any services agreement will be named in that agreement."}</p>
-            {identity.address ? <p>Published address: {identity.address}.</p> : <p>No postal address is published on this website.</p>}
+            <p>This website is published under the name Alitroz Technology. {identity.legalName ? `The published legal name is ${identity.legalName}.` : "The contracting entity is named in every services agreement."}</p>
+            {identity.address ? <p>Published address: {identity.address}.</p> : null}
             {identity.registration ? <p>Published registration: {identity.registration}.</p> : null}
-            {identity.jurisdiction ? <p>Published jurisdiction note: {identity.jurisdiction}.</p> : <p>A governing jurisdiction is not stated here. It belongs in a services agreement once the contracting party is confirmed.</p>}
+            {identity.jurisdiction ? <p>Published jurisdiction note: {identity.jurisdiction}.</p> : null}
           </section>
           <section className="block">
             <h2>What the form collects</h2>

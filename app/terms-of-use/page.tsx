@@ -18,7 +18,7 @@ export default function TermsPage() {
         <div className="wrap">
           <p className="eyebrow">Legal</p>
           <h1>Terms of use</h1>
-          <p className="lede">These terms cover use of this website. They are not a services agreement, and they should be reviewed with counsel before production use.</p>
+          <p className="lede">These terms cover use of this website. Paid work is governed by a separate written services agreement.</p>
           <p className="meta-row">Published {formatDate(publishedOn)}</p>
         </div>
       </header>
@@ -26,7 +26,7 @@ export default function TermsPage() {
         <div className="wrap wrap-narrow sheet-inner prose">
           <section className="block">
             <h2>The site</h2>
-            <p>This website describes software development and consulting offered under the name Alitroz Technology. {identity.legalName ? `The published legal name is ${identity.legalName}.` : "The registered legal entity is not published here and will be identified in any contract."}</p>
+            <p>This website describes software development and consulting offered under the name Alitroz Technology. {identity.legalName ? `The published legal name is ${identity.legalName}.` : "The contracting entity is named in every services agreement."}</p>
             <p>Content is for information. It is not an offer of regulated financial services, brokerage, custody, exchange operation, or investment advice. Concept showcases are not customer delivery claims.</p>
           </section>
           <section className="block">
@@ -44,7 +44,7 @@ export default function TermsPage() {
           <section className="block">
             <h2>Liability and law</h2>
             <p>The site is provided as available. We do not warrant that it will be uninterrupted or free of errors. To the extent the law allows, liability for use of the website itself is limited to direct damages that were reasonably foreseeable. A services agreement, not this page, governs paid work.</p>
-            {identity.jurisdiction ? <p>Published jurisdiction note: {identity.jurisdiction}.</p> : <p>Governing law and venue are not stated on this website. They will be set in a customer agreement once the contracting party and jurisdiction are confirmed.</p>}
+            {identity.jurisdiction ? <p>Published jurisdiction note: {identity.jurisdiction}.</p> : <p>Governing law and venue for paid work are set in the services agreement for that work.</p>}
           </section>
         </div>
       </div>

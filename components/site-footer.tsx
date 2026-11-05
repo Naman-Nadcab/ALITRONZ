@@ -37,33 +37,35 @@ export function SiteFooter() {
             {industryLinks.map((link) => (
               <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
             ))}
+          </ul>
+        </nav>
+        <nav aria-label="Working with us">
+          <h2>Working with us</h2>
+          <ul>
             <li><Link href="/solutions">Solutions</Link></li>
-            <li><Link href="/work">Our work</Link></li>
-            <li><Link href="/insights">Insights</Link></li>
+            <li><Link href="/engagement-models">Engagement models</Link></li>
+            {engagementLinks.map((link) => (
+              <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+            ))}
+            <li><Link href="/start-a-project">Start a project</Link></li>
           </ul>
         </nav>
         <nav aria-label="Company">
           <h2>Company</h2>
           <ul>
-            <li><Link href="/company">Company</Link></li>
+            <li><Link href="/company">About Alitroz</Link></li>
             <li><Link href="/company/our-approach">Our approach</Link></li>
             <li><Link href="/company/quality-and-security">Quality and security</Link></li>
             <li><Link href="/company/careers">Careers</Link></li>
-            <li><Link href="/engagement-models">Engagement models</Link></li>
-            {engagementLinks.map((link) => (
-              <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
-            ))}
-            <li><Link href="/insights">Technical resources</Link></li>
+            <li><Link href="/work">Our work</Link></li>
+            <li><Link href="/insights">Insights</Link></li>
             <li><Link href="/contact">Contact</Link></li>
-            <li><Link href="/start-a-project">Start a project</Link></li>
-            <li><Link href="/privacy-policy">Privacy policy</Link></li>
-            <li><Link href="/terms-of-use">Terms of use</Link></li>
           </ul>
         </nav>
       </div>
       <div className="wrap footer-base">
         <p>© {year} Alitroz Technology</p>
-        <p>Engineering software for clients.</p>
+        <p className="footer-legal"><Link href="/privacy-policy">Privacy policy</Link> · <Link href="/terms-of-use">Terms of use</Link></p>
       </div>
     </footer>
   );

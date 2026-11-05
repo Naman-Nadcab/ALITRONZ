@@ -73,8 +73,8 @@ export function SiteSearch({ items }: { items: SearchItem[] }) {
 
   return (
     <>
-      <button ref={triggerRef} className="search-trigger" type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label="Search site">
-        <span>Search</span><kbd>⌘K</kbd>
+      <button ref={triggerRef} className="search-trigger" type="button" onClick={() => setOpen(true)} aria-haspopup="dialog">
+        <span>Search</span><kbd aria-hidden="true">⌘K</kbd>
       </button>
       {open ? (
         <div className="command-backdrop" role="presentation" onMouseDown={(event) => {

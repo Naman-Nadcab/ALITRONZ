@@ -33,7 +33,7 @@ export default function ContactPage() {
               <li>The systems the product must join.</li>
               <li>Any permission, vendor access, or data constraint that is already known.</li>
             </ul>
-            <p className="muted gap-top">No telephone number or social profile is published here unless it has been configured from verified company details.</p>
+            <p className="muted gap-top">We reply by email to the address you give in the form.</p>
           </div>
           <EnquiryForm />
         </div>
