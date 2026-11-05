@@ -4,11 +4,17 @@ import { CtaBand } from "@/components/cta-band";
 import { JsonLd } from "@/components/json-ld";
 import { ProjectPlate } from "@/components/project-plate";
 import { WorkflowSpine, familyFromCategory } from "@/components/visuals/family-visual";
+import { componentStatusLabel, projectSystems } from "@/content/project-systems";
 import { projectDisclaimer, type Project } from "@/content/projects";
 import { absoluteUrl } from "@/lib/site-url";
 
 export function ProjectView({ project }: { project: Project }) {
   const family = familyFromCategory(project.category);
+  const system = projectSystems[project.slug];
+  const workflows = system?.workflows ?? project.workflows;
+  const limitations = system?.limitations ?? project.limitations;
+  const security = system?.security ?? project.security;
+  const serviceLinks = system?.serviceLinks ?? project.serviceLinks;
   return (
     <div className={`detail-page project-page family-${family}`}>
       <JsonLd
@@ -67,29 +73,62 @@ export function ProjectView({ project }: { project: Project }) {
             </ul>
             <p className="muted gap-top">Tools are illustrative of the concept. A real engagement would confirm them against the client’s constraints.</p>
           </section>
-          {project.workflows ? (
+          {system ? (
+            <section className="block" id="system">
+              <h2>Proposed system</h2>
+              <p className="muted">How the concept is layered, from the people or sources at the top to the systems the client already owns at the bottom. Arrows show the direction of requests.</p>
+              <ol className="system-layers" aria-label="System layers">
+                {system.layers.map((layer, index) => (
+                  <li key={layer.name} style={{ "--layer-index": index } as React.CSSProperties}>
+                    <span className="system-layer-name">{layer.name}</span>
+                    <ul>
+                      {layer.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ) : null}
+          {system ? (
+            <section className="block" id="components">
+              <h2>What is real in this showcase</h2>
+              <p className="muted">Each part is labelled so a reader can tell a proposed design from a simulated screen, and both from systems the client would own.</p>
+              <ul className="component-list">
+                {system.components.map((component) => (
+                  <li key={component.name} className={`status-${component.status}`}>
+                    <span className="component-status">{componentStatusLabel[component.status]}</span>
+                    <strong>{component.name}</strong>
+                    <p>{component.note}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+          {workflows ? (
             <section className="block">
               <h2>Main workflows</h2>
-              <WorkflowSpine steps={project.workflows} />
+              <WorkflowSpine steps={workflows} />
             </section>
           ) : null}
-          {project.security ? (
+          {security ? (
             <section className="block">
               <h2>Security and operation</h2>
-              <p>{project.security}</p>
+              <p>{security}</p>
             </section>
           ) : null}
-          {project.limitations ? (
+          {limitations ? (
             <section className="block">
               <h2>Known limitations</h2>
-              <p>{project.limitations}</p>
+              <p>{limitations}</p>
             </section>
           ) : null}
-          {project.serviceLinks ? (
+          {serviceLinks ? (
             <section className="block">
               <h2>Related services</h2>
               <ul className="related-list">
-                {project.serviceLinks.map((link) => (
+                {serviceLinks.map((link) => (
                   <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
                 ))}
               </ul>

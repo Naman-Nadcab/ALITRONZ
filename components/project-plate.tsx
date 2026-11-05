@@ -1,4 +1,4 @@
-type PlateKind = "assistant" | "portal" | "console" | "architecture" | "terminal" | "admin" | "analytics" | "observability";
+type PlateKind = "assistant" | "copilot" | "portal" | "console" | "architecture" | "terminal" | "workstation" | "admin" | "analytics" | "observability";
 
 type Theme = { bgA: string; bgB: string; accent: string; second: string; third: string; warm: string };
 
@@ -13,13 +13,13 @@ const themes: Record<string, Theme> = {
 
 const plates: Record<string, { kind: PlateKind; theme: Theme; title: string; label: string }> = {
   "operations-knowledge-assistant": { kind: "assistant", theme: themes.ai, title: "Operations assistant", label: "Concept · simulated data" },
-  "enterprise-ai-knowledge-copilot": { kind: "assistant", theme: themes.ai, title: "Knowledge copilot", label: "Concept · simulated data" },
+  "enterprise-ai-knowledge-copilot": { kind: "copilot", theme: themes.ai, title: "Knowledge copilot", label: "Concept · simulated data" },
   "client-portal-and-mobile": { kind: "portal", theme: themes.product, title: "Client portal", label: "Concept · simulated data" },
   "saas-administration-platform": { kind: "admin", theme: themes.product, title: "Tenant administration", label: "Concept · simulated data" },
   "digital-asset-operations-console": { kind: "console", theme: themes.web3, title: "Asset operations console", label: "Concept · simulated data" },
   "digital-asset-platform-architecture": { kind: "architecture", theme: themes.web3, title: "Platform architecture", label: "Concept · architecture sketch" },
   "forex-trading-terminal-prototype": { kind: "terminal", theme: themes.finance, title: "Dealing terminal", label: "Prototype · simulated feed" },
-  "multi-market-trading-workstation": { kind: "terminal", theme: themes.finance, title: "Multi-market workstation", label: "Concept · simulated feed" },
+  "multi-market-trading-workstation": { kind: "workstation", theme: themes.finance, title: "Multi-market workstation", label: "Concept · simulated feed" },
   "realtime-data-dashboard": { kind: "analytics", theme: themes.data, title: "Operations intelligence", label: "Concept · simulated data" },
   "deployment-observability-demonstrator": { kind: "observability", theme: themes.cloud, title: "Release and observability", label: "Demonstration · sample signals" },
 };
@@ -51,6 +51,8 @@ export function ProjectPlate({ slug, title }: { slug: string; title?: string }) 
         <Window width="584" height="340" title={plate.title} theme={theme} />
         <g transform="translate(0 34)">
           {plate.kind === "assistant" ? <Assistant theme={theme} /> : null}
+          {plate.kind === "copilot" ? <Copilot theme={theme} /> : null}
+          {plate.kind === "workstation" ? <Workstation theme={theme} areaId={`${gradientId}-area`} /> : null}
           {plate.kind === "portal" ? <Portal theme={theme} /> : null}
           {plate.kind === "console" ? <Console theme={theme} /> : null}
           {plate.kind === "architecture" ? <Architecture theme={theme} /> : null}
@@ -388,10 +390,10 @@ function Terminal({ theme, areaId }: { theme: Theme; areaId: string }) {
 
 function Admin({ theme }: { theme: Theme }) {
   const tenants = [
-    ["Northwind Logistics", "Enterprise", "412 users", "Active"],
-    ["Helix Health", "Business", "96 users", "Active"],
-    ["Arbor Retail", "Business", "58 users", "Trial · 9 days"],
-    ["Kestrel Labs", "Starter", "12 users", "Suspended"],
+    ["Tenant A · logistics", "Enterprise", "412 users", "Active"],
+    ["Tenant B · healthcare", "Business", "96 users", "Active"],
+    ["Tenant C · retail", "Business", "58 users", "Trial · 9 days"],
+    ["Tenant D · sandbox", "Starter", "12 users", "Suspended"],
   ];
   return (
     <g>
@@ -532,6 +534,142 @@ function Observability({ theme }: { theme: Theme }) {
           <rect x="112" y="46" width="92" height="20" rx="10" fill="none" stroke="#f7f6ff" strokeOpacity="0.3" />
           <text x="158" y="59.5" fill="#d7d8ea" fontSize="9" textAnchor="middle">Continue to 50%</text>
           <text x="422" y="59.5" fill="#8d90aa" fontSize="8.5" textAnchor="end">Decision logged with on-call</text>
+        </g>
+      </g>
+    </g>
+  );
+}
+
+function Copilot({ theme }: { theme: Theme }) {
+  return (
+    <g>
+      <g transform="translate(0 0)">
+        <rect width="356" height="306" fill="#f7f6ff" fillOpacity="0.03" />
+        <text x="16" y="22" fill="#8d90aa" fontSize="8.5" letterSpacing="1">HOST APPLICATION · TICKET #20931</text>
+        <text x="16" y="44" fill="#f7f6ff" fontSize="13" fontWeight="700">Chargeback after partial refund</text>
+        <text x="16" y="60" fill="#a4a7bf" fontSize="9.5">Customer: sample account · Opened 09:12 · Owner: Payments desk</text>
+        {[
+          ["Status", "Open"],
+          ["Amount", "£1,240.50"],
+          ["Refund issued", "£600.00 on 3 Nov"],
+          ["Dispute ref", "CB-77213"],
+        ].map((row, index) => (
+          <g key={row[0]} transform={`translate(16 ${78 + index * 24})`}>
+            <text y="12" fill="#8d90aa" fontSize="9">{row[0]}</text>
+            <text x="110" y="12" fill="#f7f6ff" fontSize="9.5">{row[1]}</text>
+          </g>
+        ))}
+        <rect x="16" y="182" width="324" height="92" rx="10" fill="#f7f6ff" fillOpacity="0.04" stroke="#f7f6ff" strokeOpacity="0.08" />
+        <text x="28" y="200" fill="#8d90aa" fontSize="8.5" letterSpacing="1">INTERNAL NOTES</text>
+        <text x="28" y="218" fill="#d7d8ea" fontSize="9.5">09:14 — Customer disputes the remaining balance.</text>
+        <text x="28" y="234" fill="#d7d8ea" fontSize="9.5">09:31 — Awaiting finance guidance on partial reversals.</text>
+        <rect x="28" y="246" width="296" height="18" rx="6" fill={theme.accent} fillOpacity="0.14" stroke={theme.accent} strokeOpacity="0.5" strokeDasharray="3 3" />
+        <text x="36" y="258" fill={theme.third} fontSize="9">Draft from copilot (unsaved): apply Procedure 7.3 and queue for finance review</text>
+      </g>
+      <g transform="translate(368 0)">
+        <rect width="216" height="306" fill="#0b0e1e" fillOpacity="0.55" />
+        <path d="M0 0 V306" stroke={theme.accent} strokeOpacity="0.6" strokeWidth="2" />
+        <text x="14" y="22" fill={theme.second} fontSize="8.5" fontWeight="700" letterSpacing="1.2">COPILOT · YOUR PERMISSIONS</text>
+        <rect x="14" y="34" width="188" height="30" rx="10" fill="#f7f6ff" fillOpacity="0.08" />
+        <text x="24" y="53" fill="#f7f6ff" fontSize="9.5">Which policy applies to this refund?</text>
+        <rect x="14" y="74" width="188" height="120" rx="10" fill={theme.accent} fillOpacity="0.16" stroke={theme.accent} strokeOpacity="0.5" />
+        <text x="24" y="92" fill={theme.second} fontSize="8" letterSpacing="1">ANSWER · 2 CITATIONS</text>
+        <text x="24" y="108" fill="#f7f6ff" fontSize="9.5">Procedure 7.3 covers partial</text>
+        <text x="24" y="121" fill="#f7f6ff" fontSize="9.5">reversals within 30 days. Reverse</text>
+        <text x="24" y="134" fill="#f7f6ff" fontSize="9.5">the remaining balance and queue</text>
+        <text x="24" y="147" fill="#f7f6ff" fontSize="9.5">the case for finance review.</text>
+        <rect x="24" y="156" width="108" height="13" rx="6" fill="#f7f6ff" fillOpacity="0.12" />
+        <text x="30" y="165.5" fill="#d7d8ea" fontSize="8">payments-procedures §7.3</text>
+        <rect x="136" y="156" width="58" height="13" rx="6" fill="#f7f6ff" fillOpacity="0.12" />
+        <text x="142" y="165.5" fill="#d7d8ea" fontSize="8">finance-faq</text>
+        <text x="24" y="185" fill="#8d90aa" fontSize="8">Sources limited to Payments and Finance spaces.</text>
+        <rect x="14" y="204" width="188" height="48" rx="10" fill="#0b0e1e" stroke={theme.warm} strokeOpacity="0.55" />
+        <text x="24" y="220" fill={theme.warm} fontSize="8" letterSpacing="1">DRAFT · NOT SAVED</text>
+        <text x="24" y="236" fill="#f7f6ff" fontSize="9">Insert note into ticket</text>
+        <rect x="128" y="226" width="64" height="16" rx="8" fill={theme.second} />
+        <text x="160" y="237" fill="#0b0e1e" fontSize="8.5" fontWeight="800" textAnchor="middle">Review</text>
+        <text x="14" y="276" fill="#8d90aa" fontSize="8">Unanswerable questions are refused and logged.</text>
+        <text x="14" y="290" fill="#8d90aa" fontSize="8">Model host behind an adapter.</text>
+      </g>
+    </g>
+  );
+}
+
+function Workstation({ theme, areaId }: { theme: Theme; areaId: string }) {
+  const markets = [
+    ["FX", "EUR/USD", "1.08421", "MT5 bridge", true],
+    ["FX", "GBP/JPY", "191.204", "MT5 bridge", true],
+    ["Index", "US500", "5,204.6", "LP API", true],
+    ["Metal", "XAU/USD", "2,318.40", "LP API", false],
+    ["Crypto CFD", "BTC/USD", "64,120", "Vendor API", true],
+  ];
+  const line = [40, 48, 44, 58, 52, 66, 60, 72, 68, 80, 74, 86, 82, 90];
+  const adapters = [
+    ["MT5 bridge", "connected · 38 ms", theme.second],
+    ["LP API", "connected · 120 ms", theme.second],
+    ["Vendor API", "stale 4.2 s · ticket disabled", theme.warm],
+  ];
+  return (
+    <g>
+      <rect x="0" y="0" width="584" height="18" fill={theme.warm} fillOpacity="0.16" />
+      <text x="292" y="12.5" fill={theme.warm} fontSize="8.5" fontWeight="700" textAnchor="middle" letterSpacing="1.4">SIMULATED FEED · CLIENT-LICENSED ROUTES ONLY · NOT A BROKERAGE</text>
+      <g transform="translate(12 30)">
+        <text y="10" fill="#8d90aa" fontSize="8.5" letterSpacing="1">MARKETS · BY SOURCE</text>
+        {markets.map((row, index) => (
+          <g key={String(row[1])} transform={`translate(0 ${20 + index * 24})`}>
+            <rect x="-4" width="196" height="20" rx="5" fill={index === 0 ? theme.accent : "#f7f6ff"} fillOpacity={index === 0 ? 0.2 : 0.035} />
+            <text y="14" fill="#8d90aa" fontSize="8">{row[0]}</text>
+            <text x="48" y="14" fill="#f7f6ff" fontSize="9.5" fontWeight="700">{row[1]}</text>
+            <text x="112" y="14" fill="#d7d8ea" fontSize="9">{row[2]}</text>
+            <text x="188" y="14" fill={row[4] ? theme.second : theme.warm} fontSize="7.5" textAnchor="end">{row[3]}</text>
+          </g>
+        ))}
+        <text y="152" fill="#8d90aa" fontSize="8.5" letterSpacing="1">POSITIONS · ALL MARKETS</text>
+        {[
+          ["EUR/USD", "+250k", "+1,240.50"],
+          ["US500", "-5", "-612.00"],
+          ["XAU/USD", "+20", "+96.40"],
+        ].map((row, index) => (
+          <g key={row[0]} transform={`translate(0 ${162 + index * 18})`}>
+            <text y="12" fill="#f7f6ff" fontSize="9">{row[0]}</text>
+            <text x="80" y="12" fill="#d7d8ea" fontSize="9">{row[1]}</text>
+            <text x="188" y="12" fill={row[2].startsWith("+") ? theme.second : theme.warm} fontSize="9" textAnchor="end">{row[2]}</text>
+          </g>
+        ))}
+        <text y="228" fill="#8d90aa" fontSize="7.5">Simulated P&amp;L for layout only</text>
+      </g>
+      <g transform="translate(222 30)">
+        <rect width="350" height="120" rx="10" fill="#f7f6ff" fillOpacity="0.04" />
+        <text x="12" y="18" fill="#f7f6ff" fontSize="11" fontWeight="700">EUR/USD · H1 · source MT5 bridge</text>
+        <text x="338" y="18" fill={theme.second} fontSize="8.5" textAnchor="end">price age 0.3 s</text>
+        <path d={`M12 110 ${line.map((value, index) => `L${12 + index * 24} ${116 - value}`).join(" ")} L${12 + 13 * 24} 110 Z`} fill={`url(#${areaId})`} />
+        <path d={line.map((value, index) => `${index === 0 ? "M" : "L"}${12 + index * 24} ${116 - value}`).join(" ")} fill="none" stroke={theme.third} strokeWidth="2" />
+        <g transform="translate(0 132)">
+          <text y="10" fill="#8d90aa" fontSize="8.5" letterSpacing="1">ADAPTERS</text>
+          {adapters.map((row, index) => (
+            <g key={row[0]} transform={`translate(${index * 118} 16)`}>
+              <rect width="110" height="40" rx="8" fill="#0b0e1e" stroke={row[2]} strokeOpacity="0.55" />
+              <circle cx="12" cy="14" r="3.5" fill={row[2]} />
+              <text x="22" y="17" fill="#f7f6ff" fontSize="9" fontWeight="700">{row[0]}</text>
+              <text x="10" y="31" fill="#c6c8dc" fontSize="7.5">{row[1]}</text>
+            </g>
+          ))}
+        </g>
+        <g transform="translate(0 200)">
+          <text y="10" fill="#8d90aa" fontSize="8.5" letterSpacing="1">ORDER LOG · RECORDED FOR RECONCILIATION</text>
+          {[
+            ["#5120", "EUR/USD", "Buy 250k", "MT5 bridge", "Working", theme.third],
+            ["#5119", "US500", "Sell 5", "LP API", "Filled (simulated)", theme.second],
+            ["#5118", "BTC/USD", "Buy 0.5", "Vendor API", "Blocked · stale price", theme.warm],
+          ].map((row, index) => (
+            <g key={row[0]} transform={`translate(0 ${18 + index * 18})`}>
+              <text y="12" fill="#c6c8dc" fontSize="9">{row[0]}</text>
+              <text x="40" y="12" fill="#f7f6ff" fontSize="9">{row[1]}</text>
+              <text x="104" y="12" fill="#d7d8ea" fontSize="9">{row[2]}</text>
+              <text x="170" y="12" fill="#a4a7bf" fontSize="8.5">{row[3]}</text>
+              <text x="350" y="12" fill={row[5]} fontSize="9" textAnchor="end">{row[4]}</text>
+            </g>
+          ))}
         </g>
       </g>
     </g>

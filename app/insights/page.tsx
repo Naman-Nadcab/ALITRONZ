@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { ArticleCover } from "@/components/article-cover";
 import { articles } from "@/content/insights";
-import { formatDate, readingMinutes } from "@/lib/format";
+import { readingMinutes } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -19,7 +20,8 @@ export default function InsightsPage() {
       <header className="page-hero">
         <div className="wrap article-hero-grid">
           <div>
-            <p className="eyebrow">Insights</p>
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights" }]} />
+          <p className="eyebrow">Insights</p>
             <h1>Notes from the engineering work.</h1>
             <p className="lede">Practical writing on scope, systems, and the limits of what software should claim. No invented authors or research citations.</p>
             <nav className="filter-row" aria-label="Insight categories">
@@ -46,7 +48,7 @@ export default function InsightsPage() {
                 const minutes = readingMinutes(article.blocks.flatMap((block) => (block.type === "ul" ? block.items : [block.text])));
                 return (
                   <article key={article.slug}>
-                    <p className="meta-row">{formatDate(article.date)} · {minutes} min read</p>
+                    <p className="meta-row">{minutes} min read</p>
                     <h3><Link href={`/insights/${article.slug}`}>{article.title}</Link></h3>
                     <p className="muted">{article.excerpt}</p>
                   </article>

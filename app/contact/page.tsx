@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { getPublicIdentity } from "@/lib/public-identity";
 import { pageMetadata } from "@/lib/metadata";
@@ -15,6 +16,7 @@ export default function ContactPage() {
     <>
       <header className="page-hero">
         <div className="wrap">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
           <p className="eyebrow">Contact</p>
           <h1>Tell us about the project.</h1>
           <p className="lede">

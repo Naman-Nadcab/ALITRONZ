@@ -57,12 +57,6 @@ const principles = [
   },
 ];
 
-function formatDate(iso: string) {
-  const [year, month, day] = iso.split("-").map(Number);
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  if (!year || !month || !day || !months[month - 1]) return iso;
-  return `${day} ${months[month - 1]} ${year}`;
-}
 
 export function HomePage() {
   const work = featuredWork
@@ -86,7 +80,7 @@ export function HomePage() {
       <section className="scene">
         <div className="wrap scene-stage">
           <div className="scene-copy">
-            <p className="eyebrow">ALITROZ / CREATIVE ENGINEERING STUDIO</p>
+            <p className="eyebrow">Alitroz Technology / Software development and consulting</p>
             <h1>{hero.title}</h1>
             <p className="lede">{hero.lede}</p>
             <div className="cta-row">
@@ -190,7 +184,7 @@ export function HomePage() {
                   </Link>
                 </div>
                 <div className="territory-environment">
-                  <FamilyVisual family={familyOf(division.slug)} variant={division.slug} />
+                  <FamilyVisual family={familyOf(division.slug)} variant={division.slug} caption={false} />
                 </div>
               </article>
             ))}
@@ -299,31 +293,21 @@ export function HomePage() {
             <p className="eyebrow">Industries</p>
             <h2>Built around the constraints of the sector.</h2>
             <p className="lede">Regulation, data residency, settlement, and tenancy change the architecture. These pages explain how.</p>
-            <ol className="systems-list">
-              {sectorPreview.map((industry, index) => (
-                <li key={industry.slug}>
-                  <Link href={industry.path}>
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <strong>{industry.title}</strong>
-                    <em>{industry.summary}</em>
-                  </Link>
-                </li>
+            <ul className="sector-chips" aria-label="Industry pages">
+              {sectorPreview.map((industry) => (
+                <li key={industry.slug}><Link href={industry.path}>{industry.title}</Link></li>
               ))}
-            </ol>
+            </ul>
             <p className="gap-top-lg"><Link className="text-link" href="/industries">All industries</Link></p>
           </div>
         </div>
         <div className="wrap engage-band">
           <p className="eyebrow">Engagement models</p>
-          <div className="engage-cards">
-            {engagements.map((model) => (
-              <Link key={model.slug} href={model.path} className="engage-card">
-                <strong>{model.title}</strong>
-                <span>{model.result}</span>
-              </Link>
-            ))}
-          </div>
-          <p className="gap-top"><Link className="text-link" href="/engagement-models">Compare all models</Link></p>
+          <p className="engage-line">
+            Five ways to work together, from a short discovery to ongoing support: {engagements.map((model) => model.title).join(", ")}.
+            {" "}
+            <Link className="text-link" href="/engagement-models">Compare all models</Link>
+          </p>
         </div>
       </section>
 
@@ -342,7 +326,6 @@ export function HomePage() {
                 <p className="kicker">{article.category}</p>
                 <h3><Link href={`/insights/${article.slug}`}>{article.title}</Link></h3>
                 <p>{article.excerpt}</p>
-                <time dateTime={article.date}>{formatDate(article.date)}</time>
               </article>
             ))}
           </div>

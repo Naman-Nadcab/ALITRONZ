@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
 import { FamilyVisual, familyOf } from "@/components/visuals/family-visual";
@@ -16,6 +17,7 @@ export default function SolutionsPage() {
     <>
       <header className="page-hero">
         <div className="wrap">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Solutions" }]} />
           <p className="eyebrow">Solutions</p>
           <h1>The system, not only the specialty.</h1>
           <p className="lede">
@@ -41,7 +43,7 @@ export default function SolutionsPage() {
                   <Link className="text-link" href={solution.path}>View the solution</Link>
                 </p>
               </div>
-              <FamilyVisual family={familyOf(solution.slug, solution.figure)} variant={solution.slug} />
+              <FamilyVisual family={familyOf(solution.slug, solution.figure)} variant={solution.slug} compact caption={false} />
             </article>
           ))}
         </div>

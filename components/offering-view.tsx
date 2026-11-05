@@ -24,6 +24,18 @@ export function OfferingView({ offering }: { offering: Offering }) {
   const siblings = groupKey
     ? allOfferings.filter((item) => item.parent === groupKey && item.slug !== offering.slug)
     : allOfferings.filter((item) => item.kind === offering.kind && item.slug !== offering.slug && (offering.kind === "solution" || offering.kind === "engagement"));
+  const partOfSolutions = offering.kind === "solution"
+    ? []
+    : allOfferings.filter((item) => item.kind === "solution" && item.related.some((link) => link.href === offering.path));
+  const panel = {
+    title: offering.title.length > 24 ? offering.title.slice(0, 22).trimEnd() + "…" : offering.title,
+    readout: offering.builds[0]?.title ?? offering.result,
+    support: offering.builds.slice(1, 3).map((item) => item.title).join(" · "),
+    pill: offering.deliverables[0]?.title ?? "Scoped",
+  };
+  const demoIsConcept = offering.demonstrator.href.startsWith("/work");
+  const demoLabel = demoIsConcept ? "Concept showcase" : offering.demonstrator.href.startsWith("/solutions") ? "Connected solution" : "Read alongside";
+  const demoCta = demoIsConcept ? "View the concept" : offering.demonstrator.href.startsWith("/solutions") ? "Open the solution" : "Open the page";
   const crumbs = [
     { label: "Home", href: "/" },
     sectionFor(offering),
@@ -31,11 +43,12 @@ export function OfferingView({ offering }: { offering: Offering }) {
     { label: offering.title },
   ];
   const toc = [
+    ...(offering.kind === "solution" ? [["composition", "Composition"]] : []),
     ["problem", "Problem"],
     ...(offering.useCases && offering.useCases.length > 0 ? [["use", "Where it is used"]] : []),
     ["builds", "What we build"],
     ["deliverables", "Deliverables"],
-    ["architecture", "Architecture"],
+    ["architecture", offering.kind === "engagement" ? "How it runs" : "Architecture"],
     ["delivery", "Delivery"],
     ["assurance", "Quality"],
     ["questions", "Questions"],
@@ -95,14 +108,14 @@ export function OfferingView({ offering }: { offering: Offering }) {
                     <strong>{offering.result}</strong>
                   </li>
                   <li>
-                    <span>Concept showcase</span>
+                    <span>{demoLabel}</span>
                     <strong>{offering.demonstrator.title}</strong>
                   </li>
                 </>
               )}
             </ul>
           </div>
-          {offering.kind === "engagement" ? <EngagementVisual slug={offering.slug} /> : <FamilyVisual family={family} variant={offering.slug} />}
+          {offering.kind === "engagement" ? <EngagementVisual slug={offering.slug} /> : <FamilyVisual family={family} variant={offering.slug} panel={panel} />}
         </div>
       </header>
       <div className="sheet">
@@ -116,6 +129,21 @@ export function OfferingView({ offering }: { offering: Offering }) {
             </ol>
           </nav>
           <div className="doc-main">
+            {offering.kind === "solution" ? (
+              <section className="block" id="composition">
+                <p className="eyebrow">How this solution is composed</p>
+                <h2 className="gap-top">Several specialist services, connected around one problem.</h2>
+                <ol className="composition-strip" aria-label="Services that compose this solution">
+                  {offering.related.map((link, index) => (
+                    <li key={link.href}>
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <Link href={link.href}>{link.label}</Link>
+                    </li>
+                  ))}
+                </ol>
+                <p className="muted">The services above are scoped and delivered as one plan; each link opens the specialist page that explains that part of the system.</p>
+              </section>
+            ) : null}
             <section className="block" id="problem">
               <p className="eyebrow">{offering.problemTitle}</p>
               <p className="problem-lead">{offering.problem[0]}</p>
@@ -160,20 +188,18 @@ export function OfferingView({ offering }: { offering: Offering }) {
               </div>
             </section>
             <section className="block" id="architecture">
-              <h2>Architecture</h2>
-              <div className="split">
-                <div>
-                  {offering.architecture.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
+              <h2>{offering.kind === "engagement" ? "How the engagement runs" : "Architecture"}</h2>
+              <div className="architecture-copy">
+                {offering.architecture.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+                <ul className="plain-list">
+                  {offering.architecturePoints.map((point) => (
+                    <li key={point}>{point}</li>
                   ))}
-                  <ul className="plain-list">
-                    {offering.architecturePoints.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </div>
-                <SystemFlow family={family} variant={offering.slug} noun={offering.kind === "engagement" ? "engagement model" : offering.kind} />
+                </ul>
               </div>
+              {offering.kind === "engagement" ? null : <SystemFlow family={family} variant={offering.slug} noun={offering.kind} />}
             </section>
             <section className="block">
               <h2>Integrations and technologies</h2>
@@ -216,11 +242,11 @@ export function OfferingView({ offering }: { offering: Offering }) {
               ) : null}
             </section>
             <section className="block">
-              <p className="kicker">Concept showcase</p>
+              <p className="kicker">{demoLabel}</p>
               <h2 className="gap-top">{offering.demonstrator.title}</h2>
               <p>{offering.demonstrator.text}</p>
               <p className="gap-top">
-                <Link className="text-link" href={offering.demonstrator.href}>View the concept</Link>
+                <Link className="text-link" href={offering.demonstrator.href}>{demoCta}</Link>
               </p>
             </section>
             <section className="block" id="questions">
@@ -234,6 +260,17 @@ export function OfferingView({ offering }: { offering: Offering }) {
                 ))}
               </div>
             </section>
+            {partOfSolutions.length > 0 ? (
+              <section className="block" id="solutions">
+                <h2>Part of these solutions</h2>
+                <p className="muted">This service is one component of a larger system. The solution pages show how it combines with the other disciplines around one business problem.</p>
+                <nav className="sibling-nav sibling-grid" aria-label="Solutions that include this service">
+                  {partOfSolutions.map((solution) => (
+                    <Link key={solution.path} href={solution.path}>{solution.title}</Link>
+                  ))}
+                </nav>
+              </section>
+            ) : null}
             {siblings.length > 0 ? (
               <section className="block" id="siblings">
                 <h2>{parent ? `Other ${parent.title} services` : offering.kind === "division" ? `Specialist ${offering.title} services` : "Related pages in this group"}</h2>

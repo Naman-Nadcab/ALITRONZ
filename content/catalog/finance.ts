@@ -485,7 +485,7 @@ export const financeServices = [
     tradeoffs: ["A narrow adapter is easier to certify with the vendor.", "Hiding vendor errors makes logs pretty and incidents longer.", "Tokenising payments early avoids a card-data problem you do not want."],
     demonstrator: demo,
     faqs: [
-      { question: "Can you call an API we have not licensed?", answer: "No." },
+      { question: "Can you call an API we have not licensed?", answer: "No. We integrate against the data and execution APIs you are licensed to use, and we ask for the agreement before the first call." },
       { question: "Will you complete the vendor's certification?", answer: "We will do the technical work the client is allowed to submit. The vendor's approval is theirs to give." },
       { question: "Is sandbox data live?", answer: "No. The software must make that obvious." },
     ],

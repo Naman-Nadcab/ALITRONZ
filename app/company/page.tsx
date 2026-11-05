@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
 import { companyPage } from "@/content/company";
@@ -15,6 +16,7 @@ export default function CompanyPage() {
     <>
       <header className="page-hero">
         <div className="wrap">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Company" }]} />
           <p className="eyebrow">Company</p>
           <h1>{companyPage.headline}</h1>
           <p className="lede">{companyPage.summary}</p>

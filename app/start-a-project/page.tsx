@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { enquiryServices } from "@/lib/enquiry-schema";
 import { pageMetadata } from "@/lib/metadata";
@@ -16,6 +17,7 @@ export default async function StartPage({ searchParams }: { searchParams: Promis
     <>
       <header className="page-hero">
         <div className="wrap">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Start a Project" }]} />
           <p className="eyebrow">Start a project</p>
           <h1>Have a complex project in mind?</h1>
           <p className="lede">{"Tell us what you're building. We'll start with the business challenge, requirements, and the right engineering approach."}</p>

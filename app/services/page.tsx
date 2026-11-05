@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
 import { FamilyVisual, familyOf } from "@/components/visuals/family-visual";
@@ -16,6 +17,7 @@ export default function ServicesPage() {
     <>
       <header className="page-hero">
         <div className="wrap">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services" }]} />
           <p className="eyebrow">Services</p>
           <h1>Specialist engineering, grouped by division.</h1>
           <p className="lede">

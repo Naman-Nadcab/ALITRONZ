@@ -58,10 +58,20 @@ export const companyLinks: NavLink[] = [
 
 export const primaryNav = [
   { label: "Explore", href: "/#atlas" },
-  { label: "What We Do", href: "/services", menu: "services" as const },
+  { label: "Services", href: "/services", menu: "services" as const },
   { label: "Solutions", href: "/solutions" },
   { label: "Industries", href: "/industries" },
   { label: "Our Work", href: "/work" },
   { label: "Insights", href: "/insights" },
   { label: "About", href: "/company", menu: "company" as const },
 ];
+
+export type HeaderNav = {
+  primaryNav: typeof primaryNav;
+  serviceGroups: typeof serviceGroups;
+  capabilityLinks: NavLink[];
+  companyLinks: NavLink[];
+};
+
+/** Plain data handed to the client header; keeps the offerings catalogue server-side. */
+export const headerNav: HeaderNav = { primaryNav, serviceGroups, capabilityLinks, companyLinks };

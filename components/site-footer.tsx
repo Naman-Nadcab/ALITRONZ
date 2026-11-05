@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FooterGroup } from "@/components/footer-group";
 import { Logo } from "@/components/logo";
 import { capabilityLinks, engagementLinks, industryLinks, serviceLinks } from "@/content/navigation";
 import { getPublicIdentity } from "@/lib/public-identity";
@@ -15,32 +16,28 @@ export function SiteFooter() {
           {identity.email ? <p className="footer-contact"><a href={`mailto:${identity.email}`}>{identity.email}</a></p> : <p className="footer-contact"><Link href="/start-a-project">Project enquiries</Link></p>}
           {identity.address ? <p className="muted">{identity.address}</p> : null}
         </div>
-        <nav aria-label="Services">
-          <h2>Services</h2>
+        <FooterGroup title="Services">
           <ul>
             {serviceLinks.map((link) => (
               <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
             ))}
           </ul>
-        </nav>
-        <nav aria-label="Capabilities">
-          <h2>Capabilities</h2>
+        </FooterGroup>
+        <FooterGroup title="Capabilities">
           <ul>
             {capabilityLinks.map((link) => (
               <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
             ))}
           </ul>
-        </nav>
-        <nav aria-label="Industries">
-          <h2>Industries</h2>
+        </FooterGroup>
+        <FooterGroup title="Industries">
           <ul>
             {industryLinks.map((link) => (
               <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
             ))}
           </ul>
-        </nav>
-        <nav aria-label="Working with us">
-          <h2>Working with us</h2>
+        </FooterGroup>
+        <FooterGroup title="Working with us">
           <ul>
             <li><Link href="/solutions">Solutions</Link></li>
             <li><Link href="/engagement-models">Engagement models</Link></li>
@@ -49,9 +46,8 @@ export function SiteFooter() {
             ))}
             <li><Link href="/start-a-project">Start a project</Link></li>
           </ul>
-        </nav>
-        <nav aria-label="Company">
-          <h2>Company</h2>
+        </FooterGroup>
+        <FooterGroup title="Company">
           <ul>
             <li><Link href="/company">About Alitroz</Link></li>
             <li><Link href="/company/our-approach">Our approach</Link></li>
@@ -61,7 +57,7 @@ export function SiteFooter() {
             <li><Link href="/insights">Insights</Link></li>
             <li><Link href="/contact">Contact</Link></li>
           </ul>
-        </nav>
+        </FooterGroup>
       </div>
       <div className="wrap footer-base">
         <p>© {year} Alitroz Technology</p>

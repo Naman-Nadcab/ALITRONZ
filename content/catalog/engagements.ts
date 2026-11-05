@@ -209,9 +209,9 @@ export const engagementPages = [
     tradeoffs: ["A thin adapter is easier to operate than a new bus.", "Running beside the old system costs time and avoids a cliff.", "Refusing a screen-scrape slows the project and keeps it supportable."],
     demonstrator: { title: "Digital product modernization", text: "The solution view of a seam and a slice.", href: "/solutions/digital-product-modernization" },
     faqs: [
-      { question: "Will you work around a vendor that has not approved access?", answer: "No." },
+      { question: "Will you work around a vendor that has not approved access?", answer: "No. Integration starts once the vendor has granted access in writing; until then we design the adapter against documentation and test fixtures." },
       { question: "Is a full rewrite an integration engagement?", answer: "No. If the evidence says rewrite, we will say that and re-scope." },
-      { question: "Who accepts production?", answer: "You do." },
+      { question: "Who accepts production?", answer: "You do. We prepare the evidence, rehearse the cutover and support the switch, but the decision to go live and the acceptance are yours." },
     ],
     related: [
       { href: "/solutions/enterprise-system-integration", label: "Enterprise system integration" },

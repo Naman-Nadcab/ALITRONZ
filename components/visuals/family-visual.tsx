@@ -238,14 +238,22 @@ const captions: Record<VisualFamily, { kicker: string; title: string; text: stri
   },
 };
 
+export type PanelCopy = { title: string; readout: string; support: string; pill: string };
+
 export function FamilyVisual({
   family,
   compact = false,
   variant = "",
+  panel,
+  caption = true,
 }: {
   family: string;
   compact?: boolean;
   variant?: string;
+  /** Page-specific copy for the simulated-UI panel, so each page's graphic differs. */
+  panel?: PanelCopy;
+  /** Set false where the surrounding copy already explains the diagram. */
+  caption?: boolean;
 }) {
   const key: VisualFamily = (families as readonly string[]).includes(family) ? (family as VisualFamily) : "product";
   const copy = captions[key];
@@ -258,7 +266,7 @@ export function FamilyVisual({
     <figure className={`visual-stage family-${key}${compact ? " is-compact" : ""}`}>
       <svg className={compact ? "visual-compact" : "visual-full"} viewBox={compact ? `0 0 400 ${compactHeight(stages.length)}` : "0 0 800 540"} preserveAspectRatio="xMidYMid meet" role="img" aria-label={`${description} ${copy.text}`}>
         <title>{description}</title>
-        {compact ? <CompactDiagram family={key} id={uid} focus={focus} /> : <Diagram family={key} id={uid} focus={focus} />}
+        {compact ? <CompactDiagram family={key} id={uid} focus={focus} /> : <Diagram family={key} id={uid} focus={focus} panel={panel} />}
       </svg>
       {compact ? null : (
         <svg className="visual-compact visual-narrow-only" viewBox={`0 0 400 ${compactHeight(stages.length)}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label={`${description} ${copy.text}`}>
@@ -266,7 +274,7 @@ export function FamilyVisual({
           <CompactDiagram family={key} id={`${uid}n`} focus={focus} />
         </svg>
       )}
-      {compact ? null : (
+      {compact || !caption ? null : (
         <figcaption>
           <span>{copy.kicker}{focusLabel ? ` · focus: ${focusLabel}` : ""}</span>
           {copy.text}
@@ -295,7 +303,7 @@ function layout(count: number) {
   const topCount = 4;
   const bottomCount = count - topCount;
   const top = Array.from({ length: Math.min(count, topCount) }, (_, index) => ({ x: COLUMNS[index], y: ROW_ONE }));
-  const bottom = Array.from({ length: Math.max(0, bottomCount) }, (_, index) => ({ x: COLUMNS[COLUMNS.length - 1 - index], y: ROW_TWO }));
+  const bottom = Array.from({ length: Math.max(0, bottomCount) }, (_, index) => ({ x: COLUMNS[index], y: ROW_TWO }));
   return [...top, ...bottom];
 }
 
@@ -371,7 +379,7 @@ function CompactDiagram({ family, id, focus }: { family: VisualFamily; id: strin
   );
 }
 
-function Diagram({ family, id, focus }: { family: VisualFamily; id: string; focus?: number }) {
+function Diagram({ family, id, focus, panel }: { family: VisualFamily; id: string; focus?: number; panel?: PanelCopy }) {
   const colors = palette[family];
   const stages = systemStages[family];
   const positions = layout(stages.length);
@@ -418,8 +426,8 @@ function Diagram({ family, id, focus }: { family: VisualFamily; id: string; focu
       {stages.map((stage, index) => (
         <Node key={stage.label} stage={stage} index={index} position={positions[index]} family={family} focused={focus === index} dimmed={focus !== undefined && focus !== index} id={id} />
       ))}
-      <g transform={`translate(26 ${ROW_TWO - 6})`}>
-        <Inset family={family} width={insetWidth} id={id} />
+      <g transform={`translate(${COLUMNS[stages.length - 4]} ${ROW_TWO - 6})`}>
+        <Inset family={family} width={insetWidth} id={id} panel={panel} />
       </g>
     </g>
   );
@@ -508,9 +516,14 @@ const insetCopy: Record<VisualFamily, InsetCopy> = {
   security: { title: "Access decision", short: "Access", readout: "Allow · finance-ops role", readoutShort: "Allow", support: "MFA verified · token scoped · decision logged", pill: "Logged" },
 };
 
-function Inset({ family, width }: { family: VisualFamily; width: number; id: string }) {
+function Inset({ family, width, panel }: { family: VisualFamily; width: number; id: string; panel?: PanelCopy }) {
   const colors = palette[family];
-  const copy = insetCopy[family];
+  const base = insetCopy[family];
+  const titleLimit = Math.max(16, Math.floor((width - 170) / 7.6));
+  const fit = (value: string) => (value.length > titleLimit ? `${value.slice(0, titleLimit - 1).trimEnd()}…` : value);
+  const copy: InsetCopy = panel
+    ? { title: fit(panel.title), short: base.short, readout: panel.readout, readoutShort: base.readoutShort, support: panel.support, pill: panel.pill }
+    : base;
   const narrow = width < 300;
   const height = 150;
   const pillWidth = narrow ? 0 : copy.pill.length * 7.4 + 22;
@@ -524,7 +537,7 @@ function Inset({ family, width }: { family: VisualFamily; width: number; id: str
       <circle cx="44" cy="16" r="3.4" fill={colors.second} />
       <text x="58" y="20.5" fill="#d7d8ea" fontSize="12.5" fontWeight="700" letterSpacing="0.4">{narrow ? copy.short : copy.title}</text>
       {!narrow ? <text x={width - 14} y="20.5" fill="#9ea1bb" fontSize="11" textAnchor="end" letterSpacing="1.2">SIMULATED UI</text> : null}
-      <text x="16" y={narrow ? 72 : 78} fill="#f7f6ff" fontSize={narrow ? 19 : 26} fontWeight="800" letterSpacing="-0.6">
+      <text x="16" y={narrow ? 72 : 78} fill="#f7f6ff" fontSize={narrow ? 19 : copy.readout.length > 20 ? 20 : 26} fontWeight="800" letterSpacing="-0.6">
         {narrow ? copy.readoutShort : copy.readout}
       </text>
       {narrow ? (
@@ -535,7 +548,7 @@ function Inset({ family, width }: { family: VisualFamily; width: number; id: str
         </>
       ) : (
         <>
-          <text x="16" y="104" fill="#c6c8dc" fontSize="13">{copy.support}</text>
+          <text x="16" y="104" fill="#c6c8dc" fontSize="13">{copy.support.length > 50 ? `${copy.support.slice(0, 48).trimEnd()}…` : copy.support}</text>
           <rect x="16" y="126" width={width - 44 - pillWidth} height="4" rx="2" fill="#f7f6ff" fillOpacity="0.12" />
           <rect x="16" y="126" width={(width - 44 - pillWidth) * 0.72} height="4" rx="2" fill={colors.accent} />
           <rect x={width - 16 - pillWidth} y="116" width={pillWidth} height="24" rx="12" fill={colors.accent} fillOpacity="0.22" stroke={colors.accent} strokeOpacity="0.7" />

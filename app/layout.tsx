@@ -5,6 +5,7 @@ import { ChromaticAmbient } from "@/components/chromatic-ambient";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { headerNav } from "@/content/navigation";
 import { site } from "@/content/site";
 import { getPublicIdentity } from "@/lib/public-identity";
 import { buildSearchIndex } from "@/lib/search-index";
@@ -30,6 +31,7 @@ const editorial = Instrument_Serif({
   weight: "400",
   variable: "--font-serif",
   display: "swap",
+  preload: false,
 });
 
 const siteUrl = getSiteUrl();
@@ -98,7 +100,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
         <a className="skip-link" href="#content">Skip to content</a>
-        <SiteHeader searchItems={searchItems} />
+        <SiteHeader searchItems={searchItems} nav={headerNav} />
         <main id="content">{children}</main>
         <SiteFooter />
       </body>

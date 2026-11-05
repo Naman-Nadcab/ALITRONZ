@@ -38,8 +38,14 @@ export function IndustryView({ industry }: { industry: Industry }) {
             <p className="eyebrow">{industry.eyebrow}</p>
             <h1 className={industry.headline.length > 64 ? "is-long" : undefined}>{industry.headline}</h1>
             <p className="lede">{industry.summary}</p>
+            <div className="cta-row">
+              <Link className="btn btn-primary" href="/start-a-project">
+                Discuss a Project <span className="arrow" aria-hidden="true">→</span>
+              </Link>
+              <Link className="btn btn-secondary" href="/work">Explore Our Work</Link>
+            </div>
           </div>
-          <FamilyVisual family={family} variant={industry.slug} />
+          <FamilyVisual family={family} variant={industry.slug} panel={{ title: industry.title.split(/\s[&–-]\s|\s&\s/)[0] ?? industry.title, readout: industry.systems[0]?.title ?? industry.title, support: industry.systems.slice(1, 3).map((item) => item.title).join(" · "), pill: "Sector" }} />
         </div>
       </header>
       <div className="sheet">

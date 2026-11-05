@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
 import { industryFamily } from "@/components/industry-view";
@@ -17,6 +18,7 @@ export default function IndustriesPage() {
     <>
       <header className="page-hero">
         <div className="wrap">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Industries" }]} />
           <p className="eyebrow">Industries</p>
           <h1>Built around the constraints of the sector.</h1>
           <p className="lede">

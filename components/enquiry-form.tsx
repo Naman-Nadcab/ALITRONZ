@@ -170,6 +170,9 @@ export function EnquiryForm({ initialService = "" }: { initialService?: string }
         <span aria-current={step === 2 ? "step" : undefined}>2 Project</span>
         <span aria-current={step === 3 ? "step" : undefined}>3 Scope</span>
       </div>
+      <p className="steps-preview">
+        Three short steps, about two minutes: your name, email, company and role; the service and the challenge in your own words; then an indicative budget band, a timeframe and consent. Your draft is kept in this browser tab until you submit.
+      </p>
       <h2 className="gap-top">{step === 1 ? "Who should we reply to?" : step === 2 ? "What are you building?" : "Scale and consent"}</h2>
 
       {step === 1 ? (

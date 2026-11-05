@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
 import { engagements } from "@/content/offerings";
@@ -16,6 +17,7 @@ export default function EngagementPage() {
     <>
       <header className="page-hero">
         <div className="wrap">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Engagement Models" }]} />
           <p className="eyebrow">Engagement models</p>
           <h1>Ways to start, and ways to stay.</h1>
           <p className="lede">

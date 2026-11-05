@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { WorkBrowser } from "@/components/work-browser";
 import { projectDisclaimer, projects } from "@/content/projects";
 import { pageMetadata } from "@/lib/metadata";
@@ -14,6 +15,7 @@ export default function WorkPage() {
     <>
       <header className="page-hero">
         <div className="wrap">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Our Work" }]} />
           <p className="eyebrow">Our work</p>
           <h1>Concept showcases, labelled as concepts.</h1>
           <p className="lede">{projectDisclaimer} Filter by the kind of system. None of these pages invent a client, a metric, or a delivery date.</p>

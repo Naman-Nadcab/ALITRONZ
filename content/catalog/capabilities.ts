@@ -329,7 +329,7 @@ export const capabilityPages = [
     faqs: [
       { question: "What RPO and RTO do you offer?", answer: "We do not offer a number as a product. We record the objective you choose and what the rehearsal achieved." },
       { question: "Is a snapshot a backup?", answer: "Only if it is retained, protected, and restorable. We will say which of those is true." },
-      { question: "Do you insure against data loss?", answer: "No." },
+      { question: "Do you insure against data loss?", answer: "No. We design, rehearse and document the recovery path to an agreed objective; insurance and legal liability are matters for your providers and your contract." },
     ],
     related: [
       { href: "/capabilities/cloud-migration", label: "Cloud migration" },
@@ -604,7 +604,7 @@ export const capabilityPages = [
     demonstrator: { title: "Quality and security", text: "How Alitroz treats confidentiality, testing, and residual risk.", href: "/company/quality-and-security" },
     faqs: [
       { question: "Is this a penetration test?", answer: "No. Testing against a running system is a separate, authorized engagement." },
-      { question: "Will you certify us?", answer: "No." },
+      { question: "Will you certify us?", answer: "No. We build and test controls in an agreed scope and write down what remains. A certification is a separate assessment by an accredited body." },
       { question: "Can you secure a system you cannot change?", answer: "We can advise. Implementation requires access to the code and permission to change it." },
     ],
     related: [

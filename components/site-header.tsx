@@ -5,9 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/logo";
 import { SiteSearch, type SearchItem } from "@/components/site-search";
-import { capabilityLinks, companyLinks, primaryNav, serviceGroups } from "@/content/navigation";
+import type { HeaderNav } from "@/content/navigation";
 
-export function SiteHeader({ searchItems }: { searchItems: SearchItem[] }) {
+/**
+ * Navigation data arrives as props from the server layout so the content
+ * catalogue behind it never enters the client bundle.
+ */
+export function SiteHeader({ searchItems, nav }: { searchItems: SearchItem[]; nav: HeaderNav }) {
+  const { primaryNav, serviceGroups, capabilityLinks, companyLinks } = nav;
   const pathname = usePathname();
   const [menu, setMenu] = useState<"services" | "company" | null>(null);
   const [drawer, setDrawer] = useState(false);
@@ -203,7 +208,7 @@ export function SiteHeader({ searchItems }: { searchItems: SearchItem[] }) {
             aria-current={isCurrent("/services") || isCurrent("/capabilities") ? "page" : undefined}
             onClick={() => setDrawerSection(drawerSection === "services" ? null : "services")}
           >
-            What We Do
+            Services
           </button>
           {drawerSection === "services" ? (
             <div className="drawer-group">

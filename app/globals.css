@@ -2074,8 +2074,10 @@ h3 a, h2 a { text-decoration: none; }
 }
 .detail-page .system-flow li span,
 .detail-page .spine span { color: color-mix(in srgb, var(--detail-accent) 60%, #f7f6ff); }
-.kind-solution .page-hero-split { grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); }
-.kind-engagement .page-hero-split { grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr); }
+@media (min-width: 1100px) {
+  .kind-solution .page-hero-split { grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); }
+  .kind-engagement .page-hero-split { grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr); }
+}
 .industry-page .sheet-inner { gap: 1rem; }
 .industry-page .sheet-inner > .block:nth-child(even) { margin-left: clamp(0rem, 5vw, 5rem); }
 .project-page .sheet-inner { grid-template-columns: repeat(12, 1fr); gap: 1rem; }
@@ -3284,3 +3286,115 @@ h3 { font-size: clamp(1.25rem, 1.8vw, 1.55rem); }
 .kind-engagement .page-hero-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 @media (max-width: 1099px) { .kind-engagement .page-hero-split { grid-template-columns: minmax(0, 1fr); } }
 .detail-page .system-flow li.is-focus span { color: var(--atelier-text); }
+
+/* Project pages — layered system view and component status list */
+.system-layers { display: grid; gap: 0; margin: 1.25rem 0 0; padding: 0; list-style: none; counter-reset: layer; }
+.system-layers > li {
+  position: relative;
+  display: grid;
+  gap: 0.5rem 1.5rem;
+  padding: 1rem 1.1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--detail-accent, var(--atelier-violet)) 42%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--detail-accent, var(--atelier-violet)) calc(14% - var(--layer-index) * 3%), var(--atelier-surface));
+}
+.system-layers > li + li { margin-top: 1.4rem; }
+.system-layers > li + li::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -1.4rem;
+  width: 2px;
+  height: 1.4rem;
+  background: color-mix(in srgb, var(--detail-accent, var(--atelier-violet)) 70%, transparent);
+}
+.system-layers > li + li::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 5px);
+  top: -0.45rem;
+  border: 6px solid transparent;
+  border-top-color: color-mix(in srgb, var(--detail-accent, var(--atelier-violet)) 90%, #fff);
+}
+.system-layer-name { color: var(--detail-accent, var(--atelier-lavender)); font-size: max(0.78rem, 12px); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.system-layer-name::before { counter-increment: layer; content: counter(layer, decimal-leading-zero) " · "; opacity: 0.8; }
+.system-layers ul { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+.system-layers ul li { padding: 0.4rem 0.75rem; border-radius: 999px; background: rgba(20, 24, 48, 0.55); border: 1px solid rgba(236, 235, 255, 0.14); color: var(--atelier-text); font-size: 0.92rem; }
+@media (min-width: 800px) {
+  .system-layers > li { grid-template-columns: 180px minmax(0, 1fr); align-items: start; }
+  .system-layer-name { padding-top: 0.45rem; }
+}
+.component-list { display: grid; gap: 0.8rem; margin: 1.25rem 0 0; padding: 0; list-style: none; }
+.component-list li { display: grid; gap: 0.3rem; padding: 1rem 1.1rem; border-radius: 14px; border: 1px solid rgba(236, 235, 255, 0.12); background: rgba(20, 24, 48, 0.5); }
+.component-list p { margin: 0; color: var(--atelier-muted); font-size: 0.95rem; }
+.component-status { justify-self: start; padding: 0.22rem 0.6rem; border-radius: 999px; font-size: max(0.74rem, 12px); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.status-proposed .component-status { background: rgba(181, 164, 255, 0.18); color: var(--atelier-lavender); }
+.status-simulated .component-status { background: rgba(244, 200, 121, 0.18); color: var(--atelier-amber, #f4c879); }
+.status-client-owned .component-status { background: rgba(97, 222, 213, 0.16); color: var(--atelier-cyan); }
+@media (min-width: 1100px) { .component-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Footer groups collapse on phones */
+.footer-group details > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 0; border-top: 1px solid var(--atelier-line); }
+.footer-group details > summary::-webkit-details-marker { display: none; }
+.footer-group details > summary::after { content: "+"; font-size: 1.2rem; line-height: 1; color: var(--atelier-muted); }
+.footer-group details[open] > summary::after { content: "–"; }
+.footer-group details > summary h2 { margin: 0; }
+.footer-group details > ul { margin-top: 0.25rem; padding-bottom: 1rem; }
+@media (max-width: 799px) {
+  .footer-grid { gap: 0; }
+  .footer-brand { margin-bottom: 1.5rem; }
+  .footer-group:last-of-type details > summary { border-bottom: 1px solid var(--atelier-line); }
+}
+.sheet-inner .block > .system-layers > li { max-width: none; }
+.architecture-copy { display: grid; gap: 0.75rem; margin-bottom: 1.5rem; }
+.architecture-copy p, .architecture-copy li { max-width: 72ch; }
+.architecture-copy p { margin: 0; }
+
+/* Laptop widths — legend sits below the installation instead of over its panels */
+@media (min-width: 800px) and (max-width: 1439px) {
+  /* Legend and caption sit in flow below the stage in both the WebGL and fallback states, so the swap causes no layout shift. */
+  .home-next .scene-core .core-frame { height: auto; min-height: 0; }
+  .home-next .scene-core .core-frame > .core-fallback,
+  .home-next .scene-core .core-frame > div:first-child { position: relative !important; inset: auto !important; height: clamp(440px, 60vh, 600px) !important; }
+  .home-next .core-legend { position: static; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-top: 0.75rem; }
+  .home-next .core-legend li:hover { transform: none; }
+  .home-next .core-caption { position: static; margin-top: 0.9rem; max-width: 40ch; }
+}
+
+/* Home — compact industry chips and a one-line engagement note */
+.sector-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0 0; padding: 0; list-style: none; }
+.sector-chips a { display: inline-flex; align-items: center; min-height: 40px; padding: 0.45rem 0.95rem; border-radius: 999px; border: 1px solid rgba(236, 235, 255, 0.18); color: var(--atelier-text); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: border-color 180ms var(--ease), background 180ms var(--ease); }
+.sector-chips a:hover { border-color: var(--atelier-cyan); background: rgba(97, 222, 213, 0.08); }
+.engage-line { max-width: 72ch; margin: 0.5rem 0 0; color: var(--atelier-muted); font-size: 1.02rem; line-height: 1.6; }
+
+/* Mobile — the atlas map is decorative below 480px; keep the territory list */
+@media (max-width: 479px) { .atlas-stage { display: none; } .atlas-panel { padding-top: 0; } }
+
+/* Solution composition strip */
+.composition-strip { display: grid; gap: 0.6rem; margin: 1.25rem 0 1rem; padding: 0; list-style: none; counter-reset: none; }
+.composition-strip li { position: relative; display: grid; gap: 0.25rem; padding: 0.9rem 1rem; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--detail-accent, var(--atelier-violet)) 50%, transparent); background: color-mix(in srgb, var(--detail-accent, var(--atelier-violet)) 10%, var(--atelier-surface)); }
+.composition-strip li span { color: var(--detail-accent, var(--atelier-lavender)); font-size: max(0.76rem, 12px); font-weight: 700; letter-spacing: 0.14em; }
+.composition-strip li a { color: var(--atelier-text); font-weight: 700; text-decoration: none; }
+.composition-strip li a:hover { color: var(--detail-accent, var(--atelier-cyan)); }
+@media (min-width: 800px) {
+  .composition-strip { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.4rem; }
+  .composition-strip li:not(:last-child)::after { content: "→"; position: absolute; right: -1.1rem; top: 50%; transform: translateY(-50%); color: var(--detail-accent, var(--atelier-cyan)); font-weight: 700; }
+}
+
+/* Family accent carried below the hero on detail pages */
+.detail-page .doc-main .block > h2:first-child::before { content: ""; display: block; width: 40px; height: 3px; margin-bottom: 0.9rem; border-radius: 2px; background: var(--detail-accent, var(--atelier-violet)); }
+.detail-page .toc-sticky a:hover, .detail-page .toc-sticky a:focus-visible { color: var(--detail-accent, var(--atelier-cyan)); }
+.detail-page .deliver-board article { border-left: 3px solid color-mix(in srgb, var(--detail-accent, var(--atelier-violet)) 70%, transparent); }
+.detail-page .sheet .journey .kicker, .detail-page .process-rail .kicker, .detail-page .index-no { color: var(--detail-accent, var(--atelier-lavender)); }
+.detail-page .sheet .block + .block { border-top: 1px solid color-mix(in srgb, var(--detail-accent, var(--atelier-violet)) 18%, transparent); padding-top: clamp(2rem, 4vw, 3rem); }
+
+/* Industry boundary text and tablet header CTA */
+.sector-card-boundary { font-size: 0.94rem !important; }
+@media (min-width: 640px) and (max-width: 1099px) {
+  .header-cta { display: inline-flex; padding: 0.55rem 0.9rem; font-size: 0.88rem; }
+}
+@media (min-width: 640px) and (max-width: 1099px) {
+  .header-inner { grid-template-columns: auto minmax(0, 1fr) auto auto; }
+  .header-inner .search-trigger { justify-self: end; }
+}
+.steps-preview { margin: 0.7rem 0 0.4rem; color: #c5ceda; font-size: 0.92rem; line-height: 1.55; max-width: 60ch; }

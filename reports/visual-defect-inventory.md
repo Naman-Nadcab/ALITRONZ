@@ -126,3 +126,16 @@ Reported but intentionally not changed (design or content decisions for the owne
 - Lighthouse `/services/ai-agent-development`, desktop: performance 0.99, accessibility 1.00, best practices 1.00, SEO 1.00.
 - TypeScript, ESLint, and 26 Vitest tests pass; `next build` generates 126 static pages.
 - Earlier in the round (before the audit repairs) the same home page measured 0.78 desktop / 0.70 mobile with TBT 490 ms / 620 ms; the difference comes from the 3D hero changes (no transmission, async shader compile, deferred mount) and the audit-round CSS, measured in the same local environment. Scores vary between runs and machines and are not a production guarantee.
+
+## Round 4 — final international quality gap audit (5 November 2026)
+
+Full findings, corrections and verification status are in `reports/final-quality-gap-audit.md`. Summary of what changed against the round-3 build (`dabd404`):
+
+- Credibility: duplicate assistant/terminal plates replaced by distinct `copilot` and `workstation` plates; every project page gained a proposed-system view and a component register (proposed / simulated / client-owned).
+- Differentiation: solution pages open with a composition strip of their constituent services; engagement pages no longer show the product-architecture flow; services and capabilities link to the solutions they belong to.
+- Per-page graphics: simulated-UI panel copy is generated from each page's own content; inset titles are width-fitted.
+- Layout: laptop hero legend placed below the installation with a stable height across the WebGL/fallback swap (CLS 0.138 → 0); two-column heroes scoped to ≥1100 px (fixed text/diagram overlap at 768); footer disclosures below 800 px; atlas stage hidden below 480 px.
+- Navigation: "Services" label unified; breadcrumbs on all index pages; header CTA retained on tablets; industry hero CTAs.
+- Performance: removed the `loading.tsx` Suspense boundary that forced large static pages to arrive as hidden outlined segments; moved header navigation data to server props so the content catalogue left the client bundle. Home mobile 78 → 94, desktop 90 → 100.
+
+Measured on the final build: route audit 118/118 with 0 failures; 118 desktop + 13 mobile + 52 responsive captures with 0 overflows; typecheck, lint and 26 tests pass.
