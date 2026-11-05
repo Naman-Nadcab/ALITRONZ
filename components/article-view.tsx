@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArticleCover } from "@/components/article-cover";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
 import { JsonLd } from "@/components/json-ld";
@@ -12,6 +13,7 @@ function textOf(article: Article) {
 
 export function ArticleView({ article }: { article: Article }) {
   const minutes = readingMinutes(textOf(article));
+  const organizationId = `${absoluteUrl("/")}#organization`;
   const related = articles.filter((item) => article.related.includes(item.slug));
   const index = articles.findIndex((item) => item.slug === article.slug);
   const previous = index > 0 ? articles[index - 1] : undefined;
@@ -27,22 +29,27 @@ export function ArticleView({ article }: { article: Article }) {
           description: article.excerpt,
           datePublished: article.date,
           dateModified: article.date,
+          image: absoluteUrl("/opengraph-image"),
+          author: { "@id": organizationId },
           mainEntityOfPage: absoluteUrl(`/insights/${article.slug}`),
-          publisher: { "@type": "Organization", name: "Alitroz Technology" },
+          publisher: { "@id": organizationId },
         }}
       />
       <header className="page-hero article-hero">
-        <div className="wrap wrap-narrow">
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: article.title }]} />
-          <p className="eyebrow">{article.category}</p>
-          <h1>{article.title}</h1>
-          <p className="lede">{article.excerpt}</p>
-          <p className="meta-row">
-            <span>{formatDate(article.date)}</span>
-            <span>{minutes} min read</span>
-            <span>Alitroz Technology</span>
-          </p>
-          <div className="article-hero-mark" aria-hidden="true" />
+        <div className="wrap article-hero-grid">
+          <div>
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: article.title }]} />
+            <p className="eyebrow">{article.category}</p>
+            <h1>{article.title}</h1>
+            <p className="lede">{article.excerpt}</p>
+            <p className="meta-row">
+              <span>{formatDate(article.date)}</span>
+              <span>{minutes} min read</span>
+              <span>Alitroz Technology</span>
+            </p>
+            <div className="article-hero-mark" aria-hidden="true" />
+          </div>
+          <ArticleCover slug={article.slug} category={article.category} />
         </div>
       </header>
       <article className="sheet">

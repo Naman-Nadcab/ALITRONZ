@@ -10,6 +10,7 @@ export function pageMetadata({
   description: string;
   path: string;
 }): Metadata {
+  const socialImage = absoluteUrl("/opengraph-image");
   return {
     title,
     description,
@@ -21,11 +22,13 @@ export function pageMetadata({
       siteName: "Alitroz Technology",
       type: "website",
       locale: "en_US",
+      images: [{ url: socialImage, width: 1200, height: 630, alt: "Alitroz Technology — intelligent product engineering" }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} · Alitroz Technology`,
       description,
+      images: [socialImage],
     },
   };
 }

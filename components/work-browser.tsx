@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FamilyVisual, familyFromCategory } from "@/components/visuals/family-visual";
+import { ProjectPlate } from "@/components/project-plate";
 import type { Project } from "@/content/projects";
 
 export function WorkBrowser({ projects }: { projects: Project[] }) {
@@ -12,13 +12,12 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
 
   return (
     <>
-      <div className="filter-row" role="tablist" aria-label="Work categories">
+      <div className="filter-row" role="group" aria-label="Filter work by category">
         {categories.map((item) => (
           <button
             key={item}
             type="button"
-            role="tab"
-            aria-selected={category === item}
+            aria-pressed={category === item}
             className={category === item ? "is-active" : undefined}
             onClick={() => setCategory(item)}
           >
@@ -26,11 +25,12 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
           </button>
         ))}
       </div>
+      <p className="sr-only" aria-live="polite">{visible.length} projects shown.</p>
       {visible.length === 0 ? <p>No concept work in this category yet.</p> : null}
       <div className="showcase-list">
         {visible.map((project, index) => (
           <article key={project.slug} className={index === 0 ? "showcase-feature" : "showcase-card"}>
-            <FamilyVisual family={familyFromCategory(project.category)} compact />
+            <ProjectPlate slug={project.slug} />
             <div>
               <p className="kicker">{project.kindLabel} · {project.category}</p>
               <h2 className="gap-top">{project.title}</h2>

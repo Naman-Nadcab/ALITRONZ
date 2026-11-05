@@ -7,7 +7,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/content/site";
 import { getPublicIdentity } from "@/lib/public-identity";
-import { getSiteUrl, hasConfiguredSiteUrl } from "@/lib/site-url";
+import { getSiteUrl, hasValidSiteUrlOverride } from "@/lib/site-url";
 import "./globals.css";
 
 const sans = Manrope({
@@ -32,6 +32,7 @@ const editorial = Instrument_Serif({
 });
 
 const siteUrl = getSiteUrl();
+const socialImage = new URL("/opengraph-image", siteUrl);
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
@@ -45,8 +46,9 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Alitroz Technology",
     locale: "en_US",
+    images: [{ url: socialImage, width: 1200, height: 630, alt: "Alitroz Technology — intelligent product engineering" }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: [socialImage] },
   robots: { index: true, follow: true },
 };
 
@@ -55,7 +57,7 @@ export const viewport: Viewport = { themeColor: "#242438" };
 function warnIfSiteUrlMissing() {
   const flag = globalThis as typeof globalThis & { __alitrozSiteUrlWarned?: boolean };
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (!raw || flag.__alitrozSiteUrlWarned || hasConfiguredSiteUrl()) return;
+  if (!raw || flag.__alitrozSiteUrlWarned || hasValidSiteUrlOverride()) return;
   flag.__alitrozSiteUrlWarned = true;
   console.warn("NEXT_PUBLIC_SITE_URL is invalid. Canonical URLs will use https://alitronz.com.");
 }

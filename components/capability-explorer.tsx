@@ -14,15 +14,14 @@ export function CapabilityExplorer({ paths }: { paths: readonly Path[] }) {
 
   return (
     <div className="lab">
-      <div className="lab-choices" role="radiogroup" aria-label="What are you looking to build?">
+      <div className="lab-choices" role="group" aria-label="What are you looking to build?">
         {paths.map((path, index) => {
           const pressed = path.id === current.id;
           return (
             <button
               key={path.id}
               type="button"
-              role="radio"
-              aria-checked={pressed}
+              aria-pressed={pressed}
               className="lab-choice"
               onClick={() => setSelected(path.id)}
             >

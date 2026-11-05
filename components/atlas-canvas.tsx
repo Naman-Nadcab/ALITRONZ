@@ -311,7 +311,7 @@ export function AtlasCanvas() {
               onPointerEnter={() => setHovered(territory.id)}
               onPointerLeave={() => setHovered(null)}
             >
-              <span className="sr-only">{territory.title}</span>
+              <span className="atlas-hit-label">{territory.label}</span>
             </button>
           ))}
         </div>

@@ -4,16 +4,16 @@ import { rateLimit, resetRateLimit } from "@/lib/rate-limit";
 describe("rateLimit", () => {
   beforeEach(() => resetRateLimit());
 
-  it("allows a burst and then blocks", () => {
+  it("allows a burst and then blocks", async () => {
     for (let attempt = 0; attempt < 8; attempt += 1) {
-      expect(rateLimit("10.0.0.1", 1_000)).toBe(true);
+      await expect(rateLimit("10.0.0.1", 1_000)).resolves.toBe(true);
     }
-    expect(rateLimit("10.0.0.1", 1_000)).toBe(false);
+    await expect(rateLimit("10.0.0.1", 1_000)).resolves.toBe(false);
   });
 
-  it("opens the window again after it expires", () => {
-    expect(rateLimit("10.0.0.2", 1_000, 1, 1_000)).toBe(true);
-    expect(rateLimit("10.0.0.2", 1_500, 1, 1_000)).toBe(false);
-    expect(rateLimit("10.0.0.2", 2_100, 1, 1_000)).toBe(true);
+  it("opens the window again after it expires", async () => {
+    await expect(rateLimit("10.0.0.2", 1_000, 1, 1_000)).resolves.toBe(true);
+    await expect(rateLimit("10.0.0.2", 1_500, 1, 1_000)).resolves.toBe(false);
+    await expect(rateLimit("10.0.0.2", 2_100, 1, 1_000)).resolves.toBe(true);
   });
 });

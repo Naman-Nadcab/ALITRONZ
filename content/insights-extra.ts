@@ -2,7 +2,7 @@ import type { Article } from "@/content/insights";
 
 const date = "2026-10-16";
 
-export const extraArticles: Article[] = [
+const articleDrafts: Article[] = [
   {
     slug: "when-not-to-add-a-model",
     title: "When not to add a model",
@@ -217,3 +217,51 @@ export const extraArticles: Article[] = [
     ],
   },
 ];
+
+const expansions: Record<string, Article["blocks"]> = {
+  "when-not-to-add-a-model": [
+    { type: "h2", text: "Evidence before investment" },
+    { type: "p", text: "Run the current process for a representative sample and record where time, disagreement, and rework actually occur. Compare a written rule, a simple search, and a model against the same held-back cases. The comparison needs false positives, false negatives, review time, and the cost of an unavailable provider. If the model does not create a measurable advantage after human review, the responsible result is a smaller system without it." },
+  ],
+  "cut-a-first-release": [
+    { type: "h2", text: "Make acceptance observable" },
+    { type: "p", text: "A release boundary becomes useful when a named person can demonstrate the workflow from start to finish in the target environment. Record the inputs, permissions, expected failures, support owner, and rollback path. Analytics should show whether people finish the job and where they abandon it, without collecting unrelated personal data. That evidence determines the second release; the original roadmap does not get to overrule what operation reveals." },
+  ],
+  "modernize-without-a-rewrite": [
+    { type: "h2", text: "Define the cutover contract" },
+    { type: "p", text: "For the selected slice, specify which system owns each record before, during, and after migration. Reconciliation needs a tolerance, an owner, and a way to stop the new path without corrupting the old one. Observe both implementations long enough to find schedule-driven and month-end behavior. Decommissioning is its own release: remove credentials, jobs, routes, and operating instructions only after the client has accepted the comparison." },
+  ],
+  "a-pipeline-people-trust": [
+    { type: "h2", text: "Measure the path, not deployment volume" },
+    { type: "p", text: "Useful measures include lead time for a reviewed change, time to restore a failed release, gate reliability, and the proportion of rollbacks that follow the documented path. A higher deployment count is not automatically better. Keep provenance from commit to artifact to environment, restrict who can approve production, and test that an expired credential fails safely. The pipeline should make the controlled path easier than the workaround." },
+  ],
+  "scope-a-security-test": [
+    { type: "h2", text: "Close the engagement deliberately" },
+    { type: "p", text: "At completion, revoke test accounts, remove temporary allow-lists, and confirm which evidence the client may retain. Findings should identify the affected component, reproduction conditions, realistic impact, and a verification method without exposing credentials or unnecessary customer data. Severity is agreed against the client’s context rather than copied from a scanner. Any untested environment, third party, or deferred fix remains explicit in the final record." },
+  ],
+  "warehouse-definitions": [
+    { type: "h2", text: "Operate definitions like product code" },
+    { type: "p", text: "A definition needs version history, review, tests against known examples, and a visible owner. When it changes, downstream reports should identify the version they use and whether historical figures are restated. Monitor source freshness, rejected records, model build time, and access-policy failures separately. This does not eliminate disagreement; it lets a team locate disagreement in a definition or source instead of arguing over screenshots." },
+  ],
+  "operator-not-the-protocol": [
+    { type: "h2", text: "Design the exit before launch" },
+    { type: "p", text: "The client needs repositories, deployment instructions, dependency accounts, monitoring access, and a tested way to rotate every production secret without the original engineering team. Administrative functions should require the client’s roles and approval policy. Incident contacts, upgrade authority, and emergency pause behavior belong in operating documentation. A credible handover proves that software delivery did not quietly become custody, venue operation, or permanent control." },
+  ],
+  "agents-need-a-tool-boundary": [
+    { type: "h2", text: "Evaluate the complete run" },
+    { type: "p", text: "Model quality is only one part of an agent evaluation. Test permission failures, duplicate events, stale source material, tool timeouts, malformed outputs, and attempts to cross tenant boundaries. Record cost and latency alongside correctness, then inspect whether a reviewer can understand the proposed action quickly enough to intervene. Release to a narrow group first, with a kill switch that disables writes without taking the underlying business system offline." },
+  ],
+  "tenancy-is-the-saas-product": [
+    { type: "h2", text: "Prove the boundary continuously" },
+    { type: "p", text: "Automated tests should create two tenants and attempt reads, writes, exports, searches, background jobs, and support actions across the boundary. Logs need tenant context without leaking the protected record. Backups and restoration are tenant-aware even when the storage platform is shared. Before enterprise rollout, document data residency, deletion, invitation, ownership transfer, and what happens when the final administrator leaves the organisation." },
+  ],
+  "mt-integration-is-not-a-brokerage": [
+    { type: "h2", text: "Test operational failure states" },
+    { type: "p", text: "Certification should cover stale prices, duplicate messages, rejected orders, partial vendor outages, reconnect behavior, clock differences, and the point at which the interface stops accepting input. Reconciliation compares the firm’s authoritative records rather than trusting the screen. Production credentials stay in the client’s controlled environment, with access logging and rotation. The handover names who monitors connectivity and who contacts the platform provider when the contract, not the code, is the constraint." },
+  ],
+};
+
+export const extraArticles: Article[] = articleDrafts.map((article) => ({
+  ...article,
+  blocks: [...article.blocks, ...(expansions[article.slug] ?? [])],
+}));

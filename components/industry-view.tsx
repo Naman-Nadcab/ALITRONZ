@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
+import { JsonLd } from "@/components/json-ld";
 import { FamilyVisual, WorkflowSpine } from "@/components/visuals/family-visual";
 import type { Industry } from "@/content/industries";
+import { absoluteUrl } from "@/lib/site-url";
 
 const industryFamily: Record<string, string> = {
   fintech: "finance",
@@ -18,6 +20,17 @@ export function IndustryView({ industry }: { industry: Industry }) {
   const family = industryFamily[industry.slug] ?? "product";
   return (
     <div className={`detail-page industry-page family-${family}`}>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: industry.title,
+          description: industry.summary,
+          url: absoluteUrl(industry.path),
+          about: { "@type": "Thing", name: industry.title },
+          publisher: { "@id": `${absoluteUrl("/")}#organization` },
+        }}
+      />
       <header className={`page-hero family-${family}`}>
         <div className="wrap page-hero-split">
           <div>

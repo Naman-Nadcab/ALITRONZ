@@ -14,6 +14,8 @@ export function SiteHeader() {
   const [path, setPath] = useState(pathname);
   const closeTimer = useRef<number | null>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const servicesButtonRef = useRef<HTMLButtonElement>(null);
+  const companyButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   if (path !== pathname) {
@@ -26,7 +28,11 @@ export function SiteHeader() {
   useEffect(() => {
     if (!menu) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenu(null);
+      if (event.key === "Escape") {
+        const trigger = menu === "services" ? servicesButtonRef.current : companyButtonRef.current;
+        setMenu(null);
+        trigger?.focus();
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -77,6 +83,10 @@ export function SiteHeader() {
     closeTimer.current = window.setTimeout(() => setMenu(null), 140);
   }
 
+  function isCurrent(href: string) {
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
+
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -89,6 +99,7 @@ export function SiteHeader() {
               return (
                 <div key={item.href} className="nav-item" onMouseEnter={() => openMenu("services")} onMouseLeave={scheduleClose}>
                   <button
+                    ref={servicesButtonRef}
                     className="menu-button"
                     aria-expanded={menu === "services"}
                     aria-controls="services-menu"
@@ -130,6 +141,7 @@ export function SiteHeader() {
               return (
                 <div key={item.href} className="nav-item" onMouseEnter={() => openMenu("company")} onMouseLeave={scheduleClose}>
                   <button
+                    ref={companyButtonRef}
                     className="menu-button"
                     aria-expanded={menu === "company"}
                     aria-controls="company-menu"
@@ -180,10 +192,15 @@ export function SiteHeader() {
         </button>
       </div>
       {drawer ? (
-        <div id="mobile-nav" ref={drawerRef} className="nav-drawer">
+        <div id="mobile-nav" ref={drawerRef} className="nav-drawer" role="dialog" aria-modal="true" aria-label="Mobile navigation">
           <Link href="/" aria-current={pathname === "/" ? "page" : undefined}>Home</Link>
           <Link href="/#atlas">Explore</Link>
-          <button className="drawer-sub" aria-expanded={drawerSection === "services"} onClick={() => setDrawerSection(drawerSection === "services" ? null : "services")}>
+          <button
+            className="drawer-sub"
+            aria-expanded={drawerSection === "services"}
+            aria-current={isCurrent("/services") || isCurrent("/capabilities") ? "page" : undefined}
+            onClick={() => setDrawerSection(drawerSection === "services" ? null : "services")}
+          >
             What We Do
           </button>
           {drawerSection === "services" ? (
@@ -202,11 +219,16 @@ export function SiteHeader() {
               ))}
             </div>
           ) : null}
-          <Link href="/solutions" aria-current={pathname === "/solutions" ? "page" : undefined}>Solutions</Link>
-          <Link href="/industries" aria-current={pathname === "/industries" ? "page" : undefined}>Industries</Link>
-          <Link href="/work" aria-current={pathname === "/work" ? "page" : undefined}>Our Work</Link>
-          <Link href="/insights" aria-current={pathname === "/insights" ? "page" : undefined}>Insights</Link>
-          <button className="drawer-sub" aria-expanded={drawerSection === "company"} onClick={() => setDrawerSection(drawerSection === "company" ? null : "company")}>
+          <Link href="/solutions" aria-current={isCurrent("/solutions") ? "page" : undefined}>Solutions</Link>
+          <Link href="/industries" aria-current={isCurrent("/industries") ? "page" : undefined}>Industries</Link>
+          <Link href="/work" aria-current={isCurrent("/work") ? "page" : undefined}>Our Work</Link>
+          <Link href="/insights" aria-current={isCurrent("/insights") ? "page" : undefined}>Insights</Link>
+          <button
+            className="drawer-sub"
+            aria-expanded={drawerSection === "company"}
+            aria-current={isCurrent("/company") || pathname === "/contact" ? "page" : undefined}
+            onClick={() => setDrawerSection(drawerSection === "company" ? null : "company")}
+          >
             About
           </button>
           {drawerSection === "company" ? (

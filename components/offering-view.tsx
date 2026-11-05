@@ -45,7 +45,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
           serviceType: offering.title,
           description: offering.summary,
           url: absoluteUrl(offering.path),
-          provider: { "@type": "Organization", name: "Alitroz Technology" },
+          provider: { "@id": `${absoluteUrl("/")}#organization` },
           areaServed: "Worldwide",
         }}
       />
@@ -84,7 +84,6 @@ export function OfferingView({ offering }: { offering: Offering }) {
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </section>
-            {offering.kind === "solution" ? <SystemFlow family={family} /> : null}
             {offering.useCases && offering.useCases.length > 0 ? (
               <section className="block" id="use">
                 <h2>Where it is used</h2>

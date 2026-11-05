@@ -1,14 +1,29 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
+import { JsonLd } from "@/components/json-ld";
 import { ProjectPlate } from "@/components/project-plate";
 import { WorkflowSpine, familyFromCategory } from "@/components/visuals/family-visual";
 import { projectDisclaimer, type Project } from "@/content/projects";
+import { absoluteUrl } from "@/lib/site-url";
 
 export function ProjectView({ project }: { project: Project }) {
   const family = familyFromCategory(project.category);
   return (
     <div className={`detail-page project-page family-${family}`}>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: project.title,
+          abstract: project.summary,
+          description: projectDisclaimer,
+          url: absoluteUrl(`/work/${project.slug}`),
+          image: absoluteUrl("/opengraph-image"),
+          creator: { "@id": `${absoluteUrl("/")}#organization` },
+          keywords: [project.category, project.industry, ...project.services],
+        }}
+      />
       <header className={`page-hero project-hero family-${family}`}>
         <div className="wrap page-hero-split">
           <div>

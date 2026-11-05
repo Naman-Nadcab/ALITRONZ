@@ -4,6 +4,17 @@ export function hasConfiguredSiteUrl() {
   return getSiteUrl().protocol === "https:";
 }
 
+export function hasValidSiteUrlOverride() {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw) return false;
+  try {
+    const url = new URL(raw);
+    return (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 export function getSiteUrl() {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (raw) {

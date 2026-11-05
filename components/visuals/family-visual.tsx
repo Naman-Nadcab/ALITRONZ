@@ -20,6 +20,13 @@ const categoryFamily: Record<string, VisualFamily> = {
   "Web3 and Blockchain": "web3",
   "Financial and Trading Technology": "finance",
   "Cloud and Data Engineering": "cloud",
+  "Cloud and DevOps": "cloud",
+  "Data Engineering": "data",
+  Cybersecurity: "security",
+  "Product Strategy and Delivery": "product",
+  "Software Engineering": "product",
+  "Product Engineering": "product",
+  "Financial Technology": "finance",
 };
 
 export function familyOf(slug: string, figure?: string): VisualFamily {

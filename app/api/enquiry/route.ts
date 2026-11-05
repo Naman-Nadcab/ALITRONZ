@@ -8,6 +8,27 @@ export const runtime = "nodejs";
 
 const MAX_BODY = 50_000;
 
+async function readLimitedBody(request: Request) {
+  const declared = Number(request.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > MAX_BODY) return null;
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let bytes = 0;
+  let text = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    bytes += value.byteLength;
+    if (bytes > MAX_BODY) {
+      await reader.cancel();
+      return null;
+    }
+    text += decoder.decode(value, { stream: true });
+  }
+  return text + decoder.decode();
+}
+
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) {
     return NextResponse.json({ ok: false, error: "rejected" }, { status: 403 });
@@ -18,12 +39,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "validation" }, { status: 400 });
   }
 
-  if (!rateLimit(clientKey(request.headers))) {
-    return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
-  }
-
-  const raw = await request.text();
-  if (raw.length > MAX_BODY) {
+  const raw = await readLimitedBody(request);
+  if (raw === null) {
     return NextResponse.json({ ok: false, error: "too_large" }, { status: 413 });
   }
 
@@ -36,7 +53,13 @@ export async function POST(request: Request) {
 
   if (body && typeof body === "object" && "company_website" in body) {
     const honeypot = String((body as { company_website?: unknown }).company_website ?? "").trim();
-    if (honeypot) return NextResponse.json({ ok: true });
+    if (honeypot) {
+      return NextResponse.json({ ok: false, error: "rejected" }, { status: 400 });
+    }
+  }
+
+  if (!(await rateLimit(clientKey(request.headers)))) {
+    return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
   }
 
   const parsed = parseEnquiry(body);

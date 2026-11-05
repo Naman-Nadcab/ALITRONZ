@@ -49,13 +49,21 @@ async function capture(page, pathname, viewportName, width, height) {
     content: "*,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important}",
   });
   await page.waitForTimeout(200);
-  const measures = await page.evaluate(() => ({
-    viewportWidth: window.innerWidth,
-    bodyWidth: document.body.scrollWidth,
-    htmlWidth: document.documentElement.scrollWidth,
-    title: document.title,
-    h1: document.querySelector("h1")?.textContent?.trim() ?? "",
-  }));
+  const measures = await page.evaluate(() => {
+    const initialX = window.scrollX;
+    const initialY = window.scrollY;
+    window.scrollTo(Number.MAX_SAFE_INTEGER, initialY);
+    const horizontalScrollRange = window.scrollX;
+    window.scrollTo(initialX, initialY);
+    return {
+      viewportWidth: window.innerWidth,
+      bodyWidth: document.body.scrollWidth,
+      htmlWidth: document.documentElement.scrollWidth,
+      horizontalScrollRange,
+      title: document.title,
+      h1: document.querySelector("h1")?.textContent?.trim() ?? "",
+    };
+  });
   const relativePath = `${viewportName}/${filename(pathname)}.jpg`;
   await page.screenshot({
     path: `${outputRoot}/${relativePath}`,
@@ -70,7 +78,7 @@ async function capture(page, pathname, viewportName, width, height) {
     status: response?.status() ?? 0,
     screenshot: relativePath,
     ...measures,
-    overflow: measures.bodyWidth > measures.viewportWidth + 1,
+    overflow: measures.horizontalScrollRange > 1,
     consoleErrors,
   };
 }

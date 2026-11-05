@@ -128,7 +128,10 @@ export function HomePage() {
       <section className="reel-scene" id="work">
         <div className="wrap reel-head">
           <h2>Concepts, labelled as concepts.</h2>
-          <Link href="/work">All work</Link>
+          <div className="reel-actions">
+            <span aria-hidden="true">Scroll selected work →</span>
+            <Link href="/work">All work</Link>
+          </div>
         </div>
         <div className="reel-track">
           {work.map((project) => (

@@ -17,4 +17,20 @@ describe("isSameOrigin", () => {
     expect(isSameOrigin(missing)).toBe(false);
     expect(isSameOrigin(foreign)).toBe(false);
   });
+
+  it("rejects a scheme mismatch even when the host is identical", () => {
+    const request = new Request("http://localhost:3000/api/enquiry", {
+      headers: { origin: "https://localhost:3000", host: "localhost:3000" },
+    });
+    expect(isSameOrigin(request)).toBe(false);
+  });
+
+  it("accepts an explicitly configured deployment origin", () => {
+    process.env.ENQUIRY_ALLOWED_ORIGINS = "https://preview.alitronz.com";
+    const request = new Request("http://internal:3000/api/enquiry", {
+      headers: { origin: "https://preview.alitronz.com", host: "internal:3000" },
+    });
+    expect(isSameOrigin(request)).toBe(true);
+    delete process.env.ENQUIRY_ALLOWED_ORIGINS;
+  });
 });

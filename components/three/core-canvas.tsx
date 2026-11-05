@@ -45,6 +45,20 @@ function Staging() {
   return null;
 }
 
+function ContextLossGuard({ onFailure }: { onFailure: () => void }) {
+  const { gl } = useThree();
+  useEffect(() => {
+    const canvas = gl.domElement;
+    const onContextLost = (event: Event) => {
+      event.preventDefault();
+      onFailure();
+    };
+    canvas.addEventListener("webglcontextlost", onContextLost);
+    return () => canvas.removeEventListener("webglcontextlost", onContextLost);
+  }, [gl, onFailure]);
+  return null;
+}
+
 function Beam({ to, color = "#9eb0c0" }: { to: [number, number, number]; color?: string }) {
   const ref = useRef<THREE.Mesh>(null);
   useLayoutEffect(() => {
@@ -216,7 +230,7 @@ function Sculpture({
   );
 }
 
-export default function CoreCanvas({ active }: { active: boolean }) {
+export default function CoreCanvas({ active, onFailure }: { active: boolean; onFailure: () => void }) {
   const pointer = useRef({ x: 0, y: 0 });
   const scroll = useRef(0);
   const [pageVisible, setPageVisible] = useState(true);
@@ -253,6 +267,7 @@ export default function CoreCanvas({ active }: { active: boolean }) {
         gl.toneMappingExposure = 1.05;
       }}
     >
+      <ContextLossGuard onFailure={onFailure} />
       <Staging />
       <ambientLight intensity={0.38} color="#c8baff" />
       <directionalLight position={[4.2, 6, 5]} intensity={1.35} color="#f4f0ff" />

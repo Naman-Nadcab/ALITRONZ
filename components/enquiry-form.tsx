@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getPublicIdentity } from "@/lib/public-identity";
 import { enquiryServices, investmentRanges, parseStep, timeframes } from "@/lib/enquiry-schema";
 
@@ -18,14 +18,63 @@ const initial = {
   consent: false,
   company_website: "",
 };
+const draftKey = "alitroz:enquiry-draft:v1";
+type Draft = Pick<typeof initial, "name" | "email" | "company" | "role" | "service" | "challenge" | "investment" | "timeframe">;
 
 export function EnquiryForm({ initialService = "" }: { initialService?: string }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [values, setValues] = useState({ ...initial, service: initialService });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>("idle");
+  const [draftReady, setDraftReady] = useState(false);
   const alertRef = useRef<HTMLDivElement>(null);
   const identity = getPublicIdentity();
+
+  useEffect(() => {
+    let draft: Partial<Draft> | null = null;
+    try {
+      const saved = sessionStorage.getItem(draftKey);
+      if (saved) draft = JSON.parse(saved) as Partial<Draft>;
+    } catch {
+      sessionStorage.removeItem(draftKey);
+    }
+    const timer = window.setTimeout(() => {
+      if (draft) {
+        setValues((current) => ({
+          ...current,
+          name: typeof draft.name === "string" ? draft.name : current.name,
+          email: typeof draft.email === "string" ? draft.email : current.email,
+          company: typeof draft.company === "string" ? draft.company : current.company,
+          role: typeof draft.role === "string" ? draft.role : current.role,
+          service: initialService || (typeof draft.service === "string" ? draft.service : current.service),
+          challenge: typeof draft.challenge === "string" ? draft.challenge : current.challenge,
+          investment: typeof draft.investment === "string" ? draft.investment : current.investment,
+          timeframe: typeof draft.timeframe === "string" ? draft.timeframe : current.timeframe,
+        }));
+      }
+      setDraftReady(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [initialService]);
+
+  useEffect(() => {
+    if (!draftReady) return;
+    const draft: Draft = {
+      name: values.name,
+      email: values.email,
+      company: values.company,
+      role: values.role,
+      service: values.service,
+      challenge: values.challenge,
+      investment: values.investment,
+      timeframe: values.timeframe,
+    };
+    try {
+      sessionStorage.setItem(draftKey, JSON.stringify(draft));
+    } catch {
+      // The form remains usable when storage is unavailable.
+    }
+  }, [draftReady, values]);
 
   function update(name: string, value: string | boolean) {
     setValues((current) => ({ ...current, [name]: value }));
@@ -66,6 +115,7 @@ export function EnquiryForm({ initialService = "" }: { initialService?: string }
       });
       const data = (await response.json().catch(() => null)) as { ok?: boolean; error?: string; fields?: Record<string, string> } | null;
       if (response.ok && data?.ok) {
+        sessionStorage.removeItem(draftKey);
         setStatus("success");
         return;
       }
@@ -90,7 +140,12 @@ export function EnquiryForm({ initialService = "" }: { initialService?: string }
         <p className="eyebrow">Received</p>
         <h2>Enquiry received.</h2>
         <p className="gap-top">We have it. If the project is a fit, we will reply to {values.email}.</p>
-        <button className="btn btn-secondary gap-top-lg" type="button" onClick={() => { setValues(initial); setStep(1); setStatus("idle"); }}>
+        <button className="btn btn-secondary gap-top-lg" type="button" onClick={() => {
+          sessionStorage.removeItem(draftKey);
+          setValues(initial);
+          setStep(1);
+          setStatus("idle");
+        }}>
           Send another enquiry
         </button>
       </div>

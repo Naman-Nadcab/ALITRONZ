@@ -34,6 +34,10 @@ beforeEach(() => {
   delete process.env.ENQUIRY_FROM_EMAIL;
   delete process.env.ENQUIRY_WEBHOOK_URL;
   delete process.env.ENQUIRY_WEBHOOK_SECRET;
+  delete process.env.UPSTASH_REDIS_REST_URL;
+  delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  delete process.env.ENQUIRY_ALLOWED_ORIGINS;
+  delete process.env.TRUST_PROXY_HEADERS;
 });
 
 describe("POST /api/enquiry", () => {
@@ -55,8 +59,15 @@ describe("POST /api/enquiry", () => {
     process.env.ENQUIRY_WEBHOOK_URL = "https://example.com/hook";
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("ok"));
     const response = await POST(request({ ...valid, company_website: "https://spam.example" }));
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({ ok: false, error: "rejected" });
     expect(fetchMock).not.toHaveBeenCalled();
     fetchMock.mockRestore();
+  });
+
+  it("rejects an oversized UTF-8 request before parsing", async () => {
+    const response = await POST(request({ ...valid, challenge: "🧪".repeat(30_000) }));
+    expect(response.status).toBe(413);
+    await expect(response.json()).resolves.toEqual({ ok: false, error: "too_large" });
   });
 });
