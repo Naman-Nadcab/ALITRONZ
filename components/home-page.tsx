@@ -9,7 +9,7 @@ import { ProcessStory } from "@/components/process-story";
 import { buildPaths, hero, homepageJourney } from "@/content/home";
 import { industries } from "@/content/industries";
 import { articles } from "@/content/insights";
-import { capabilities, divisions, engagements, solutions } from "@/content/offerings";
+import { capabilities, divisions, engagements, solutions, specialistServices } from "@/content/offerings";
 import { projects } from "@/content/projects";
 
 const featuredWork = [
@@ -60,7 +60,7 @@ export function HomePage() {
             <p className="lede">{hero.lede}</p>
             <div className="cta-row">
               <Link className="btn btn-primary" href="#atlas">
-                Explore the Atlas <span className="arrow" aria-hidden="true">→</span>
+                Explore the Experience <span className="arrow" aria-hidden="true">→</span>
               </Link>
               <Link className="btn btn-secondary" href="/start-a-project">Discuss a Project</Link>
             </div>
@@ -90,16 +90,34 @@ export function HomePage() {
 
       <section className="mosaic-scene" id="services">
         <div className="wrap">
-          <h2>Four ways in.</h2>
-          <div className="mosaic">
+          <div className="territory-intro">
+            <p className="eyebrow">What we build</p>
+            <h2>Four engineering environments. One connected delivery system.</h2>
+            <p className="lede">Each division has its own architecture, product surfaces, and operating constraints. Select a specialist route or enter through the complete environment.</p>
+          </div>
+          <div className="technology-territories">
             {divisions.map((division, index) => (
-              <article key={division.slug} className="territory-card">
-                <FamilyVisual family={familyOf(division.slug)} compact />
+              <article key={division.slug} className={`technology-territory territory-${familyOf(division.slug)}`}>
                 <div className="territory-copy">
-                  <p>{String(index + 1).padStart(2, "0")}</p>
+                  <p className="territory-index">{String(index + 1).padStart(2, "0")} / 04</p>
                   <h3>{division.title}</h3>
                   <p>{division.result}</p>
-                  <Link href={division.path}>{divisionCta[division.slug] ?? division.title}</Link>
+                  <div className="territory-links" aria-label={`Specialist ${division.title} services`}>
+                    {specialistServices
+                      .filter((service) => service.parent === division.slug)
+                      .slice(0, 3)
+                      .map((service) => (
+                        <Link key={service.path} href={service.path}>{service.title}</Link>
+                      ))}
+                  </div>
+                  <Link className="territory-enter" href={division.path}>
+                    {divisionCta[division.slug] ?? division.title} <span aria-hidden="true">↗</span>
+                  </Link>
+                </div>
+                <div className="territory-environment">
+                  <FamilyVisual family={familyOf(division.slug)} />
+                  <span className="territory-plane territory-plane-one" aria-hidden="true" />
+                  <span className="territory-plane territory-plane-two" aria-hidden="true" />
                 </div>
               </article>
             ))}

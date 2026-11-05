@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
-import { FamilyVisual, WorkflowSpine, familyFromCategory } from "@/components/visuals/family-visual";
+import { ProjectPlate } from "@/components/project-plate";
+import { WorkflowSpine, familyFromCategory } from "@/components/visuals/family-visual";
 import { projectDisclaimer, type Project } from "@/content/projects";
 
 export function ProjectView({ project }: { project: Project }) {
   const family = familyFromCategory(project.category);
   return (
-    <>
+    <div className={`detail-page project-page family-${family}`}>
       <header className={`page-hero project-hero family-${family}`}>
         <div className="wrap page-hero-split">
           <div>
@@ -24,7 +25,10 @@ export function ProjectView({ project }: { project: Project }) {
               ))}
             </ul>
           </div>
-          <FamilyVisual family={family} />
+          <figure className="project-hero-plate">
+            <ProjectPlate slug={project.slug} />
+            <figcaption>{project.kindLabel}. Visualised for this concept; not a live customer system.</figcaption>
+          </figure>
         </div>
       </header>
       <div className="sheet">
@@ -82,6 +86,6 @@ export function ProjectView({ project }: { project: Project }) {
         </div>
       </div>
       <CtaBand title="Start a similar project" body="Tell us the constraint and the first workflow. This showcase is a concept, not a template we copy into production." />
-    </>
+    </div>
   );
 }

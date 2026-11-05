@@ -13,3 +13,4 @@ next-env.d.ts
 .env.test.local
 .env.production.local
 npm-debug.log*
+/reports/screenshots/

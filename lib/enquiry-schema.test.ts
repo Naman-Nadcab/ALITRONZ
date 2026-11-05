@@ -37,6 +37,12 @@ describe("parseEnquiry", () => {
       expect(result.fields.consent).toBeTruthy();
     }
   });
+
+  it("requires a business email address", () => {
+    const result = parseEnquiry({ ...valid, email: "amina@gmail.com" });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.fields.email).toMatch(/company email/i);
+  });
 });
 
 describe("parseStep", () => {

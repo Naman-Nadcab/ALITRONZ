@@ -11,7 +11,9 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "audit:routes": "node scripts/audit-public-routes.mjs",
+    "audit:screenshots": "node scripts/capture-public-routes.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.8.2",
@@ -29,6 +31,7 @@
     "@types/three": "^0.186.0",
     "eslint": "^9.39.0",
     "eslint-config-next": "^16.4.2",
+    "playwright-core": "^1.64.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "vitest": "^4.0.0"

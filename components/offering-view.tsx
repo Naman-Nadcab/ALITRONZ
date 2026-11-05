@@ -36,7 +36,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
   ] as const;
 
   return (
-    <>
+    <div className={`detail-page offering-page kind-${offering.kind} family-${family}`}>
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -208,6 +208,6 @@ export function OfferingView({ offering }: { offering: Offering }) {
         </div>
       </div>
       <CtaBand label="Discuss a Project" href={enquiry} />
-    </>
+    </div>
   );
 }

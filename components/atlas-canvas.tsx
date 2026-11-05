@@ -257,6 +257,13 @@ export function AtlasCanvas() {
       >
         <div className="atlas-depth atlas-depth-back" />
         <div className="atlas-depth atlas-depth-mid" />
+        <div className="atlas-depth atlas-depth-front" />
+        <div className="atlas-terrain" aria-hidden="true">
+          <span className="atlas-monolith atlas-monolith-one" />
+          <span className="atlas-monolith atlas-monolith-two" />
+          <span className="atlas-monolith atlas-monolith-three" />
+          <span className="atlas-horizon" />
+        </div>
         <div className="atlas-coordinate">UNIVERSE / 08 TERRITORIES / LIVE MAP</div>
         <svg viewBox="0 0 1000 620" role="img" aria-label="Alitroz Atlas, a map of engineering territories">
           <g style={{ transform: `translate(${shift.x * 10}px, ${shift.y * 8}px)` }}>

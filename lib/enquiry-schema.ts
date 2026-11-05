@@ -36,6 +36,26 @@ function cleanText(value: string) {
   return value.replace(/[^\S\n\r\t]+/g, " ").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim();
 }
 
+const consumerEmailDomains = new Set([
+  "aol.com",
+  "gmail.com",
+  "googlemail.com",
+  "hotmail.com",
+  "icloud.com",
+  "live.com",
+  "mail.com",
+  "outlook.com",
+  "proton.me",
+  "protonmail.com",
+  "yahoo.com",
+  "ymail.com",
+]);
+
+function isBusinessEmail(value: string) {
+  const domain = value.split("@").at(-1)?.toLowerCase();
+  return Boolean(domain && !consumerEmailDomains.has(domain));
+}
+
 const line = (min: number, max: number, empty: string, long: string) =>
   z
     .string()
@@ -47,7 +67,13 @@ const enquiryObject = z.object({
   email: z
     .string()
     .transform(cleanLine)
-    .pipe(z.string().max(254, "Email is too long.").pipe(z.email("Enter a valid email address."))),
+    .pipe(
+      z
+        .string()
+        .max(254, "Email is too long.")
+        .pipe(z.email("Enter a valid email address."))
+        .refine(isBusinessEmail, "Use your company email address rather than a personal email provider."),
+    ),
   company: line(2, 160, "Enter your company.", "Company name is too long."),
   role: z.string().transform(cleanLine).pipe(z.string().max(120, "Role is too long.")),
   service: z.enum(enquiryServices, "Select a service."),

@@ -17,7 +17,7 @@ const industryFamily: Record<string, string> = {
 export function IndustryView({ industry }: { industry: Industry }) {
   const family = industryFamily[industry.slug] ?? "product";
   return (
-    <>
+    <div className={`detail-page industry-page family-${family}`}>
       <header className={`page-hero family-${family}`}>
         <div className="wrap page-hero-split">
           <div>
@@ -93,6 +93,6 @@ export function IndustryView({ industry }: { industry: Industry }) {
         body="Tell us the system, the constraint, and what a first useful release would have to do."
         label="Discuss a Project"
       />
-    </>
+    </div>
   );
 }
