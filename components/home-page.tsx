@@ -94,9 +94,12 @@ export function HomePage() {
             <AlitrozCore />
           </div>
         </div>
-        <div className="scene-line wrap" aria-label="Primary engineering divisions">
-          <span>AI &amp; automation</span><span>Digital products</span><span>Web3 systems</span><span>Trading technology</span>
-        </div>
+        <nav className="scene-line wrap" aria-label="Primary engineering divisions">
+          <Link href="/services/ai-automation">AI &amp; automation</Link>
+          <Link href="/services/digital-product-engineering">Digital products</Link>
+          <Link href="/services/web3-blockchain">Web3 systems</Link>
+          <Link href="/services/financial-trading-technology">Trading technology</Link>
+        </nav>
       </section>
 
       <section className="position-scene" aria-labelledby="positioning-heading">

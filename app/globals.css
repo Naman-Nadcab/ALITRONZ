@@ -2114,7 +2114,6 @@ h3 a, h2 a { text-decoration: none; }
 .site-header {
   background: color-mix(in srgb, var(--atelier-dark) 76%, transparent);
   border-bottom-color: rgba(226, 225, 245, 0.12);
-  backdrop-filter: blur(22px) saturate(135%);
 }
 #content { min-height: 100svh; }
 .lab-panel .kicker,
@@ -2348,14 +2347,14 @@ h3 a, h2 a { text-decoration: none; }
   text-transform: uppercase;
   color: var(--atelier-muted);
 }
-.home-next .scene-line span::before {
+.home-next .scene-line a::before {
   content: "●";
   margin-right: .65rem;
   color: var(--atelier-mint);
 }
-.home-next .scene-line span:nth-child(2)::before { color: var(--atelier-blue); }
-.home-next .scene-line span:nth-child(3)::before { color: var(--atelier-coral); }
-.home-next .scene-line span:nth-child(4)::before { color: var(--atelier-lime); }
+.home-next .scene-line a:nth-child(2)::before { color: var(--atelier-blue); }
+.home-next .scene-line a:nth-child(3)::before { color: var(--atelier-coral); }
+.home-next .scene-line a:nth-child(4)::before { color: var(--atelier-lime); }
 
 .home-next .canvas-scene {
   background:
@@ -2664,10 +2663,10 @@ h3 { font-size: clamp(1.25rem, 1.8vw, 1.55rem); }
 .core-legend li:nth-child(4) { margin-right: 0.9rem; }
 .core-caption { left: 0.25rem; bottom: 0; z-index: 3; max-width: 24ch; font-size: 0.86rem; }
 .core-caption span { color: var(--atelier-cyan); }
-.home-next .scene-line span::before { color: var(--atelier-violet); }
-.home-next .scene-line span:nth-child(2)::before { color: var(--atelier-blue); }
-.home-next .scene-line span:nth-child(3)::before { color: var(--atelier-cyan); }
-.home-next .scene-line span:nth-child(4)::before { color: var(--atelier-coral); }
+.home-next .scene-line a::before { color: var(--atelier-violet); }
+.home-next .scene-line a:nth-child(2)::before { color: var(--atelier-blue); }
+.home-next .scene-line a:nth-child(3)::before { color: var(--atelier-cyan); }
+.home-next .scene-line a:nth-child(4)::before { color: var(--atelier-coral); }
 
 /* Positioning */
 .position-scene {
@@ -3351,15 +3350,47 @@ h3 { font-size: clamp(1.25rem, 1.8vw, 1.55rem); }
 .architecture-copy p { margin: 0; }
 
 /* Laptop widths — legend sits below the installation instead of over its panels */
-@media (min-width: 800px) and (max-width: 1439px) {
-  /* Legend and caption sit in flow below the stage in both the WebGL and fallback states, so the swap causes no layout shift. */
+@media (min-width: 800px) {
+  /* The layer key sits below the installation, in both the WebGL and fallback states, so the cards do not cover the panels and the swap does not move the layout. The stage is short enough that the division links below it stay inside the first screen. */
+  .home-next .scene { padding-bottom: 1.35rem; }
+  .home-next .scene-stage { min-height: 0; }
   .home-next .scene-core .core-frame { height: auto; min-height: 0; }
   .home-next .scene-core .core-frame > .core-fallback,
-  .home-next .scene-core .core-frame > div:first-child { position: relative !important; inset: auto !important; height: clamp(440px, 60vh, 600px) !important; }
+  .home-next .scene-core .core-frame > div:first-child { position: relative !important; inset: auto !important; height: clamp(280px, 34vh, 420px) !important; }
   .home-next .core-legend { position: static; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-top: 0.75rem; }
+  .home-next .core-legend li { margin-right: 0; }
   .home-next .core-legend li:hover { transform: none; }
-  .home-next .core-caption { position: static; margin-top: 0.9rem; max-width: 40ch; }
+  .home-next .core-caption { position: static; margin-top: 0.85rem; max-width: 42ch; }
+  .home-next .scene-line {
+    align-items: center;
+    gap: 0.35rem 1.75rem;
+    margin-top: 0.85rem;
+    padding: 0.85rem 0 0.15rem;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+  }
+  .home-next .scene-line a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--atelier-muted);
+    text-decoration: none;
+  }
+  .home-next .scene-line a:hover,
+  .home-next .scene-line a:focus-visible { color: var(--atelier-text); }
 }
+.home-next .scene-line a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--atelier-muted);
+  font-size: max(0.8rem, 12.8px);
+  line-height: 1.35;
+  text-decoration: none;
+}
+.home-next .scene-line a:hover,
+.home-next .scene-line a:focus-visible { color: var(--atelier-text); }
 
 /* Home — compact industry chips and a one-line engagement note */
 .sector-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0 0; padding: 0; list-style: none; }
