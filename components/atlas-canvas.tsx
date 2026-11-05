@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
 
 const territories = [
@@ -81,7 +81,55 @@ const territories = [
     w: 170,
     h: 100,
   },
+  {
+    id: "work",
+    label: "Solutions",
+    title: "Solutions & Selected Work",
+    text: "Connected systems and clearly labelled demonstrations of how the parts work together.",
+    href: "/solutions",
+    x: 750,
+    y: 270,
+    w: 190,
+    h: 90,
+  },
 ] as const;
+
+const territoryTheme = {
+  ai: { primary: "#ad94ff", secondary: "#71e6e4", glow: "173, 148, 255" },
+  product: { primary: "#82a7ff", secondary: "#ff927e", glow: "130, 167, 255" },
+  web3: { primary: "#71e6e4", secondary: "#c8baff", glow: "113, 230, 228" },
+  finance: { primary: "#82a7ff", secondary: "#ff927e", glow: "255, 146, 126" },
+  cloud: { primary: "#82a7ff", secondary: "#71e6e4", glow: "130, 167, 255" },
+  data: { primary: "#ad94ff", secondary: "#d0f28c", glow: "208, 242, 140" },
+  security: { primary: "#c8baff", secondary: "#71e6e4", glow: "200, 186, 255" },
+  work: { primary: "#ff927e", secondary: "#d0f28c", glow: "255, 146, 126" },
+} as const;
+
+const territoryLinks = {
+  ai: [
+    { label: "AI agents", href: "/services/ai-agent-development" },
+    { label: "Enterprise copilots", href: "/services/enterprise-ai-copilots" },
+  ],
+  product: [
+    { label: "Custom software", href: "/services/custom-software-development" },
+    { label: "SaaS products", href: "/services/saas-development" },
+  ],
+  web3: [
+    { label: "Smart contracts", href: "/services/smart-contract-development" },
+    { label: "dApp engineering", href: "/services/dapp-development" },
+  ],
+  finance: [
+    { label: "Trading terminals", href: "/services/trading-terminal-development" },
+    { label: "MT4/MT5 integration", href: "/services/mt4-mt5-integration" },
+  ],
+  cloud: [{ label: "Cloud capabilities", href: "/capabilities/cloud-devops" }],
+  data: [{ label: "Data capabilities", href: "/capabilities/data-engineering" }],
+  security: [{ label: "Security capabilities", href: "/capabilities/cybersecurity" }],
+  work: [
+    { label: "Browse solutions", href: "/solutions" },
+    { label: "Selected work", href: "/work" },
+  ],
+} as const;
 
 const links: [string, string][] = [
   ["ai", "data"],
@@ -92,6 +140,8 @@ const links: [string, string][] = [
   ["security", "finance"],
   ["product", "finance"],
   ["web3", "finance"],
+  ["web3", "work"],
+  ["finance", "work"],
 ];
 
 function Territory({
@@ -174,6 +224,7 @@ export function AtlasCanvas() {
   const [active, setActive] = useState<(typeof territories)[number]["id"]>("ai");
   const [shift, setShift] = useState({ x: 0, y: 0 });
   const [motionOk, setMotionOk] = useState(false);
+  const [hovered, setHovered] = useState<(typeof territories)[number]["id"] | null>(null);
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const apply = () => setMotionOk(!media.matches);
@@ -182,9 +233,17 @@ export function AtlasCanvas() {
     return () => media.removeEventListener("change", apply);
   }, []);
   const current = territories.find((territory) => territory.id === active) ?? territories[0];
+  const visualState = hovered ?? active;
+  const theme = territoryTheme[visualState];
+  const contextualLinks = territoryLinks[current.id];
+  const atlasStyle = {
+    "--atlas-primary": theme.primary,
+    "--atlas-secondary": theme.secondary,
+    "--atlas-glow": theme.glow,
+  } as CSSProperties;
 
   return (
-    <div className="atlas-board" id="atlas">
+    <div className={`atlas-board is-${visualState}`} id="atlas" style={atlasStyle}>
       <div
         className="atlas-stage"
         onPointerMove={(event) => {
@@ -196,6 +255,9 @@ export function AtlasCanvas() {
         }}
         onPointerLeave={() => setShift({ x: 0, y: 0 })}
       >
+        <div className="atlas-depth atlas-depth-back" />
+        <div className="atlas-depth atlas-depth-mid" />
+        <div className="atlas-coordinate">UNIVERSE / 08 TERRITORIES / LIVE MAP</div>
         <svg viewBox="0 0 1000 620" role="img" aria-label="Alitroz Atlas, a map of engineering territories">
           <g style={{ transform: `translate(${shift.x * 10}px, ${shift.y * 8}px)` }}>
             {links.map(([from, to]) => {
@@ -203,14 +265,15 @@ export function AtlasCanvas() {
               const b = center(to);
               const midX = (a.x + b.x) / 2 + (a.y - b.y) * 0.08;
               const midY = (a.y + b.y) / 2 + 30;
-              const lit = active === from || active === to;
+              const lit = visualState === from || visualState === to;
               return (
                 <path
                   key={`${from}-${to}`}
                   d={`M ${a.x} ${a.y} Q ${midX} ${midY} ${b.x} ${b.y}`}
                   fill="none"
-                  stroke={lit ? "#73dfd0" : "rgba(198,188,255,0.35)"}
-                  strokeWidth={lit ? 2.2 : 1.2}
+                  stroke={lit ? theme.secondary : "rgba(198,188,255,0.25)"}
+                  strokeWidth={lit ? 3 : 1.1}
+                  className={lit ? "atlas-path is-lit" : "atlas-path"}
                 />
               );
             })}
@@ -238,6 +301,8 @@ export function AtlasCanvas() {
               }}
               aria-pressed={territory.id === active}
               onClick={() => setActive(territory.id)}
+              onPointerEnter={() => setHovered(territory.id)}
+              onPointerLeave={() => setHovered(null)}
             >
               <span className="sr-only">{territory.title}</span>
             </button>
@@ -251,6 +316,11 @@ export function AtlasCanvas() {
         <Link className="btn btn-primary" href={current.href}>
           Open this territory <span className="arrow" aria-hidden="true">→</span>
         </Link>
+        <div className="atlas-capabilities" aria-label={`Explore ${current.title}`}>
+          {contextualLinks.map((link) => (
+            <Link key={link.href} href={link.href}>{link.label}</Link>
+          ))}
+        </div>
         <div className="atlas-list">
           {territories.map((territory) => (
             <button key={territory.id} type="button" aria-pressed={territory.id === active} onClick={() => setActive(territory.id)}>

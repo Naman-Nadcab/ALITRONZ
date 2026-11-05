@@ -47,6 +47,37 @@ function Beam({ to }: { to: [number, number, number] }) {
   );
 }
 
+function ArchitecturalLayer() {
+  const fins = Array.from({ length: 10 }, (_, index) => {
+    const angle = (index / 10) * Math.PI * 2;
+    return {
+      angle,
+      position: [Math.cos(angle) * 1.34, Math.sin(angle) * 1.34, Math.sin(angle * 2) * 0.28] as [number, number, number],
+    };
+  });
+  return (
+    <group>
+      <mesh rotation={[0.7, 0.35, 0.25]}>
+        <torusKnotGeometry args={[0.86, 0.045, 140, 12, 2, 3]} />
+        <meshPhysicalMaterial color="#82a7ff" metalness={0.72} roughness={0.18} emissive="#445da8" emissiveIntensity={0.22} />
+      </mesh>
+      {fins.map((fin, index) => (
+        <mesh key={fin.angle} position={fin.position} rotation={[0.2, 0.4, fin.angle]}>
+          <boxGeometry args={[index % 2 ? 0.34 : 0.5, 0.08, 0.22]} />
+          <meshPhysicalMaterial
+            color={index % 3 === 0 ? "#ff927e" : index % 2 ? "#71e6e4" : "#c8baff"}
+            metalness={index % 3 === 0 ? 0.35 : 0.82}
+            roughness={0.16}
+            clearcoat={1}
+            emissive={index % 2 ? "#2b807d" : "#5d4a98"}
+            emissiveIntensity={0.16}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 function ShadowDisc() {
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -103,7 +134,8 @@ function Sculpture({
   return (
     <group ref={root}>
       <ShadowDisc />
-      <group ref={spin} scale={0.86} position={[0, 0, 0]}>
+      <group ref={spin} scale={0.94} position={[0, 0, 0]}>
+        <ArchitecturalLayer />
         <mesh>
           <icosahedronGeometry args={[1.22, 1]} />
           <meshPhysicalMaterial
@@ -123,7 +155,11 @@ function Sculpture({
         </mesh>
         <mesh>
           <octahedronGeometry args={[0.78, 0]} />
-          <meshPhysicalMaterial color="#d9e2ec" metalness={1} roughness={0.16} clearcoat={0.8} flatShading envMapIntensity={1.4} />
+          <meshPhysicalMaterial color="#dbe2ff" metalness={0.94} roughness={0.12} clearcoat={1} flatShading envMapIntensity={1.2} />
+        </mesh>
+        <mesh rotation={[0.4, 0.8, 0.2]}>
+          <dodecahedronGeometry args={[0.96, 0]} />
+          <meshPhysicalMaterial color="#ad94ff" transmission={0.48} transparent opacity={0.38} roughness={0.08} thickness={0.45} iridescence={1} wireframe />
         </mesh>
         <mesh>
           <icosahedronGeometry args={[1.05, 0]} />
@@ -193,18 +229,18 @@ export default function CoreCanvas({ active }: { active: boolean }) {
       frameloop={active && pageVisible ? "always" : "demand"}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
-        gl.setClearColor(0x34324c, 1);
+        gl.setClearColor(0x000000, 0);
         gl.toneMapping = THREE.ACESFilmicToneMapping;
         gl.toneMappingExposure = 1.05;
       }}
     >
       <Staging />
-      <ambientLight intensity={0.35} color="#c6bcff" />
+      <ambientLight intensity={0.38} color="#c8baff" />
       <directionalLight position={[4.2, 6, 5]} intensity={1.35} color="#f4f0ff" />
-      <directionalLight position={[-5, 2, 3]} intensity={1.25} color="#73dfd0" />
-      <directionalLight position={[1, -2, -4]} intensity={0.85} color="#a99aff" />
-      <pointLight position={[2.2, 0.4, 1.2]} intensity={1.4} distance={6} decay={2} color="#ff987e" />
-      <pointLight position={[0, 0.2, 0.4]} intensity={1.6} distance={5} decay={2} color="#c6bcff" />
+      <directionalLight position={[-5, 2, 3]} intensity={1.25} color="#71e6e4" />
+      <directionalLight position={[1, -2, -4]} intensity={0.85} color="#ad94ff" />
+      <pointLight position={[2.2, 0.4, 1.2]} intensity={1.4} distance={6} decay={2} color="#ff927e" />
+      <pointLight position={[0, 0.2, 0.4]} intensity={1.6} distance={5} decay={2} color="#c8baff" />
       <Sculpture pointer={pointer} scroll={scroll} />
     </Canvas>
   );

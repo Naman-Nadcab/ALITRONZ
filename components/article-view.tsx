@@ -31,7 +31,7 @@ export function ArticleView({ article }: { article: Article }) {
           publisher: { "@type": "Organization", name: "Alitroz Technology" },
         }}
       />
-      <header className="page-hero">
+      <header className="page-hero article-hero">
         <div className="wrap wrap-narrow">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: article.title }]} />
           <p className="eyebrow">{article.category}</p>

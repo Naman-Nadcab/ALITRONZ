@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CtaBand } from "@/components/cta-band";
-import { WorkflowSpine } from "@/components/visuals/family-visual";
+import { FamilyVisual, WorkflowSpine } from "@/components/visuals/family-visual";
 import type { Industry } from "@/content/industries";
 
 const industryFamily: Record<string, string> = {
@@ -18,7 +18,7 @@ export function IndustryView({ industry }: { industry: Industry }) {
   const family = industryFamily[industry.slug] ?? "product";
   return (
     <>
-      <header className="page-hero">
+      <header className={`page-hero family-${family}`}>
         <div className="wrap page-hero-split">
           <div>
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Industries", href: "/industries" }, { label: industry.title }]} />
@@ -26,7 +26,7 @@ export function IndustryView({ industry }: { industry: Industry }) {
             <h1>{industry.headline}</h1>
             <p className="lede">{industry.summary}</p>
           </div>
-          <IndustryMark family={family} />
+          <FamilyVisual family={family} />
         </div>
       </header>
       <div className="sheet">
@@ -94,21 +94,5 @@ export function IndustryView({ industry }: { industry: Industry }) {
         label="Discuss a Project"
       />
     </>
-  );
-}
-
-function IndustryMark({ family }: { family: string }) {
-  return (
-    <figure className={`visual-stage family-${family} is-compact`} aria-hidden="true">
-      <svg viewBox="0 0 720 480">
-        <rect width="720" height="480" fill="#101725" />
-        <circle cx="250" cy="240" r="120" fill="none" stroke="#73e5f7" strokeOpacity="0.7" />
-        <circle cx="420" cy="210" r="90" fill="none" stroke="#8173fa" />
-        <circle cx="360" cy="300" r="46" fill="#73e5f7" fillOpacity="0.85" />
-        <path d="M130 240h240M420 120v180" stroke="#f4f6fa" strokeOpacity="0.35" />
-        <text x="48" y="64" fill="#73e5f7" fontSize="14" letterSpacing="1.6">SECTOR CONSTRAINTS</text>
-        <text x="48" y="420" fill="#d5deea" fontSize="22">Permissions, data, and the duty to operate.</text>
-      </svg>
-    </figure>
   );
 }

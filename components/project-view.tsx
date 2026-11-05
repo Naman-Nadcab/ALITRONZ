@@ -8,7 +8,7 @@ export function ProjectView({ project }: { project: Project }) {
   const family = familyFromCategory(project.category);
   return (
     <>
-      <header className="page-hero">
+      <header className={`page-hero project-hero family-${family}`}>
         <div className="wrap page-hero-split">
           <div>
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Our work", href: "/work" }, { label: project.title }]} />

@@ -128,7 +128,7 @@ export function FamilyVisual({
   const uid = useId().replace(/:/g, "");
   return (
     <figure className={`visual-stage family-${key}${compact ? " is-compact" : ""}`}>
-      <svg viewBox="0 0 720 480" role="img" aria-label={`${copy.title} ${copy.text}`}>
+      <svg viewBox="0 0 720 480" preserveAspectRatio={compact ? "xMidYMid slice" : "xMidYMid meet"} role="img" aria-label={`${copy.title} ${copy.text}`}>
         <title>{copy.title}</title>
         {key === "ai" ? <AiScene id={uid} /> : null}
         {key === "product" ? <ProductScene /> : null}
@@ -183,38 +183,32 @@ export function WorkflowSpine({ steps }: { steps: readonly string[] }) {
 function AiScene({ id }: { id: string }) {
   return (
     <g>
-      <rect width="720" height="480" fill="#0c111a" />
-      <radialGradient id={`${id}-glow`} cx="50%" cy="42%" r="45%">
-        <stop offset="0%" stopColor="#8173fa" stopOpacity="0.45" />
-        <stop offset="55%" stopColor="#73e5f7" stopOpacity="0.08" />
-        <stop offset="100%" stopColor="#0c111a" stopOpacity="0" />
-      </radialGradient>
+      <defs>
+        <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#3c3658" />
+          <stop offset="100%" stopColor="#24283c" />
+        </linearGradient>
+        <radialGradient id={`${id}-glow`} cx="62%" cy="38%" r="48%">
+          <stop offset="0%" stopColor="#a99aff" stopOpacity="0.55" />
+          <stop offset="45%" stopColor="#73dfd0" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#24283c" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="720" height="480" fill={`url(#${id}-bg)`} />
       <rect width="720" height="480" fill={`url(#${id}-glow)`} />
-      <path d="M120 168C190 120 250 210 360 188C470 166 490 120 590 150" stroke="#73e5f7" strokeOpacity="0.7" fill="none" />
-      <path d="M150 330C230 300 280 250 360 210" stroke="#8173fa" fill="none" />
-      <path d="M360 230C430 280 480 300 590 300" stroke="#73e5f7" strokeOpacity="0.8" fill="none" />
-      <path d="M360 230C340 310 300 360 220 390" stroke="#c9d4e4" strokeOpacity="0.7" fill="none" />
-      <path d="M590 168C610 230 600 280 560 320" stroke="#8173fa" fill="none" />
-      <Node x={118} y={160} label="Sources" />
-      <Node x={150} y={330} label="Retrieve" accent />
-      <Node x={360} y={196} label="Orchestrate" large />
-      <Node x={592} y={148} label="Tools" />
-      <Node x={548} y={328} label="Review" accent />
-      <Node x={214} y={392} label="Application" />
-      <rect x={430} y={360} width="210" height="72" rx="8" fill="#121a28" stroke="#73e5f7" strokeOpacity="0.45" />
-      <text x="448" y="388" fill="#73e5f7" fontSize="13" letterSpacing="1.5">ANSWER</text>
-      <text x="448" y="412" fill="#d5deea" fontSize="15">Cited passage · or refusal</text>
-    </g>
-  );
-}
-
-function Node({ x, y, label, large, accent }: { x: number; y: number; label: string; large?: boolean; accent?: boolean }) {
-  const r = large ? 28 : 10;
-  return (
-    <g>
-      {large ? <circle cx={x} cy={y} r="54" fill="#73e5f7" fillOpacity="0.12" /> : null}
-      <circle cx={x} cy={y} r={r} fill={accent ? "#8173fa" : large ? "#73e5f7" : "#f4f6fa"} />
-      <text x={x} y={y + (large ? 48 : 28)} textAnchor="middle" fill="#f4f6fa" fontSize="15">{label}</text>
+      {Array.from({ length: 7 }, (_, index) => (
+        <path key={index} d={`M40 ${90 + index * 52} C 180 ${40 + index * 36}, 360 ${160 + index * 28}, 680 ${70 + index * 48}`} fill="none" stroke={index % 2 ? "#73dfd0" : "#c6bcff"} strokeOpacity={0.28 + (index % 3) * 0.12} strokeWidth={index === 3 ? 2.4 : 1.2} />
+      ))}
+      <circle cx="250" cy="168" r="46" fill="#73dfd0" fillOpacity="0.16" stroke="#73dfd0" />
+      <circle cx="430" cy="210" r="72" fill="#a99aff" fillOpacity="0.2" stroke="#f4f0ff" strokeOpacity="0.45" />
+      <circle cx="560" cy="150" r="18" fill="#ff987e" />
+      <text x="214" y="173" fill="#f4f0ff" fontSize="14">Sources</text>
+      <text x="386" y="206" fill="#f4f0ff" fontSize="16">Review</text>
+      <text x="538" y="155" fill="#201f32" fontSize="12">Act</text>
+      <rect x="78" y="300" width="250" height="120" rx="18" fill="#201f32" fillOpacity="0.72" stroke="#c6bcff" strokeOpacity="0.4" />
+      <text x="100" y="340" fill="#73dfd0" fontSize="13" letterSpacing="1.6">CITED ANSWER</text>
+      <text x="100" y="372" fill="#f4f0ff" fontSize="20">Passage, or a refusal</text>
+      <text x="100" y="398" fill="#c0bed0" fontSize="14">A person confirms the change</text>
     </g>
   );
 }
@@ -222,63 +216,56 @@ function Node({ x, y, label, large, accent }: { x: number; y: number; label: str
 function ProductScene() {
   return (
     <g>
-      <rect width="720" height="480" fill="#efeae3" />
-      <rect x="28" y="36" width="430" height="300" rx="14" fill="#121722" />
-      <rect x="28" y="36" width="430" height="42" rx="14" fill="#1b2433" />
-      <rect x="28" y="64" width="430" height="14" fill="#1b2433" />
-      <circle cx="52" cy="57" r="5" fill="#73e5f7" />
-      <circle cx="70" cy="57" r="5" fill="#8173fa" />
-      <text x="92" y="62" fill="#d5deea" fontSize="13">Client workspace</text>
-      <rect x="28" y="78" width="96" height="258" fill="#101722" />
-      <rect x="44" y="100" width="64" height="8" rx="4" fill="#73e5f7" />
-      <rect x="44" y="122" width="52" height="8" rx="4" fill="#3a4658" />
-      <rect x="44" y="144" width="58" height="8" rx="4" fill="#3a4658" />
-      <rect x="44" y="166" width="46" height="8" rx="4" fill="#3a4658" />
+      <rect width="720" height="480" fill="#312e48" />
+      <rect x="36" y="48" width="460" height="300" rx="22" fill="#201f32" transform="skewY(-4)" />
+      <rect x="70" y="78" width="400" height="250" rx="16" fill="#3d3958" />
+      <rect x="70" y="78" width="400" height="36" fill="#494762" />
+      <circle cx="92" cy="96" r="5" fill="#ff987e" />
+      <circle cx="110" cy="96" r="5" fill="#73dfd0" />
+      <text x="128" y="101" fill="#f4f0ff" fontSize="13">Workspace</text>
       {[0, 1, 2, 3, 4].map((bar) => (
-        <rect key={bar} x={150 + bar * 48} y={250 - bar * 18} width="26" height={70 + bar * 18} rx="4" fill={bar === 3 ? "#73e5f7" : "#2a3548"} />
+        <rect key={bar} x={110 + bar * 62} y={250 - bar * 16} width="28" height={70 + bar * 16} rx="6" fill={bar === 3 ? "#73dfd0" : "#a99aff"} fillOpacity={bar === 3 ? 1 : 0.45} />
       ))}
-      <text x="148" y="120" fill="#9eb0c4" fontSize="13">Active work</text>
-      <text x="148" y="148" fill="#f4f6fa" fontSize="28">24 open</text>
-      <rect x="470" y="64" width="214" height="360" rx="28" fill="#121722" />
-      <rect x="488" y="96" width="178" height="22" rx="11" fill="#1b2433" />
-      <rect x="488" y="136" width="178" height="92" rx="12" fill="#1b2433" />
-      <text x="504" y="176" fill="#73e5f7" fontSize="13">Mobile</text>
-      <text x="504" y="202" fill="#f4f6fa" fontSize="18">Today’s queue</text>
-      <rect x="488" y="246" width="178" height="48" rx="10" fill="#172033" />
-      <rect x="488" y="306" width="178" height="48" rx="10" fill="#172033" />
-      <rect x="250" y="300" width="250" height="132" rx="12" fill="#f7f4ef" stroke="#121722" />
-      <text x="270" y="332" fill="#0c6478" fontSize="13" letterSpacing="1.2">API</text>
-      <text x="270" y="362" fill="#121722" fontSize="18">GET /work/today</text>
-      <text x="270" y="392" fill="#3e4858" fontSize="15">200 · scoped to the user</text>
+      <g transform="translate(470 70)">
+        <rect width="210" height="360" rx="32" fill="#201f32" stroke="#c6bcff" strokeOpacity="0.35" />
+        <rect x="22" y="36" width="166" height="28" rx="14" fill="#494762" />
+        <rect x="22" y="84" width="166" height="110" rx="16" fill="#73dfd0" fillOpacity="0.16" />
+        <text x="38" y="132" fill="#f4f0ff" fontSize="18">Today</text>
+        <text x="38" y="156" fill="#c6bcff" fontSize="13">Queue · scoped</text>
+        <rect x="22" y="214" width="166" height="52" rx="12" fill="#39364f" />
+        <rect x="22" y="278" width="166" height="52" rx="12" fill="#39364f" />
+      </g>
+      <text x="48" y="40" fill="#c6bcff" fontSize="13" letterSpacing="1.8">PRODUCT SURFACES</text>
     </g>
   );
 }
 
 function Web3Scene({ id }: { id: string }) {
   const layers = [
-    { y: 46, label: "Application", tone: "#d7deea" },
-    { y: 128, label: "Wallet", tone: "#73e5f7" },
-    { y: 210, label: "Contracts", tone: "#c9bfff" },
-    { y: 292, label: "Chain read", tone: "#d7deea" },
-    { y: 374, label: "Monitor", tone: "#73e5f7" },
+    { y: 70, label: "Application", fill: "#55516f" },
+    { y: 150, label: "Wallet", fill: "#3f4d5c" },
+    { y: 230, label: "Contracts", fill: "#4a3d62" },
+    { y: 310, label: "Chain read", fill: "#34324c" },
+    { y: 390, label: "Monitor", fill: "#2c3c44" },
   ];
   return (
     <g>
-      <rect width="720" height="480" fill="#0e1018" />
-      <radialGradient id={`${id}-glow`} cx="70%" cy="40%" r="40%">
-        <stop offset="0%" stopColor="#8173fa" stopOpacity="0.35" />
-        <stop offset="100%" stopColor="#0e1018" stopOpacity="0" />
-      </radialGradient>
+      <defs>
+        <radialGradient id={`${id}-glow`} cx="72%" cy="30%" r="42%">
+          <stop offset="0%" stopColor="#ff987e" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#292a3d" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="720" height="480" fill="#2a2740" />
       <rect width="720" height="480" fill={`url(#${id}-glow)`} />
       {layers.map((layer) => (
         <g key={layer.label}>
-          <path d={`M150 ${layer.y + 28} L340 ${layer.y} L620 ${layer.y + 18} L560 ${layer.y + 72} L188 ${layer.y + 78} Z`} fill="#161b28" stroke={layer.tone} strokeOpacity="0.85" />
-          <text x="210" y={layer.y + 48} fill="#f4f6fa" fontSize="16">{layer.label}</text>
+          <path d={`M90 ${layer.y + 34} L300 ${layer.y} L640 ${layer.y + 22} L560 ${layer.y + 78} L140 ${layer.y + 86} Z`} fill={layer.fill} stroke="#c6bcff" strokeOpacity="0.45" />
+          <text x="160" y={layer.y + 52} fill="#f4f0ff" fontSize="18">{layer.label}</text>
         </g>
       ))}
-      <path d="M470 78 L520 108 L500 168 L430 158 L424 108 Z" fill="#73e5f7" fillOpacity="0.16" stroke="#73e5f7" />
-      <path d="M470 78 L424 108 L430 158" stroke="#f4f6fa" strokeOpacity="0.5" fill="none" />
-      <text x="150" y="36" fill="#9eb0c4" fontSize="13" letterSpacing="1.4">PROTOCOL LAYERS</text>
+      <polygon points="470,96 540,132 516,210 430,198 422,128" fill="#73dfd0" fillOpacity="0.25" stroke="#73dfd0" />
+      <text x="48" y="42" fill="#ff987e" fontSize="13" letterSpacing="1.8">PROTOCOL</text>
     </g>
   );
 }
@@ -287,50 +274,44 @@ function FinanceScene() {
   const candles = [40, 70, 48, 90, 60, 110, 76, 96, 64, 120, 88, 70];
   return (
     <g>
-      <rect width="720" height="480" fill="#0b0f16" />
-      <text x="36" y="42" fill="#73e5f7" fontSize="13" letterSpacing="1.6">SIMULATED INTERFACE</text>
-      <text x="520" y="42" fill="#9eb0c4" fontSize="13">Not live market data</text>
-      <rect x="28" y="64" width="450" height="300" rx="10" fill="#121826" />
-      <text x="48" y="96" fill="#f4f6fa" fontSize="16">Instrument · prototype</text>
-      <path d="M48 300 C 90 280, 120 240, 160 250 S 230 180, 270 190 S 340 120, 430 140" stroke="#73e5f7" fill="none" strokeWidth="2" />
+      <rect width="720" height="480" fill="#243044" />
+      <rect x="24" y="56" width="470" height="320" rx="18" fill="#201f32" />
+      <text x="48" y="40" fill="#73dfd0" fontSize="13" letterSpacing="1.8">SIMULATED DESK</text>
+      <text x="470" y="40" fill="#c0bed0" fontSize="13">Not live market data</text>
+      <path d="M56 300 C 110 250, 160 270, 210 210 S 300 120, 450 150" stroke="#ff987e" fill="none" strokeWidth="3" />
       {candles.map((height, index) => (
-        <rect key={height + index} x={56 + index * 32} y={300 - height} width="10" height={height} fill={index % 3 === 0 ? "#8173fa" : "#73e5f7"} fillOpacity="0.85" />
+        <rect key={`${height}-${index}`} x={64 + index * 32} y={310 - height} width="12" height={height} rx="3" fill={index % 3 === 0 ? "#ff987e" : "#73dfd0"} />
       ))}
-      <rect x="496" y="64" width="196" height="300" rx="10" fill="#121826" />
-      <text x="514" y="96" fill="#9eb0c4" fontSize="13">ORDER STATES</text>
+      <rect x="510" y="56" width="186" height="320" rx="18" fill="#39364f" />
       {["Accepted", "Working", "Rejected", "Disconnected"].map((state, index) => (
         <g key={state}>
-          <text x="514" y={140 + index * 52} fill="#f4f6fa" fontSize="16">{state}</text>
-          <rect x="514" y={150 + index * 52} width={120 - index * 18} height="6" fill={index === 2 ? "#e7a3a8" : "#73e5f7"} />
+          <text x="530" y={110 + index * 70} fill="#f4f0ff" fontSize="16">{state}</text>
+          <rect x="530" y={122 + index * 70} width={140 - index * 22} height="8" rx="4" fill={index === 2 ? "#ff987e" : "#a99aff"} />
         </g>
       ))}
-      <rect x="28" y="380" width="664" height="68" rx="10" fill="#121826" />
-      <text x="48" y="420" fill="#d5deea" fontSize="16">Price age, source, and a reject stay visible. Nothing here is a live book.</text>
+      <text x="48" y="430" fill="#c0bed0" fontSize="15">Price age and a reject stay visible. This is software, not a brokerage.</text>
     </g>
   );
 }
 
 function CloudScene() {
   const layers = [
-    { label: "Edge", note: "Ingress and identity" },
-    { label: "Services", note: "The running product" },
-    { label: "Pipeline", note: "Build, test, release" },
-    { label: "Observe", note: "Logs, metrics, rollback" },
+    { label: "Edge", note: "Ingress and identity", fill: "#3f4f62" },
+    { label: "Services", note: "The running product", fill: "#494762" },
+    { label: "Pipeline", note: "Build, test, release", fill: "#3d3558" },
+    { label: "Observe", note: "Logs, metrics, rollback", fill: "#2e3c48" },
   ];
   return (
     <g>
-      <rect width="720" height="480" fill="#f3f1ec" />
-      <text x="40" y="48" fill="#0c6478" fontSize="13" letterSpacing="1.5">INFRASTRUCTURE</text>
+      <rect width="720" height="480" fill="#2c3348" />
+      <text x="40" y="46" fill="#73dfd0" fontSize="13" letterSpacing="1.8">INFRASTRUCTURE</text>
       {layers.map((layer, index) => (
-        <g key={layer.label} transform={`translate(${48 + index * 18} ${78 + index * 88})`}>
-          <rect width={520 - index * 10} height="72" rx="8" fill={index % 2 ? "#e7e3ff" : "#ffffff"} stroke="#121722" strokeOpacity="0.18" />
-          <circle cx="36" cy="36" r="8" fill={index === 2 ? "#8173fa" : "#0c6478"} />
-          <text x="60" y="32" fill="#121722" fontSize="20">{layer.label}</text>
-          <text x="60" y="54" fill="#3e4858" fontSize="14">{layer.note}</text>
+        <g key={layer.label} transform={`translate(${70 + index * 28} ${80 + index * 86})`}>
+          <path d={`M0 24 L40 0 H${500 - index * 24} L${540 - index * 24} 24 V78 H0 Z`} fill={layer.fill} stroke="#c6bcff" strokeOpacity="0.4" />
+          <text x="56" y="40" fill="#f4f0ff" fontSize="22">{layer.label}</text>
+          <text x="56" y="64" fill="#c0bed0" fontSize="14">{layer.note}</text>
         </g>
       ))}
-      <path d="M600 120 V390" stroke="#8173fa" strokeDasharray="4 6" />
-      <text x="560" y="430" fill="#3e4858" fontSize="14">Deploy path</text>
     </g>
   );
 }
@@ -339,22 +320,22 @@ function DataScene() {
   const sources = ["CRM", "Product", "Billing", "Events"];
   return (
     <g>
-      <rect width="720" height="480" fill="#f4f1fb" />
-      <text x="36" y="46" fill="#4c3fd4" fontSize="13" letterSpacing="1.4">PIPELINE</text>
+      <rect width="720" height="480" fill="#322c4a" />
+      <text x="36" y="46" fill="#c6bcff" fontSize="13" letterSpacing="1.8">PIPELINE</text>
       {sources.map((source, index) => (
         <g key={source}>
-          <rect x="36" y={80 + index * 88} width="160" height="64" rx="8" fill="#ffffff" stroke="#121722" strokeOpacity="0.15" />
-          <text x="56" y={118 + index * 88} fill="#121722" fontSize="18">{source}</text>
-          <path d={`M196 ${112 + index * 88} C 280 ${112 + index * 88}, 300 230, 360 230`} stroke="#8173fa" fill="none" />
+          <rect x="36" y={78 + index * 92} width="170" height="68" rx="16" fill="#494762" />
+          <text x="56" y={118 + index * 92} fill="#f4f0ff" fontSize="18">{source}</text>
+          <path d={`M206 ${112 + index * 92} C 300 ${112 + index * 92}, 320 240, 380 240`} stroke="#73dfd0" fill="none" strokeWidth="1.6" />
         </g>
       ))}
-      <rect x="360" y="150" width="120" height="160" rx="12" fill="#121722" />
-      <text x="384" y="220" fill="#73e5f7" fontSize="14">MODEL</text>
-      <text x="384" y="248" fill="#f4f6fa" fontSize="16">Defined</text>
-      <rect x="520" y="80" width="168" height="300" rx="12" fill="#121722" />
-      <text x="540" y="116" fill="#73e5f7" fontSize="13">ANALYTICS</text>
+      <rect x="368" y="150" width="130" height="170" rx="20" fill="#201f32" />
+      <text x="392" y="230" fill="#73dfd0" fontSize="14">MODEL</text>
+      <text x="392" y="258" fill="#f4f0ff" fontSize="18">Defined</text>
+      <rect x="520" y="78" width="168" height="320" rx="20" fill="#201f32" />
+      <text x="540" y="114" fill="#ff987e" fontSize="13">ANALYTICS</text>
       {[80, 120, 64, 150, 96].map((height, index) => (
-        <rect key={height} x={544 + index * 26} y={330 - height} width="16" height={height} fill={index === 3 ? "#73e5f7" : "#8173fa"} />
+        <rect key={`${height}-${index}`} x={544 + index * 26} y={340 - height} width="16" rx="4" height={height} fill={index === 3 ? "#ff987e" : "#a99aff"} />
       ))}
     </g>
   );
@@ -363,25 +344,20 @@ function DataScene() {
 function SecurityScene() {
   return (
     <g>
-      <rect width="720" height="480" fill="#0d121b" />
-      <rect x="70" y="70" width="360" height="340" rx="18" fill="none" stroke="#d5deea" strokeOpacity="0.35" />
-      <rect x="110" y="110" width="280" height="260" rx="16" fill="none" stroke="#8173fa" />
-      <rect x="150" y="150" width="200" height="180" rx="14" fill="none" stroke="#73e5f7" />
-      <rect x="190" y="196" width="120" height="88" rx="10" fill="#73e5f7" fillOpacity="0.15" stroke="#73e5f7" />
-      <text x="214" y="236" fill="#f4f6fa" fontSize="14">Decision</text>
-      <text x="214" y="258" fill="#73e5f7" fontSize="13">Allow / deny</text>
-      <text x="86" y="58" fill="#9eb0c4" fontSize="14">Perimeter</text>
-      <text x="118" y="100" fill="#c9bfff" fontSize="14">Identity</text>
-      <text x="158" y="140" fill="#73e5f7" fontSize="14">Application</text>
-      <g>
-        {["Request", "Policy", "Record"].map((step, index) => (
-          <g key={step} transform={`translate(470 ${90 + index * 110})`}>
-            <rect width="200" height="78" rx="10" fill="#151c2a" stroke="#73e5f7" strokeOpacity="0.4" />
-            <text x="20" y="34" fill="#9eb0c4" fontSize="13">{String(index + 1).padStart(2, "0")}</text>
-            <text x="20" y="58" fill="#f4f6fa" fontSize="18">{step}</text>
-          </g>
-        ))}
-      </g>
+      <rect width="720" height="480" fill="#2a2438" />
+      <rect x="48" y="48" width="390" height="384" rx="28" fill="#39364f" fillOpacity="0.35" stroke="#c6bcff" strokeOpacity="0.35" />
+      <rect x="96" y="96" width="294" height="288" rx="24" fill="none" stroke="#a99aff" />
+      <rect x="144" y="144" width="198" height="192" rx="20" fill="#73dfd0" fillOpacity="0.12" stroke="#73dfd0" />
+      <text x="176" y="230" fill="#f4f0ff" fontSize="18">Decision</text>
+      <text x="176" y="254" fill="#73dfd0" fontSize="14">Allow or deny</text>
+      <text x="64" y="40" fill="#c0bed0" fontSize="14">Perimeter</text>
+      {["Request", "Policy", "Record"].map((step, index) => (
+        <g key={step} transform={`translate(470 ${78 + index * 120})`}>
+          <rect width="210" height="92" rx="18" fill="#201f32" stroke={index === 1 ? "#ff987e" : "#73dfd0"} strokeOpacity="0.7" />
+          <text x="22" y="38" fill="#c6bcff" fontSize="13">{String(index + 1).padStart(2, "0")}</text>
+          <text x="22" y="66" fill="#f4f0ff" fontSize="22">{step}</text>
+        </g>
+      ))}
     </g>
   );
 }

@@ -4,6 +4,7 @@ import { AlitrozCore } from "@/components/three/alitroz-core";
 import { CtaBand } from "@/components/cta-band";
 import { FamilyVisual, familyOf } from "@/components/visuals/family-visual";
 import { CapabilityExplorer } from "@/components/capability-explorer";
+import { ProjectPlate } from "@/components/project-plate";
 import { ProcessStory } from "@/components/process-story";
 import { buildPaths, hero, homepageJourney } from "@/content/home";
 import { industries } from "@/content/industries";
@@ -92,12 +93,14 @@ export function HomePage() {
           <h2>Four ways in.</h2>
           <div className="mosaic">
             {divisions.map((division, index) => (
-              <article key={division.slug} className={index === 3 ? "is-ink" : undefined}>
-                <p>{String(index + 1).padStart(2, "0")}</p>
-                <h3>{division.title}</h3>
+              <article key={division.slug} className="territory-card">
                 <FamilyVisual family={familyOf(division.slug)} compact />
-                <p>{division.result}</p>
-                <Link href={division.path}>{divisionCta[division.slug] ?? division.title}</Link>
+                <div className="territory-copy">
+                  <p>{String(index + 1).padStart(2, "0")}</p>
+                  <h3>{division.title}</h3>
+                  <p>{division.result}</p>
+                  <Link href={division.path}>{divisionCta[division.slug] ?? division.title}</Link>
+                </div>
               </article>
             ))}
           </div>
@@ -111,7 +114,8 @@ export function HomePage() {
         </div>
         <div className="reel-track">
           {work.map((project) => (
-            <article key={project.slug}>
+            <article key={project.slug} className="work-plate">
+              <ProjectPlate slug={project.slug} />
               <p>{project.kindLabel}</p>
               <h3>{project.title}</h3>
               <p>{project.summary}</p>

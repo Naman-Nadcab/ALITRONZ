@@ -49,7 +49,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
           areaServed: "Worldwide",
         }}
       />
-      <header className="page-hero">
+      <header className={`page-hero family-${family}`}>
         <div className="wrap page-hero-split">
           <div>
             <Breadcrumbs items={crumbs} />

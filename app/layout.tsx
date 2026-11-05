@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Instrument_Serif, Manrope, Syne } from "next/font/google";
+import { ChromaticAmbient } from "@/components/chromatic-ambient";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export const viewport: Viewport = { themeColor: "#292A3D" };
+export const viewport: Viewport = { themeColor: "#242438" };
 
 function warnIfSiteUrlMissing() {
   const flag = globalThis as typeof globalThis & { __alitrozSiteUrlWarned?: boolean };
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${display.variable} ${editorial.variable}`}>
       <body>
+        <ChromaticAmbient />
         <JsonLd
           data={{
             "@context": "https://schema.org",
