@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/content/site";
 import { getPublicIdentity } from "@/lib/public-identity";
+import { buildSearchIndex } from "@/lib/search-index";
 import { getSiteUrl, hasValidSiteUrlOverride } from "@/lib/site-url";
 import "./globals.css";
 
@@ -33,6 +34,7 @@ const editorial = Instrument_Serif({
 
 const siteUrl = getSiteUrl();
 const socialImage = new URL("/opengraph-image", siteUrl);
+const searchItems = buildSearchIndex();
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
@@ -52,7 +54,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export const viewport: Viewport = { themeColor: "#242438" };
+export const viewport: Viewport = { themeColor: "#20243A" };
 
 function warnIfSiteUrlMissing() {
   const flag = globalThis as typeof globalThis & { __alitrozSiteUrlWarned?: boolean };
@@ -96,7 +98,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
         <a className="skip-link" href="#content">Skip to content</a>
-        <SiteHeader />
+        <SiteHeader searchItems={searchItems} />
         <main id="content">{children}</main>
         <SiteFooter />
       </body>

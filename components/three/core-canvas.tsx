@@ -5,28 +5,28 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefO
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
-const glassBlades = [
-  { position: [-0.72, 0.52, 0.12], rotation: [0.18, -0.34, 0.48], size: [0.38, 2.9, 0.22], color: "#c8baff" },
-  { position: [0.62, -0.36, 0.2], rotation: [-0.22, 0.28, -0.56], size: [0.34, 2.65, 0.18], color: "#71e6e4" },
-  { position: [0.1, 0.28, -0.62], rotation: [0.12, 0.2, 1.12], size: [0.28, 2.35, 0.16], color: "#82a7ff" },
-] satisfies {
-  position: [number, number, number];
-  rotation: [number, number, number];
-  size: [number, number, number];
-  color: string;
-}[];
+const membraneData = [
+  {
+    color: "#bbadff",
+    opacity: 0.48,
+    points: [[-1.75, 0.9, -0.2], [-0.3, 1.62, 0.24], [0.35, 0.12, 0.68], [-1.28, -0.26, 0.18]],
+  },
+  {
+    color: "#83a5ff",
+    opacity: 0.38,
+    points: [[0.12, 1.48, -0.44], [1.72, 0.72, -0.12], [1.18, -0.7, 0.52], [0.16, 0.06, 0.7]],
+  },
+  {
+    color: "#58dcd1",
+    opacity: 0.34,
+    points: [[-1.52, -0.28, -0.35], [0.1, -0.02, 0.64], [0.92, -1.38, 0.14], [-0.7, -1.62, -0.24]],
+  },
+] satisfies { color: string; opacity: number; points: number[][] }[];
 
-const suspendedSlabs = [
-  { position: [-1.68, 0.78, 0.22], rotation: [0.08, 0.18, -0.22], size: [0.86, 0.12, 0.46], color: "#ff927e" },
-  { position: [1.55, 0.86, -0.22], rotation: [-0.1, -0.25, 0.18], size: [0.72, 0.14, 0.52], color: "#71e6e4" },
-  { position: [-1.28, -1.08, -0.36], rotation: [0.12, 0.38, 0.34], size: [0.72, 0.11, 0.38], color: "#82a7ff" },
-  { position: [1.25, -1.18, 0.28], rotation: [-0.18, -0.28, -0.3], size: [0.92, 0.12, 0.34], color: "#d0f28c" },
-] satisfies {
-  position: [number, number, number];
-  rotation: [number, number, number];
-  size: [number, number, number];
-  color: string;
-}[];
+const ribbonPaths = [
+  { color: "#e8edf9", radius: 0.105, points: [[-2, -0.5, 0], [-1.2, 0.65, 0.3], [0, 0.1, 0.74], [1.05, -0.72, 0.32], [2, 0.28, -0.18]] },
+  { color: "#8995ad", radius: 0.075, points: [[-1.7, 1.1, -0.46], [-0.7, 0.22, 0.46], [0.12, 0.06, 0.78], [0.82, 0.82, 0.26], [1.74, 1.16, -0.34]] },
+] satisfies { color: string; radius: number; points: number[][] }[];
 
 function mountRoom(gl: THREE.WebGLRenderer, target: THREE.Scene) {
   const pmrem = new THREE.PMREMGenerator(gl);
@@ -59,39 +59,59 @@ function ContextLossGuard({ onFailure }: { onFailure: () => void }) {
   return null;
 }
 
-function Beam({ to, color = "#9eb0c0" }: { to: [number, number, number]; color?: string }) {
-  const ref = useRef<THREE.Mesh>(null);
-  useLayoutEffect(() => {
-    const mesh = ref.current;
-    if (!mesh) return;
-    const end = new THREE.Vector3(...to);
-    mesh.position.copy(end.clone().multiplyScalar(0.5));
-    mesh.scale.set(1, end.length(), 1);
-    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), end.clone().normalize());
-  }, [to]);
-  return (
-    <mesh ref={ref}>
-      <boxGeometry args={[0.012, 1, 0.012]} />
-      <meshStandardMaterial color={color} metalness={0.6} roughness={0.22} emissive={color} emissiveIntensity={0.28} transparent opacity={0.68} />
-    </mesh>
-  );
-}
-
-function LuminousPath({
-  points,
-  color,
-}: {
-  points: [number, number, number][];
+function CurvedPath({ points, color, radius = 0.018, glow = false }: {
+  points: number[][];
   color: string;
+  radius?: number;
+  glow?: boolean;
 }) {
   const curve = useMemo(
-    () => new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(...point))),
+    () => new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(point[0], point[1], point[2]))),
     [points],
   );
   return (
     <mesh>
-      <tubeGeometry args={[curve, 56, 0.014, 8, false]} />
-      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={1.35} toneMapped={false} />
+      <tubeGeometry args={[curve, 72, radius, 10, false]} />
+      <meshPhysicalMaterial
+        color={color}
+        metalness={glow ? 0.25 : 0.94}
+        roughness={glow ? 0.18 : 0.12}
+        clearcoat={1}
+        emissive={glow ? color : "#000000"}
+        emissiveIntensity={glow ? 1.2 : 0}
+        toneMapped={!glow}
+      />
+    </mesh>
+  );
+}
+
+function GlassMembrane({ points, color, opacity }: { points: number[][]; color: string; opacity: number }) {
+  const geometry = useMemo(() => {
+    const shape = new THREE.BufferGeometry();
+    const positions = new Float32Array(points.flat());
+    shape.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    shape.setIndex([0, 1, 2, 0, 2, 3]);
+    shape.computeVertexNormals();
+    return shape;
+  }, [points]);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  return (
+    <mesh geometry={geometry}>
+      <meshPhysicalMaterial
+        side={THREE.DoubleSide}
+        color={color}
+        roughness={0.08}
+        metalness={0.03}
+        transmission={0.7}
+        thickness={0.55}
+        transparent
+        opacity={opacity}
+        iridescence={1}
+        iridescenceIOR={1.35}
+        iridescenceThicknessRange={[180, 520]}
+        clearcoat={1}
+        clearcoatRoughness={0.05}
+      />
     </mesh>
   );
 }
@@ -121,7 +141,7 @@ function ShadowDisc() {
   );
 }
 
-function Sculpture({
+function IntelligentAssembly({
   pointer,
   scroll,
 }: {
@@ -129,9 +149,9 @@ function Sculpture({
   scroll: MutableRefObject<number>;
 }) {
   const root = useRef<THREE.Group>(null);
-  const architecture = useRef<THREE.Group>(null);
-  const pathways = useRef<THREE.Group>(null);
-  const core = useRef<THREE.Mesh>(null);
+  const assembly = useRef<THREE.Group>(null);
+  const field = useRef<THREE.Group>(null);
+  const core = useRef<THREE.Group>(null);
 
   useFrame((state, delta) => {
     const step = Math.min(delta, 0.05);
@@ -141,8 +161,8 @@ function Sculpture({
       root.current.rotation.x = THREE.MathUtils.damp(root.current.rotation.x, pointer.current.y * -0.14, 2.2, step);
       root.current.position.y = THREE.MathUtils.damp(root.current.position.y, scroll.current * 0.22, 2.2, step);
     }
-    if (architecture.current) architecture.current.rotation.y = time * 0.045;
-    if (pathways.current) pathways.current.position.y = Math.sin(time * 0.7) * 0.035;
+    if (assembly.current) assembly.current.rotation.y = time * 0.055;
+    if (field.current) field.current.rotation.z = Math.sin(time * 0.24) * 0.035;
     if (core.current) {
       const scale = 1 + Math.sin(time * 1.1) * 0.04;
       core.current.scale.setScalar(scale);
@@ -150,81 +170,47 @@ function Sculpture({
   });
 
   return (
-    <group ref={root}>
+    <group ref={root} rotation={[0.06, -0.18, -0.03]}>
       <ShadowDisc />
-      <group ref={architecture} scale={0.94} rotation={[0.05, -0.12, 0]}>
-        <mesh position={[0.02, 0, 0.04]} rotation={[0.1, 0.08, -0.22]}>
-          <boxGeometry args={[0.36, 3.35, 0.38]} />
-          <meshPhysicalMaterial color="#d7deed" metalness={0.96} roughness={0.12} clearcoat={1} envMapIntensity={1.4} />
-        </mesh>
-        <mesh position={[0.12, 0.05, -0.08]} rotation={[0.05, -0.18, 1.03]}>
-          <boxGeometry args={[0.3, 2.85, 0.32]} />
-          <meshPhysicalMaterial color="#aeb8cb" metalness={0.98} roughness={0.16} clearcoat={1} envMapIntensity={1.5} />
-        </mesh>
-        {glassBlades.map((blade) => (
-          <mesh key={blade.position.join("-")} position={blade.position} rotation={blade.rotation}>
-            <boxGeometry args={blade.size} />
-            <meshPhysicalMaterial
-              color={blade.color}
-              metalness={0.04}
-              roughness={0.08}
-              transmission={0.72}
-              transparent
-              opacity={0.82}
-              thickness={0.9}
-              ior={1.48}
-              iridescence={1}
-              iridescenceIOR={1.4}
-              iridescenceThicknessRange={[180, 540]}
-              clearcoat={1}
-              clearcoatRoughness={0.06}
-              envMapIntensity={1.1}
-            />
-          </mesh>
+      <group ref={assembly} scale={1.08}>
+        {membraneData.map((membrane) => (
+          <GlassMembrane key={membrane.color} {...membrane} />
         ))}
-        <mesh ref={core} position={[0.04, 0.04, 0.46]} rotation={[0.35, 0.1, 0.58]} scale={[0.58, 1.08, 0.58]}>
-          <octahedronGeometry args={[0.42, 0]} />
-          <meshStandardMaterial color="#71e6e4" emissive="#71e6e4" emissiveIntensity={0.85} metalness={0.28} roughness={0.18} />
-        </mesh>
-        {suspendedSlabs.map((slab, index) => (
-          <group key={slab.position.join("-")}>
-            <Beam to={slab.position} color={slab.color} />
-            <mesh position={slab.position} rotation={slab.rotation}>
-              <boxGeometry args={slab.size} />
-              <meshPhysicalMaterial
-                color={slab.color}
-                metalness={index % 2 ? 0.76 : 0.34}
-                roughness={0.14}
-                transmission={index % 2 ? 0.08 : 0.28}
-                transparent
-                opacity={0.94}
-                clearcoat={1}
-                emissive={slab.color}
-                emissiveIntensity={0.08}
-              />
-            </mesh>
-          </group>
+        {ribbonPaths.map((ribbon) => (
+          <CurvedPath key={ribbon.color} {...ribbon} />
         ))}
-        <group ref={pathways}>
-          <LuminousPath
-            color="#71e6e4"
-            points={[[-1.95, -0.72, 0.5], [-1.1, -0.22, 0.72], [0.04, 0.04, 0.66], [1.12, 0.52, 0.5], [1.9, 1.08, 0.12]]}
-          />
-          <LuminousPath
-            color="#ad94ff"
-            points={[[-1.46, 1.38, -0.28], [-0.6, 0.72, -0.52], [0.04, 0.04, -0.42], [0.72, -0.62, -0.18], [1.54, -1.42, 0.22]]}
-          />
-          <LuminousPath
-            color="#ff927e"
-            points={[[-1.7, 0.96, 0.08], [-0.84, 0.54, 0.28], [0.12, 0.05, 0.5], [0.98, -0.66, 0.46], [1.62, -1.12, 0.3]]}
-          />
+        <group ref={field}>
+          <CurvedPath color="#58dcd1" glow points={[[-2.15, -0.8, 0.4], [-1.1, -0.1, 0.8], [0, 0.08, 0.96], [1.18, 0.64, 0.58], [2.14, 1.22, 0.04]]} />
+          <CurvedPath color="#bbadff" glow points={[[-1.72, 1.45, -0.2], [-0.8, 0.68, 0.62], [0.02, 0.06, 1.02], [0.92, -0.72, 0.48], [1.7, -1.42, 0.08]]} />
+          <CurvedPath color="#ff825e" glow radius={0.012} points={[[-2, 0.68, 0.18], [-0.92, 0.42, 0.78], [0.02, 0.08, 1.04], [1.06, -0.3, 0.64], [2.08, -0.92, 0.12]]} />
         </group>
-        {[-1, 1].map((side) => (
-          <mesh key={side} position={[side * 1.05, 0.08, -0.58]} rotation={[0.05, side * 0.22, side * -0.18]}>
-            <boxGeometry args={[0.08, 2.2, 0.9]} />
-            <meshPhysicalMaterial color="#9aa8bb" metalness={0.82} roughness={0.22} transparent opacity={0.46} />
+        <group ref={core} position={[0.02, 0.08, 0.94]}>
+          <mesh>
+            <icosahedronGeometry args={[0.48, 2]} />
+            <meshPhysicalMaterial color="#f6f4fc" roughness={0.08} transmission={0.24} thickness={0.8} clearcoat={1} iridescence={0.7} />
+          </mesh>
+          <mesh scale={0.62}>
+            <icosahedronGeometry args={[0.48, 1]} />
+            <meshStandardMaterial color="#d0f28c" emissive="#58dcd1" emissiveIntensity={1.2} roughness={0.2} />
+          </mesh>
+        </group>
+        {[
+          [-2.15, -0.8, 0.4, "#58dcd1"],
+          [2.14, 1.22, 0.04, "#58dcd1"],
+          [-1.72, 1.45, -0.2, "#bbadff"],
+          [1.7, -1.42, 0.08, "#bbadff"],
+          [-2, 0.68, 0.18, "#ff825e"],
+          [2.08, -0.92, 0.12, "#ff825e"],
+        ].map(([x, y, z, color]) => (
+          <mesh key={`${x}-${y}`} position={[x as number, y as number, z as number]}>
+            <sphereGeometry args={[0.065, 18, 18]} />
+            <meshStandardMaterial color={color as string} emissive={color as string} emissiveIntensity={0.8} />
           </mesh>
         ))}
+        <mesh rotation={[Math.PI / 2.6, 0.35, 0.1]} position={[0, 0.02, 0.1]}>
+          <torusGeometry args={[1.62, 0.026, 12, 120]} />
+          <meshPhysicalMaterial color="#83a5ff" metalness={0.72} roughness={0.15} transparent opacity={0.45} />
+        </mesh>
       </group>
     </group>
   );
@@ -269,13 +255,13 @@ export default function CoreCanvas({ active, onFailure }: { active: boolean; onF
     >
       <ContextLossGuard onFailure={onFailure} />
       <Staging />
-      <ambientLight intensity={0.38} color="#c8baff" />
-      <directionalLight position={[4.2, 6, 5]} intensity={1.35} color="#f4f0ff" />
-      <directionalLight position={[-5, 2, 3]} intensity={1.25} color="#71e6e4" />
-      <directionalLight position={[1, -2, -4]} intensity={0.85} color="#ad94ff" />
-      <pointLight position={[2.2, 0.4, 1.2]} intensity={1.4} distance={6} decay={2} color="#ff927e" />
-      <pointLight position={[0, 0.2, 0.4]} intensity={1.6} distance={5} decay={2} color="#c8baff" />
-      <Sculpture pointer={pointer} scroll={scroll} />
+      <ambientLight intensity={0.34} color="#bbadff" />
+      <directionalLight position={[4.6, 6.5, 5]} intensity={1.55} color="#f6f4fc" />
+      <directionalLight position={[-5, 2.5, 3]} intensity={1.35} color="#58dcd1" />
+      <directionalLight position={[1, -3, -4]} intensity={1.05} color="#6355c9" />
+      <pointLight position={[2.3, 0.5, 1.6]} intensity={1.7} distance={7} decay={2} color="#ff825e" />
+      <pointLight position={[0, 0.2, 1.2]} intensity={2.1} distance={5} decay={2} color="#d0f28c" />
+      <IntelligentAssembly pointer={pointer} scroll={scroll} />
     </Canvas>
   );
 }

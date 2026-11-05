@@ -37,7 +37,7 @@ export default function ServicesPage() {
                   ))}
                 </ul>
               </div>
-              <FamilyVisual family={familyOf(group.href.split("/").pop() ?? "")} compact />
+              <FamilyVisual family={familyOf(group.href.split("/").pop() ?? "")} variant={group.href} compact />
             </article>
           ))}
         </div>
@@ -51,7 +51,7 @@ export default function ServicesPage() {
           <div className="cap-stage">
             {capabilityGroups.map((group) => (
               <article key={group.href}>
-                <FamilyVisual family={familyOf(group.href.split("/").pop() ?? "")} compact />
+                <FamilyVisual family={familyOf(group.href.split("/").pop() ?? "")} variant={group.href} compact />
                 <div>
                   <h3><Link href={group.href}>{group.title}</Link></h3>
                   <p className="gap-top">{group.result}</p>

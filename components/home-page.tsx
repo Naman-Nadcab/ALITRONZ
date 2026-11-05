@@ -55,28 +55,30 @@ export function HomePage() {
       <section className="scene">
         <div className="wrap scene-stage">
           <div className="scene-copy">
-            <p className="eyebrow">ALITROZ / DIGITAL SYSTEMS STUDIO</p>
+            <p className="eyebrow">ALITROZ / CREATIVE ENGINEERING STUDIO</p>
             <h1>{hero.title}</h1>
             <p className="lede">{hero.lede}</p>
             <div className="cta-row">
-              <Link className="btn btn-primary" href="#atlas">
-                Explore the Experience <span className="arrow" aria-hidden="true">→</span>
+              <Link className="btn btn-primary" href="/start-a-project">
+                Discuss a Project <span className="arrow" aria-hidden="true">→</span>
               </Link>
-              <Link className="btn btn-secondary" href="/start-a-project">Discuss a Project</Link>
+              <Link className="btn btn-secondary" href="/work">Explore Our Work</Link>
             </div>
           </div>
           <div className="scene-core">
             <AlitrozCore />
           </div>
         </div>
-        <p className="scene-line wrap">Complex ideas. Engineered into products.</p>
+        <div className="scene-line wrap" aria-label="Primary engineering disciplines">
+          <span>Intelligence</span><span>Products</span><span>Protocols</span><span>Platforms</span>
+        </div>
       </section>
 
       <section className="canvas-scene">
         <div className="wrap">
-          <p className="eyebrow">Alitroz Atlas</p>
-          <h2>Intelligent systems in motion.</h2>
-          <p className="lede">Select a territory. The panel opens the real specialist pages.</p>
+          <p className="eyebrow">Independent thinking. Connected engineering.</p>
+          <h2>Complex ideas. Engineered into products.</h2>
+          <p className="lede">Explore the live technology map. Every territory connects to substantive service, capability, solution, and project pages.</p>
           <AtlasCanvas />
         </div>
       </section>
@@ -115,7 +117,7 @@ export function HomePage() {
                   </Link>
                 </div>
                 <div className="territory-environment">
-                  <FamilyVisual family={familyOf(division.slug)} />
+                  <FamilyVisual family={familyOf(division.slug)} variant={division.slug} />
                   <span className="territory-plane territory-plane-one" aria-hidden="true" />
                   <span className="territory-plane territory-plane-two" aria-hidden="true" />
                 </div>

@@ -126,13 +126,16 @@ const captions: Record<VisualFamily, { kicker: string; title: string; text: stri
 export function FamilyVisual({
   family,
   compact = false,
+  variant = "",
 }: {
   family: string;
   compact?: boolean;
+  variant?: string;
 }) {
   const key: VisualFamily = (families as readonly string[]).includes(family) ? (family as VisualFamily) : "product";
   const copy = captions[key];
   const uid = useId().replace(/:/g, "");
+  const seed = [...variant].reduce((total, character) => (total * 31 + character.charCodeAt(0)) % 9973, 29);
   return (
     <figure className={`visual-stage family-${key}${compact ? " is-compact" : ""}`}>
       <svg viewBox="0 0 720 480" preserveAspectRatio={compact ? "xMidYMid slice" : "xMidYMid meet"} role="img" aria-label={`${copy.title} ${copy.text}`}>
@@ -144,6 +147,7 @@ export function FamilyVisual({
         {key === "cloud" ? <CloudScene /> : null}
         {key === "data" ? <DataScene /> : null}
         {key === "security" ? <SecurityScene /> : null}
+        <VariantField seed={seed} />
       </svg>
       {compact ? null : (
         <figcaption>
@@ -152,6 +156,31 @@ export function FamilyVisual({
         </figcaption>
       )}
     </figure>
+  );
+}
+
+function VariantField({ seed }: { seed: number }) {
+  const points = Array.from({ length: 7 }, (_, index) => ({
+    x: 62 + ((seed + index * 137) % 590),
+    y: 66 + ((seed * (index + 5) + index * 83) % 350),
+    radius: 2 + ((seed + index) % 4),
+  }));
+  return (
+    <g aria-hidden="true">
+      <path
+        d={points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x} ${point.y}`).join(" ")}
+        fill="none"
+        stroke="#f6f4fc"
+        strokeOpacity=".16"
+        strokeDasharray="3 7"
+      />
+      {points.map((point, index) => (
+        <g key={`${point.x}-${point.y}`}>
+          <circle cx={point.x} cy={point.y} r={point.radius * 3.4} fill={index % 3 === 0 ? "#58dcd1" : "#83a5ff"} fillOpacity=".08" />
+          <circle cx={point.x} cy={point.y} r={point.radius} fill={index % 3 === 1 ? "#ff825e" : "#f6f4fc"} fillOpacity=".76" />
+        </g>
+      ))}
+    </g>
   );
 }
 
@@ -223,26 +252,66 @@ function AiScene({ id }: { id: string }) {
 function ProductScene() {
   return (
     <g>
-      <rect width="720" height="480" fill="#312e48" />
-      <rect x="36" y="48" width="460" height="300" rx="22" fill="#201f32" transform="skewY(-4)" />
-      <rect x="70" y="78" width="400" height="250" rx="16" fill="#3d3958" />
-      <rect x="70" y="78" width="400" height="36" fill="#494762" />
-      <circle cx="92" cy="96" r="5" fill="#ff987e" />
-      <circle cx="110" cy="96" r="5" fill="#73dfd0" />
-      <text x="128" y="101" fill="#f4f0ff" fontSize="13">Workspace</text>
-      {[0, 1, 2, 3, 4].map((bar) => (
-        <rect key={bar} x={110 + bar * 62} y={250 - bar * 16} width="28" height={70 + bar * 16} rx="6" fill={bar === 3 ? "#73dfd0" : "#a99aff"} fillOpacity={bar === 3 ? 1 : 0.45} />
-      ))}
-      <g transform="translate(470 70)">
-        <rect width="210" height="360" rx="32" fill="#201f32" stroke="#c6bcff" strokeOpacity="0.35" />
-        <rect x="22" y="36" width="166" height="28" rx="14" fill="#494762" />
-        <rect x="22" y="84" width="166" height="110" rx="16" fill="#73dfd0" fillOpacity="0.16" />
-        <text x="38" y="132" fill="#f4f0ff" fontSize="18">Today</text>
-        <text x="38" y="156" fill="#c6bcff" fontSize="13">Queue · scoped</text>
-        <rect x="22" y="214" width="166" height="52" rx="12" fill="#39364f" />
-        <rect x="22" y="278" width="166" height="52" rx="12" fill="#39364f" />
+      <rect width="720" height="480" fill="#202b46" />
+      <path d="M0 380 C150 300 260 450 430 330 S630 244 720 286 V480 H0Z" fill="#ff825e" fillOpacity=".08" />
+      <g transform="translate(34 50)">
+        <rect width="520" height="356" rx="20" fill="#181b2d" stroke="#83a5ff" strokeOpacity=".28" />
+        <rect width="520" height="38" rx="20" fill="#303752" />
+        <path d="M0 38 H520" stroke="#f6f4fc" strokeOpacity=".1" />
+        <circle cx="22" cy="19" r="4" fill="#ff825e" />
+        <circle cx="36" cy="19" r="4" fill="#d0f28c" />
+        <circle cx="50" cy="19" r="4" fill="#58dcd1" />
+        <text x="74" y="24" fill="#f6f4fc" fontSize="11">Operations workspace</text>
+        <rect x="0" y="38" width="108" height="318" fill="#22263d" />
+        {["Overview", "Work queue", "Customers", "Reporting", "Settings"].map((label, index) => (
+          <g key={label} transform={`translate(16 ${70 + index * 38})`}>
+            <rect width="76" height="26" rx="7" fill={index === 1 ? "#83a5ff" : "transparent"} fillOpacity=".2" />
+            <circle cx="10" cy="13" r="3" fill={index === 1 ? "#58dcd1" : "#757d99"} />
+            <text x="20" y="17" fill={index === 1 ? "#f6f4fc" : "#9fa4ba"} fontSize="9">{label}</text>
+          </g>
+        ))}
+        <text x="132" y="76" fill="#f6f4fc" fontSize="18">Work queue</text>
+        <text x="132" y="96" fill="#aeb2c6" fontSize="10">Operational state across the product</text>
+        {[
+          { x: 132, label: "Open", value: "128", color: "#83a5ff" },
+          { x: 252, label: "Review", value: "24", color: "#ff825e" },
+          { x: 372, label: "Resolved", value: "86", color: "#58dcd1" },
+        ].map((item) => (
+          <g key={item.label} transform={`translate(${item.x} 116)`}>
+            <rect width="104" height="66" rx="11" fill="#2d3049" />
+            <text x="12" y="24" fill="#aeb2c6" fontSize="9">{item.label}</text>
+            <text x="12" y="50" fill={item.color} fontSize="22">{item.value}</text>
+          </g>
+        ))}
+        <rect x="132" y="202" width="344" height="126" rx="12" fill="#24283f" />
+        {["Reference", "Owner", "State"].map((label, index) => (
+          <text key={label} x={148 + index * 112} y="226" fill="#767e99" fontSize="9">{label}</text>
+        ))}
+        {[0, 1, 2].map((row) => (
+          <g key={row}>
+            <path d={`M144 ${246 + row * 25} H460`} stroke="#f6f4fc" strokeOpacity=".08" />
+            <text x="148" y={262 + row * 25} fill="#d8d9e8" fontSize="9">REQ-{1428 + row * 17}</text>
+            <rect x="372" y={251 + row * 25} width={62 - row * 5} height="8" rx="4" fill={row === 1 ? "#ff825e" : "#58dcd1"} fillOpacity=".7" />
+          </g>
+        ))}
       </g>
-      <text x="48" y="40" fill="#c6bcff" fontSize="13" letterSpacing="1.8">PRODUCT SURFACES</text>
+      <g transform="translate(530 98)">
+        <rect width="162" height="310" rx="27" fill="#161a2c" stroke="#bbadff" strokeOpacity=".38" />
+        <rect x="56" y="12" width="50" height="5" rx="2.5" fill="#343950" />
+        <text x="18" y="52" fill="#aeb2c6" fontSize="9">TODAY</text>
+        <text x="18" y="78" fill="#f6f4fc" fontSize="20">12 items</text>
+        <rect x="18" y="98" width="126" height="78" rx="13" fill="#58dcd1" fillOpacity=".13" stroke="#58dcd1" strokeOpacity=".3" />
+        <text x="32" y="124" fill="#58dcd1" fontSize="9">NEXT ACTION</text>
+        <text x="32" y="148" fill="#f6f4fc" fontSize="13">Review request</text>
+        {[0, 1].map((row) => (
+          <g key={row} transform={`translate(18 ${194 + row * 48})`}>
+            <rect width="126" height="38" rx="10" fill="#2d3049" />
+            <circle cx="18" cy="19" r="5" fill={row ? "#ff825e" : "#83a5ff"} />
+            <path d="M34 14 H108 M34 24 H88" stroke="#c7c7d9" strokeOpacity=".45" />
+          </g>
+        ))}
+      </g>
+      <text x="38" y="34" fill="#83a5ff" fontSize="12" letterSpacing="1.8">PRODUCT INTERFACE INSTALLATION</text>
     </g>
   );
 }

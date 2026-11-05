@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/logo";
+import { SiteSearch, type SearchItem } from "@/components/site-search";
 import { capabilityLinks, companyLinks, primaryNav, serviceGroups } from "@/content/navigation";
 
-export function SiteHeader() {
+export function SiteHeader({ searchItems }: { searchItems: SearchItem[] }) {
   const pathname = usePathname();
   const [menu, setMenu] = useState<"services" | "company" | null>(null);
   const [drawer, setDrawer] = useState(false);
@@ -171,6 +172,7 @@ export function SiteHeader() {
             );
           })}
         </nav>
+        <SiteSearch items={searchItems} />
         <Link className="btn btn-primary header-cta" href="/start-a-project">
           Start a Project
         </Link>

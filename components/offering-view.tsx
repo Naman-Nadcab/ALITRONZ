@@ -63,7 +63,7 @@ export function OfferingView({ offering }: { offering: Offering }) {
               <Link className="btn btn-secondary" href="/work">Explore Our Work</Link>
             </div>
           </div>
-          <FamilyVisual family={family} />
+          <FamilyVisual family={family} variant={offering.slug} />
         </div>
       </header>
       <div className="sheet">

@@ -39,7 +39,7 @@ export function IndustryView({ industry }: { industry: Industry }) {
             <h1>{industry.headline}</h1>
             <p className="lede">{industry.summary}</p>
           </div>
-          <FamilyVisual family={family} />
+          <FamilyVisual family={family} variant={industry.slug} />
         </div>
       </header>
       <div className="sheet">

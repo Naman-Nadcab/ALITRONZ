@@ -38,7 +38,7 @@ export default function SolutionsPage() {
                   <Link className="text-link" href={solution.path}>View the solution</Link>
                 </p>
               </div>
-              <FamilyVisual family={familyOf(solution.slug, solution.figure)} compact />
+              <FamilyVisual family={familyOf(solution.slug, solution.figure)} variant={solution.slug} compact />
             </article>
           ))}
         </div>
